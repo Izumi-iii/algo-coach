@@ -1,0 +1,69 @@
+{
+  "checked_at": "2026-10-16T06:10:35.850869+00:00",
+  "observations": [
+    {
+      "reference": "25",
+      "problem_key": "leetcode_cn:25",
+      "slug": "reverse-nodes-in-k-group",
+      "source": {
+        "kind": "leetcode_cn_graphql",
+        "endpoint": "https://leetcode.cn/graphql/",
+        "snapshot_id": "62964f816c24aebf0fcb67ca7f57dde4c1ce94a510d0320307847b7db9cbbb23",
+        "fetched_at": "2026-10-16T06:10:26.090494Z",
+        "problem_hash": "fd47b1c699babd2f9cfbfec939db1a2251af5ab40e425c29622fbeb6f9fa3db5",
+        "raw_hash": "3e82e78822ce87ab09aecb5751cb62a7dd75a46537fb3a58d7067e3fd9afa731",
+        "parser_version": "leetcode-cn-html-v1",
+        "language": "zh-CN",
+        "cache_status": "network",
+        "warning": ""
+      },
+      "statement_chars": 307,
+      "constraints": 3,
+      "examples": 2,
+      "signature": "class Solution: def reverseKGroup(self, head: ListNode | None, k: int) -> ListNode | None:"
+    },
+    {
+      "reference": "1",
+      "problem_key": "leetcode_cn:1",
+      "slug": "two-sum",
+      "source": {
+        "kind": "leetcode_cn_graphql",
+        "endpoint": "https://leetcode.cn/graphql/",
+        "snapshot_id": "d35082df2e67cc29cab44fa450d23a4bc0dfcfa4981d1e01aa95f382355cf82c",
+        "fetched_at": "2026-10-16T06:10:32.672915Z",
+        "problem_hash": "85b08ca375dd202882c400f22663802f1afa06844676ce008f18a801e707ae0f",
+        "raw_hash": "8bafbd48611c8c54e866f64e71c9b1a495a130ba8945cf06a37cec1f7f8fa24d",
+        "parser_version": "leetcode-cn-html-v1",
+        "language": "zh-CN",
+        "cache_status": "network",
+        "warning": ""
+      },
+      "statement_chars": 206,
+      "constraints": 4,
+      "examples": 3,
+      "signature": "class Solution: def twoSum(self, nums: list[int], target: int) -> list[int]:"
+    },
+    {
+      "reference": "daily",
+      "date": "2026-10-16",
+      "problem_key": "leetcode_cn:2916",
+      "slug": "subarrays-distinct-element-sum-of-squares-ii",
+      "source": {
+        "kind": "leetcode_cn_graphql",
+        "endpoint": "https://leetcode.cn/graphql/",
+        "snapshot_id": "3945a09f2afd68d54147a7bd3ff54170a053d516cf1e1395a8c2d6f2c299b4f3",
+        "fetched_at": "2026-10-16T06:10:35.784059Z",
+        "problem_hash": "4cfdb49a0582c0ad705d1d2e2be36829e1dc935f42230c145b5abf0db234423d",
+        "raw_hash": "7b0952ef8684d717b98ab3f377cfde4072c7e55e7650feb244c4e78732b1645e",
+        "parser_version": "leetcode-cn-html-v1",
+        "language": "zh-CN",
+        "cache_status": "network",
+        "warning": ""
+      },
+      "constraints": 2,
+      "examples": 2
+    }
+  ],
+  "offline_session_created": true,
+  "daily_offline_match": true
+}

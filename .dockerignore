@@ -1,0 +1,6 @@
+**
+!sandbox/
+!sandbox/Dockerfile
+!src/
+!src/algo_coach/
+!src/algo_coach/sandbox_worker.py

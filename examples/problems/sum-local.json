@@ -1,0 +1,12 @@
+{
+  "site": "local",
+  "frontend_id": "sum-demo",
+  "slug": "sum-demo",
+  "title": "数组求和（自定义题目格式示例）",
+  "statement": "返回给定整数数组 nums 中所有元素的和，不能调用内置 sum 函数。",
+  "constraints": ["0 <= len(nums) <= 1000", "每个元素为 -1000 到 1000 之间的整数"],
+  "examples": [{"input": "nums = [1, -2, 3]", "output": "2"}],
+  "signature": "def total(nums: list[int]) -> int",
+  "url": "",
+  "attribution": "AlgoCoach 原创格式示例，允许随项目使用。"
+}

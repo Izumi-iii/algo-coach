@@ -1,0 +1,59 @@
+{
+  "site": "cn",
+  "mode": "anonymous_read_only",
+  "reports": [
+    {
+      "probe": "detail",
+      "endpoint": "https://leetcode.cn/graphql/",
+      "variables": {
+        "slug": "subarrays-distinct-element-sum-of-squares-ii"
+      },
+      "checked_at_utc": "2026-10-16T05:58:13.748697+00:00",
+      "http_status": 200,
+      "content_type": "application/json",
+      "stop_site": false,
+      "response_bytes": 7851,
+      "response_sha256": "dfb24b7cac655f0a3d3d2bd167fb43773c2c75f7a44dba2c2bd6b584e55390d8",
+      "result": {
+        "questionId": "3139",
+        "questionFrontendId": "2916",
+        "titleSlug": "subarrays-distinct-element-sum-of-squares-ii",
+        "isPaidOnly": false,
+        "content": {
+          "html_chars": 1920,
+          "text_chars": 1289,
+          "has_input_marker": true,
+          "has_output_marker": true,
+          "has_constraints_marker": true,
+          "images": 0,
+          "scripts": 0
+        },
+        "translatedContent": {
+          "html_chars": 1461,
+          "text_chars": 766,
+          "has_input_marker": true,
+          "has_output_marker": true,
+          "has_constraints_marker": true,
+          "images": 0,
+          "scripts": 0
+        },
+        "python3_signature": "def sumCounts(self, nums: List[int]) -> int:",
+        "sample_input_chars": 7,
+        "metadata": {
+          "name": "sumCounts",
+          "params": [
+            {
+              "name": "nums",
+              "type": "integer[]"
+            }
+          ],
+          "return": {
+            "type": "integer"
+          }
+        }
+      },
+      "outcome": "ok",
+      "seconds": 0.343
+    }
+  ]
+}

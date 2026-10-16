@@ -1,0 +1,26 @@
+[
+  {
+    "site": "leetcode_cn",
+    "frontend_id": "1",
+    "slug": "two-sum",
+    "title": "两数之和（本地教学摘要）",
+    "statement": "给定整数数组 nums 和整数 target，返回两个不同位置的下标，使这两个位置的数相加等于 target。假设恰好存在一组答案，下标顺序不限。",
+    "constraints": ["数组长度至少为 2", "只能使用不同位置的元素", "恰好存在一组有效答案", "本地摘要不代替平台完整约束，请通过来源链接核对"],
+    "examples": [{"input": "nums = [2, 7, 11, 15], target = 9", "output": "[0, 1]"}],
+    "signature": "class Solution: def twoSum(self, nums: list[int], target: int) -> list[int]",
+    "url": "https://leetcode.cn/problems/two-sum/",
+    "attribution": "AlgoCoach 自写教学摘要；非实时抓取，具体题面以来源站点为准。"
+  },
+  {
+    "site": "leetcode_cn",
+    "frontend_id": "25",
+    "slug": "reverse-nodes-in-k-group",
+    "title": "K 个一组翻转链表（本地教学摘要）",
+    "statement": "将单链表每连续 k 个节点作为一组，反转组内连接并返回新头节点。最后不足 k 个节点的一组保留原顺序。不能只交换节点的值。",
+    "constraints": ["链表非空且无环", "1 <= k <= 链表长度", "改变节点连接，不能仅修改节点值", "本地摘要不代替平台完整约束，请通过来源链接核对"],
+    "examples": [{"input": "head = [1, 2, 3, 4, 5], k = 2", "output": "[2, 1, 4, 3, 5]"}],
+    "signature": "class Solution: def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]",
+    "url": "https://leetcode.cn/problems/reverse-nodes-in-k-group/",
+    "attribution": "AlgoCoach 自写教学摘要；非实时抓取，具体题面以来源站点为准。"
+  }
+]

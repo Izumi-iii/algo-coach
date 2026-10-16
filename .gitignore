@@ -205,6 +205,15 @@ cython_debug/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
+# AlgoCoach local learning history and credentials
+.algo-coach/
+.env.*
+!.env.example
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.sqlite-journal
+
 # Ruff stuff:
 .ruff_cache/
 

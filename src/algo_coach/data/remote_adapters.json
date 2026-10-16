@@ -1,0 +1,22 @@
+[
+  {
+    "site": "leetcode_cn",
+    "frontend_id": "1",
+    "slug": "two-sum",
+    "problem_hash": "85b08ca375dd202882c400f22663802f1afa06844676ce008f18a801e707ae0f",
+    "adapter": "two_sum",
+    "reviewed_at": "2026-10-16",
+    "parser_version": "leetcode-cn-html-v1",
+    "evidence": "Docs/evidence/leetcode-cn-integration-20261016T061021.json"
+  },
+  {
+    "site": "leetcode_cn",
+    "frontend_id": "25",
+    "slug": "reverse-nodes-in-k-group",
+    "problem_hash": "fd47b1c699babd2f9cfbfec939db1a2251af5ab40e425c29622fbeb6f9fa3db5",
+    "adapter": "reverse_k_group",
+    "reviewed_at": "2026-10-16",
+    "parser_version": "leetcode-cn-html-v1",
+    "evidence": "Docs/evidence/leetcode-cn-integration-20261016T061021.json"
+  }
+]

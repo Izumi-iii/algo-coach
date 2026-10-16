@@ -1,0 +1,108 @@
+{
+  "site": "com",
+  "mode": "anonymous_read_only",
+  "reports": [
+    {
+      "probe": "daily",
+      "endpoint": "https://leetcode.com/graphql/",
+      "variables": {},
+      "checked_at_utc": "2026-10-16T05:58:10.017078+00:00",
+      "http_status": 200,
+      "content_type": "application/json",
+      "stop_site": false,
+      "response_bytes": 308,
+      "response_sha256": "413198cb42f30740bd8938bbec1846f2f01716da0dcd678b986116c1919e57bb",
+      "result": {
+        "records": [
+          {
+            "date": "2026-10-16",
+            "link": "/problems/subarrays-distinct-element-sum-of-squares-ii/",
+            "question": {
+              "questionFrontendId": "2916",
+              "title": "Subarrays Distinct Element Sum of Squares II",
+              "titleSlug": "subarrays-distinct-element-sum-of-squares-ii",
+              "isPaidOnly": false
+            }
+          }
+        ]
+      },
+      "outcome": "ok",
+      "seconds": 1.0
+    },
+    {
+      "probe": "detail",
+      "endpoint": "https://leetcode.com/graphql/",
+      "variables": {
+        "slug": "reverse-nodes-in-k-group"
+      },
+      "checked_at_utc": "2026-10-16T05:58:11.021976+00:00",
+      "http_status": 200,
+      "content_type": "application/json",
+      "stop_site": false,
+      "response_bytes": 8860,
+      "response_sha256": "76357386252bad25a3d151e99aa6655d0ad8200795efd7ff97a7ba4c314bd077",
+      "result": {
+        "questionId": "25",
+        "questionFrontendId": "25",
+        "titleSlug": "reverse-nodes-in-k-group",
+        "isPaidOnly": false,
+        "content": {
+          "html_chars": 1374,
+          "text_chars": 746,
+          "has_input_marker": true,
+          "has_output_marker": true,
+          "has_constraints_marker": true,
+          "images": 2,
+          "scripts": 0
+        },
+        "translatedContent": {
+          "html_chars": 0,
+          "text_chars": 0,
+          "has_input_marker": false,
+          "has_output_marker": false,
+          "has_constraints_marker": false,
+          "images": 0,
+          "scripts": 0
+        },
+        "python3_signature": "def reverseKGroup(self, head: ListNode | None, k: int) -> ListNode | None:",
+        "sample_input_chars": 13,
+        "metadata": {
+          "name": "reverseKGroup",
+          "params": [
+            {
+              "name": "head",
+              "type": "ListNode"
+            },
+            {
+              "name": "k",
+              "type": "integer"
+            }
+          ],
+          "return": {
+            "type": "ListNode"
+          }
+        }
+      },
+      "outcome": "ok",
+      "seconds": 0.516
+    },
+    {
+      "probe": "lookup",
+      "endpoint": "https://leetcode.com/graphql/",
+      "variables": {
+        "term": "25"
+      },
+      "checked_at_utc": "2026-10-16T05:58:11.545006+00:00",
+      "http_status": 200,
+      "content_type": "application/json",
+      "stop_site": true,
+      "response_bytes": 189,
+      "response_sha256": "3b1c6c05b71f2a3d9e5f7c1e0293d4783808e1382c0b2d740d51c18e26bbd5cf",
+      "outcome": "graphql_error",
+      "errors": [
+        "🐸☕Please Register or Sign in"
+      ],
+      "seconds": 0.265
+    }
+  ]
+}
