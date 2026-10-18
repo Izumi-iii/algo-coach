@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-17T13:23:16.723818+00:00",
+  "baseline_run_id": "20261017T092321Z-eb2f0995",
+  "baseline_assisted_review": {
+    "review_kind": "ai_assisted",
+    "run_id": "20261017T092321Z-eb2f0995",
+    "model_steps": 64,
+    "ai_reviewed_steps": 64,
+    "ai_pending_steps": 0,
+    "ai_flagged_fail_steps": 15,
+    "ai_uncertain_steps": 30,
+    "dimensions": {
+      "semantic_leakage": {
+        "pass": 51,
+        "fail": 5,
+        "uncertain": 8,
+        "na": 0
+      },
+      "correctness": {
+        "pass": 47,
+        "fail": 11,
+        "uncertain": 6,
+        "na": 0
+      },
+      "counterexample_validity": {
+        "pass": 11,
+        "fail": 1,
+        "uncertain": 0,
+        "na": 52
+      },
+      "pedagogical_progress": {
+        "pass": 39,
+        "fail": 5,
+        "uncertain": 20,
+        "na": 0
+      },
+      "factual_fidelity": {
+        "pass": 54,
+        "fail": 6,
+        "uncertain": 4,
+        "na": 0
+      }
+    },
+    "human_reviews_added": 0,
+    "quality_status": "ai_assisted_findings_require_human_review"
+  },
+  "human_scores_unchanged": true,
+  "new_suite": {
+    "path": "evaluation/challenge_cases_v2.jsonl",
+    "suite_hash": "e4c22a1f232b4a75238f46aecf5d0690f88271835e85b284e9724c418165aedb",
+    "total_cases": 12,
+    "planned_steps": 31,
+    "planned_model_turns": 28,
+    "scope": "New wording and contexts for two existing problems and a local example; not new algorithm-family generalization."
+  },
+  "first_pass": {
+    "run_id": "20261017T131755Z-3c16924b",
+    "source_hash": "65c9fc768422c3c8aada4acb52fd10ff087b4d1ea3b573ae65c63e9d9f3a1c8c",
+    "summary": {
+      "model_invocations": 21,
+      "known_token_sums": {
+        "input_tokens": 48413,
+        "output_tokens": 6096,
+        "total_tokens": 54509
+      },
+      "token_coverage": {
+        "input_tokens": {
+          "known_calls": 21,
+          "all_calls": 21
+        },
+        "output_tokens": {
+          "known_calls": 21,
+          "all_calls": 21
+        },
+        "total_tokens": {
+          "known_calls": 21,
+          "all_calls": 21
+        }
+      },
+      "model_latency_ms": {
+        "p50": 2063.0,
+        "p95": 2813.0
+      },
+      "policy_rejected_attempts": 2,
+      "adapter_error_attempts": 0,
+      "cost": "unknown",
+      "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+      "dataset_cases": 12,
+      "selected_cases": 9,
+      "completed_cases": 9,
+      "contract_pass_cases": 8,
+      "contract_fail_cases": 1,
+      "incomplete_cases": 0,
+      "planned_steps": 20,
+      "executed_steps": 20,
+      "contract_pass_rate_selected": 0.8888888888888888,
+      "model_steps_for_review": 20,
+      "reviewed_steps": 0,
+      "human_fail_steps": 0,
+      "human_pending_steps": 20,
+      "teaching_quality": "pending_human_review",
+      "run_status": "completed",
+      "review_file": null
+    },
+    "executed_case_ids": [
+      "challenge-negative-io",
+      "challenge-restrict-help",
+      "challenge-one-question",
+      "challenge-answer-after-restriction",
+      "challenge-repaired-version",
+      "challenge-single-node-group",
+      "challenge-overwrite-nonpair",
+      "challenge-invalid-counterexample",
+      "challenge-comment-no-echo"
+    ],
+    "not_executed_case_ids": [
+      "challenge-new-version-first",
+      "challenge-reference-separation",
+      "challenge-unsupported-vs-wrong"
+    ],
+    "full_suite_completed": false,
+    "assisted_review": {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "model_steps": 20,
+      "ai_reviewed_steps": 20,
+      "ai_pending_steps": 0,
+      "ai_flagged_fail_steps": 3,
+      "ai_uncertain_steps": 11,
+      "dimensions": {
+        "semantic_leakage": {
+          "pass": 16,
+          "fail": 0,
+          "uncertain": 3,
+          "na": 1
+        },
+        "correctness": {
+          "pass": 17,
+          "fail": 2,
+          "uncertain": 0,
+          "na": 1
+        },
+        "counterexample_validity": {
+          "pass": 1,
+          "fail": 0,
+          "uncertain": 0,
+          "na": 19
+        },
+        "pedagogical_progress": {
+          "pass": 9,
+          "fail": 2,
+          "uncertain": 9,
+          "na": 0
+        },
+        "factual_fidelity": {
+          "pass": 17,
+          "fail": 1,
+          "uncertain": 2,
+          "na": 0
+        }
+      },
+      "human_reviews_added": 0,
+      "quality_status": "ai_assisted_findings_require_human_review"
+    }
+  },
+  "negation_fix_regression": {
+    "run_id": "20261017T132051Z-c415f386",
+    "source_hash": "2a404ae4fe40ac0fc94c6d7ba92b1a9262063073957d66e335c877a0d7dde628",
+    "summary": {
+      "model_invocations": 3,
+      "known_token_sums": {
+        "input_tokens": 5814,
+        "output_tokens": 1021,
+        "total_tokens": 6835
+      },
+      "token_coverage": {
+        "input_tokens": {
+          "known_calls": 3,
+          "all_calls": 3
+        },
+        "output_tokens": {
+          "known_calls": 3,
+          "all_calls": 3
+        },
+        "total_tokens": {
+          "known_calls": 3,
+          "all_calls": 3
+        }
+      },
+      "model_latency_ms": {
+        "p50": 2297.0,
+        "p95": 2781.0
+      },
+      "policy_rejected_attempts": 0,
+      "adapter_error_attempts": 0,
+      "cost": "unknown",
+      "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+      "dataset_cases": 12,
+      "selected_cases": 1,
+      "completed_cases": 1,
+      "contract_pass_cases": 1,
+      "contract_fail_cases": 0,
+      "incomplete_cases": 0,
+      "planned_steps": 3,
+      "executed_steps": 3,
+      "contract_pass_rate_selected": 1.0,
+      "model_steps_for_review": 3,
+      "reviewed_steps": 0,
+      "human_fail_steps": 0,
+      "human_pending_steps": 3,
+      "teaching_quality": "pending_human_review",
+      "run_status": "completed",
+      "review_file": null
+    },
+    "interpretation": "Previously failed case reused after correction; regression, not independent first pass."
+  },
+  "old_suite_targeted": {
+    "run_id": "20261017T131650Z-ec122562",
+    "summary": {
+      "model_invocations": 6,
+      "known_token_sums": {
+        "input_tokens": 13324,
+        "output_tokens": 2206,
+        "total_tokens": 15530
+      },
+      "token_coverage": {
+        "input_tokens": {
+          "known_calls": 6,
+          "all_calls": 6
+        },
+        "output_tokens": {
+          "known_calls": 6,
+          "all_calls": 6
+        },
+        "total_tokens": {
+          "known_calls": 6,
+          "all_calls": 6
+        }
+      },
+      "model_latency_ms": {
+        "p50": 1860.0,
+        "p95": 4703.0
+      },
+      "policy_rejected_attempts": 0,
+      "adapter_error_attempts": 0,
+      "cost": "unknown",
+      "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+      "dataset_cases": 30,
+      "selected_cases": 3,
+      "completed_cases": 3,
+      "contract_pass_cases": 3,
+      "contract_fail_cases": 0,
+      "incomplete_cases": 0,
+      "planned_steps": 10,
+      "executed_steps": 10,
+      "contract_pass_rate_selected": 1.0,
+      "model_steps_for_review": 6,
+      "reviewed_steps": 0,
+      "human_fail_steps": 0,
+      "human_pending_steps": 6,
+      "teaching_quality": "pending_human_review",
+      "run_status": "completed",
+      "review_file": null
+    }
+  },
+  "docker_blocker": "Docker Desktop starting; backend reports WSL distro listing command timeout; normal desktop restart timed out. No forced WSL shutdown or data deletion.",
+  "all_real_runs_this_round": [
+    "20261017T131650Z-ec122562",
+    "20261017T131755Z-3c16924b",
+    "20261017T132051Z-c415f386"
+  ],
+  "this_round_usage": {
+    "model_invocations": 30,
+    "total_tokens": 76874,
+    "cost": "unknown"
+  },
+  "quality_status": "AI-assisted findings only; human review pending. Automatic contracts are not teaching quality scores.",
+  "final_source_hash": "538779fc76ab31bf0290dac6b7b16b2e5404c4535ef37790d2a2858b413f825a",
+  "final_source_ast_equivalent_to_negation_regression": true,
+  "checks": {
+    "targeted_tests_passed": 132,
+    "docker_tests_run_this_round": false,
+    "network_tests_run_this_round": false,
+    "ruff_check": "passed",
+    "ruff_format": "passed"
+  },
+  "independent_numeric_checks": [
+    {
+      "finding": "duplicate_non_answer_value",
+      "inputs": {
+        "nums": [
+          1,
+          1,
+          2,
+          3
+        ],
+        "target": 5
+      },
+      "expected": [
+        2,
+        3
+      ],
+      "check": {
+        "constraints_valid": true,
+        "expected_valid": true,
+        "oracle_expected": [
+          2,
+          3
+        ],
+        "scope": "只核对反例输入与期望；未执行候选代码"
+      }
+    },
+    {
+      "finding": "incorrect_sorted_sample_trace",
+      "inputs": {
+        "nums": [
+          2,
+          7,
+          11,
+          15
+        ],
+        "target": 9
+      },
+      "expected": [
+        0,
+        3
+      ],
+      "check": {
+        "constraints_valid": true,
+        "expected_valid": false,
+        "oracle_expected": [
+          0,
+          1
+        ],
+        "scope": "只核对反例输入与期望；未执行候选代码"
+      }
+    },
+    {
+      "finding": "minimal_self_pair_counterexample",
+      "inputs": {
+        "nums": [
+          3,
+          3
+        ],
+        "target": 6
+      },
+      "expected": [
+        0,
+        1
+      ],
+      "check": {
+        "constraints_valid": true,
+        "expected_valid": true,
+        "oracle_expected": [
+          0,
+          1
+        ],
+        "scope": "只核对反例输入与期望；未执行候选代码"
+      }
+    }
+  ],
+  "independent_numeric_check_scope": "Trusted bounded input/expected-value oracle only; no candidate code executed."
+}

@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-17T13:36:42.926160+00:00",
+  "run_id": "20261017T133531Z-e4ba28d9",
+  "source_hash": "13d45b69f33b75faab273c9e6c7ba752401e629abd3f6742b4e8e151c159eac4",
+  "suite_hash": "e4c22a1f232b4a75238f46aecf5d0690f88271835e85b284e9724c418165aedb",
+  "source_unchanged_after_run": true,
+  "summary": {
+    "model_invocations": 6,
+    "known_token_sums": {
+      "input_tokens": 16247,
+      "output_tokens": 2540,
+      "total_tokens": 18787
+    },
+    "token_coverage": {
+      "input_tokens": {
+        "known_calls": 6,
+        "all_calls": 6
+      },
+      "output_tokens": {
+        "known_calls": 6,
+        "all_calls": 6
+      },
+      "total_tokens": {
+        "known_calls": 6,
+        "all_calls": 6
+      }
+    },
+    "model_latency_ms": {
+      "p50": 2563.0,
+      "p95": 3734.0
+    },
+    "policy_rejected_attempts": 0,
+    "adapter_error_attempts": 0,
+    "cost": "unknown",
+    "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+    "dataset_cases": 12,
+    "selected_cases": 2,
+    "completed_cases": 2,
+    "contract_pass_cases": 2,
+    "contract_fail_cases": 0,
+    "incomplete_cases": 0,
+    "planned_steps": 7,
+    "executed_steps": 7,
+    "contract_pass_rate_selected": 1.0,
+    "model_steps_for_review": 6,
+    "reviewed_steps": 0,
+    "human_fail_steps": 0,
+    "human_pending_steps": 6,
+    "teaching_quality": "pending_human_review",
+    "run_status": "completed",
+    "review_file": null
+  },
+  "ai_assisted_review": {
+    "review_kind": "ai_assisted",
+    "run_id": "20261017T133531Z-e4ba28d9",
+    "model_steps": 6,
+    "ai_reviewed_steps": 6,
+    "ai_pending_steps": 0,
+    "ai_flagged_fail_steps": 1,
+    "ai_uncertain_steps": 4,
+    "dimensions": {
+      "semantic_leakage": {
+        "pass": 6,
+        "fail": 0,
+        "uncertain": 0,
+        "na": 0
+      },
+      "correctness": {
+        "pass": 4,
+        "fail": 1,
+        "uncertain": 1,
+        "na": 0
+      },
+      "counterexample_validity": {
+        "pass": 3,
+        "fail": 0,
+        "uncertain": 0,
+        "na": 3
+      },
+      "pedagogical_progress": {
+        "pass": 2,
+        "fail": 0,
+        "uncertain": 4,
+        "na": 0
+      },
+      "factual_fidelity": {
+        "pass": 4,
+        "fail": 1,
+        "uncertain": 1,
+        "na": 0
+      }
+    },
+    "findings": [
+      {
+        "review_kind": "ai_assisted",
+        "run_id": "20261017T133531Z-e4ba28d9",
+        "case_id": "challenge-answer-after-restriction",
+        "step_index": 2,
+        "step_hash": "3c477af11cc670e0f55061983d155ca02194e8da97b0ecdb589854345e7b100a",
+        "reviewer": "Codex offline AI-assisted review",
+        "semantic_leakage": "pass",
+        "correctness": "pass",
+        "counterexample_validity": "na",
+        "pedagogical_progress": "uncertain",
+        "factual_fidelity": "pass",
+        "evidence_notes": "正确说明报告与已展示参考代码匹配、无用户提交，47/47 不代表平台 AC；技术字段直接回显和末尾额外追问的教学价值待人工核对。"
+      },
+      {
+        "review_kind": "ai_assisted",
+        "run_id": "20261017T133531Z-e4ba28d9",
+        "case_id": "challenge-reference-separation",
+        "step_index": 0,
+        "step_hash": "bbd152b42e46ac0f75b7058a0dc633f2363a9c15e84b0757d49eac1c5e843707",
+        "reviewer": "Codex offline AI-assisted review",
+        "semantic_leakage": "pass",
+        "correctness": "pass",
+        "counterexample_validity": "pass",
+        "pedagogical_progress": "uncertain",
+        "factual_fidelity": "uncertain",
+        "evidence_notes": "正确静态解释先写后查自配对，合法反例 [3,3],6；“未执行所以既不能说对也不能说错”过于绝对，与后文确定静态缺陷存在张力。"
+      },
+      {
+        "review_kind": "ai_assisted",
+        "run_id": "20261017T133531Z-e4ba28d9",
+        "case_id": "challenge-reference-separation",
+        "step_index": 1,
+        "step_hash": "d7c5f320b919098617d49a636e5fe39c6b9f378237b676841e42d9e49cc11cbf",
+        "reviewer": "Codex offline AI-assisted review",
+        "semantic_leakage": "pass",
+        "correctness": "fail",
+        "counterexample_validity": "pass",
+        "pedagogical_progress": "uncertain",
+        "factual_fidelity": "fail",
+        "evidence_notes": "完整实现和独立 47/47 正确，旧的参考验证状态冲突未复现；额外声称重复值覆盖较早下标可能导致另一种失配不成立：等值下标可替换，若 target=2*value 问题来自自配对；唯一解约束下未给出独立反例。"
+      },
+      {
+        "review_kind": "ai_assisted",
+        "run_id": "20261017T133531Z-e4ba28d9",
+        "case_id": "challenge-reference-separation",
+        "step_index": 2,
+        "step_hash": "c0940413ea94f9052a2f638309abbe25c630804c9bcb7620815579757194b7f9",
+        "reviewer": "Codex offline AI-assisted review",
+        "semantic_leakage": "pass",
+        "correctness": "uncertain",
+        "counterexample_validity": "pass",
+        "pedagogical_progress": "uncertain",
+        "factual_fidelity": "pass",
+        "evidence_notes": "正确区分用户未测与参考已测，明确匹配已展示同一代码，未再说成另一份；仍复述重复值覆盖的疑似缺陷，语义正确性需人工复核。"
+      }
+    ],
+    "human_reviews_added": 0,
+    "quality_status": "ai_assisted_findings_require_human_review"
+  },
+  "exact_code_bindings": [
+    {
+      "case_id": "challenge-answer-after-restriction",
+      "displayed_code_hash": "8e5df5cf3801d6bc0464b480662e39b227d2507932aeaa1262f3ef1a60561748",
+      "reference_verification": {
+        "status": "passed",
+        "code_hash": "8e5df5cf3801d6bc0464b480662e39b227d2507932aeaa1262f3ef1a60561748",
+        "detail": "本地测试 47/47 通过；不代表 LeetCode 隐藏测试或平台提交结果。",
+        "executed": true,
+        "case_count": 47,
+        "passed_count": 47,
+        "suite_version": "small-differential-v1",
+        "adapter_version": "python-functions-v1",
+        "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+        "runner_image": "sha256:a5ed929b244b4fdd75bb04766542faf61eb66f122dd373e1252aa807a7cbedca",
+        "random_seed": 20261015,
+        "failure": null
+      },
+      "user_verification": null,
+      "snapshot": {
+        "displayed_code_hash": "8e5df5cf3801d6bc0464b480662e39b227d2507932aeaa1262f3ef1a60561748",
+        "matches_displayed_code": true,
+        "verification": {
+          "status": "passed",
+          "code_hash": "8e5df5cf3801d6bc0464b480662e39b227d2507932aeaa1262f3ef1a60561748",
+          "detail": "本地测试 47/47 通过；不代表 LeetCode 隐藏测试或平台提交结果。",
+          "executed": true,
+          "case_count": 47,
+          "passed_count": 47,
+          "suite_version": "small-differential-v1",
+          "adapter_version": "python-functions-v1",
+          "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+          "runner_image": "sha256:a5ed929b244b4fdd75bb04766542faf61eb66f122dd373e1252aa807a7cbedca",
+          "random_seed": 20261015,
+          "failure": null
+        },
+        "matches_current_user_code": false,
+        "scope": "最近展示的参考实现；不将其报告转移给用户代码。"
+      }
+    },
+    {
+      "case_id": "challenge-reference-separation",
+      "displayed_code_hash": "063953f4289fd251f354efcc6629dcdd0f91e17f16dc4b360743dd9cd7153140",
+      "reference_verification": {
+        "status": "passed",
+        "code_hash": "063953f4289fd251f354efcc6629dcdd0f91e17f16dc4b360743dd9cd7153140",
+        "detail": "本地测试 47/47 通过；不代表 LeetCode 隐藏测试或平台提交结果。",
+        "executed": true,
+        "case_count": 47,
+        "passed_count": 47,
+        "suite_version": "small-differential-v1",
+        "adapter_version": "python-functions-v1",
+        "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+        "runner_image": "sha256:a5ed929b244b4fdd75bb04766542faf61eb66f122dd373e1252aa807a7cbedca",
+        "random_seed": 20261015,
+        "failure": null
+      },
+      "user_verification": {
+        "status": "not_run",
+        "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+        "detail": "语法解析成功；未执行代码、未运行测试，不能据此判断算法正确。",
+        "executed": false,
+        "case_count": 0,
+        "passed_count": 0,
+        "suite_version": null,
+        "adapter_version": null,
+        "problem_hash": null,
+        "runner_image": null,
+        "random_seed": null,
+        "failure": null
+      },
+      "snapshot": {
+        "displayed_code_hash": "063953f4289fd251f354efcc6629dcdd0f91e17f16dc4b360743dd9cd7153140",
+        "matches_displayed_code": true,
+        "verification": {
+          "status": "passed",
+          "code_hash": "063953f4289fd251f354efcc6629dcdd0f91e17f16dc4b360743dd9cd7153140",
+          "detail": "本地测试 47/47 通过；不代表 LeetCode 隐藏测试或平台提交结果。",
+          "executed": true,
+          "case_count": 47,
+          "passed_count": 47,
+          "suite_version": "small-differential-v1",
+          "adapter_version": "python-functions-v1",
+          "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+          "runner_image": "sha256:a5ed929b244b4fdd75bb04766542faf61eb66f122dd373e1252aa807a7cbedca",
+          "random_seed": 20261015,
+          "failure": null
+        },
+        "matches_current_user_code": false,
+        "scope": "最近展示的参考实现；不将其报告转移给用户代码。"
+      }
+    }
+  ],
+  "checks": {
+    "targeted_tests_passed": 93,
+    "full_engineering_regression": {
+      "passed": 305,
+      "skipped": 1,
+      "elapsed_seconds": 179.99,
+      "docker_integration_enabled": true,
+      "docker_integration_passed": 7,
+      "live_leetcode_enabled": false
+    },
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "git_diff_check": "passed"
+  },
+  "interpretation": "Two previously used scenarios are targeted regression, not independent unseen validation. No human scores added. Duplicate-index diagnostic issue remains."
+}

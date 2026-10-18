@@ -1,0 +1,22 @@
+{
+  "review_type": "deterministic_policy_replay_not_human_quality_score",
+  "source_hash": "7d292516ca7f3867cb05b3c463aa58c5f9bffcc8ef2e41492756a432f6fa3e5d",
+  "checks": [
+    {
+      "run_id": "20261017T051047Z-45713c8e",
+      "call_index": 6,
+      "output_hash": "439e84ef5cdc489657689f501cec0b0238e65309a20311d4f390a299f53d7596",
+      "original_policy_result": "reply_policy_rejected",
+      "rechecked_policy_result": "accepted",
+      "hint_level": 0
+    },
+    {
+      "run_id": "20261017T054401Z-343bff84",
+      "call_index": 6,
+      "output_hash": "9f43a57f6dd1f1dce8695668735d95afe73ec7c56138060fb604d5ea2eca56f9",
+      "original_policy_result": "reply_policy_rejected",
+      "rechecked_policy_result": "accepted",
+      "hint_level": 0
+    }
+  ]
+}

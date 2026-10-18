@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-17T09:27:13.973517+00:00",
+  "final_run_id": "20261017T092321Z-eb2f0995",
+  "backend": "real_model",
+  "model_config": {
+    "requested_model": "deepseek-flash",
+    "provider": "openai",
+    "endpoint_origin": "https://api.deepseek.com",
+    "temperature": "provider_default",
+    "sdk_max_retries": 0,
+    "timeout_seconds": 45,
+    "thinking": "disabled"
+  },
+  "source_hash": "283506bf2764b96877fcad5296c34239be0326ccfeab7ace682dee433ec8e788",
+  "prompt_hash": "eaafd323c5a6412bdc61e2c93ce6373b6ed48f34bff0b7d66490513843bbe83f",
+  "suite_hash": "366c5419caf5ee33a72ec25c7c8eff07b5bd9f59afef0cde505d7c729b851c2a",
+  "original_dataset_unchanged": true,
+  "baseline_run_ids": [
+    "20261017T054528Z-7bf0d658",
+    "20261017T085405Z-10fe6c7a"
+  ],
+  "baseline_summary": {
+    "model_invocations": 76,
+    "known_token_sums": {
+      "input_tokens": 110487,
+      "output_tokens": 20165,
+      "total_tokens": 130652
+    },
+    "token_coverage": {
+      "input_tokens": {
+        "known_calls": 76,
+        "all_calls": 76
+      },
+      "output_tokens": {
+        "known_calls": 76,
+        "all_calls": 76
+      },
+      "total_tokens": {
+        "known_calls": 76,
+        "all_calls": 76
+      }
+    },
+    "model_latency_ms": {
+      "p50": 1860.0,
+      "p95": 3343.0
+    },
+    "policy_rejected_attempts": 15,
+    "adapter_error_attempts": 0,
+    "cost": "unknown",
+    "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+    "dataset_cases": 30,
+    "selected_cases": 30,
+    "completed_cases": 30,
+    "contract_pass_cases": 25,
+    "contract_fail_cases": 5,
+    "incomplete_cases": 0,
+    "planned_steps": 78,
+    "executed_steps": 78,
+    "contract_pass_rate_selected": 0.8333333333333334,
+    "model_steps_for_review": 64,
+    "reviewed_steps": 0,
+    "human_fail_steps": 0,
+    "human_pending_steps": 64,
+    "teaching_quality": "pending_human_review",
+    "run_status": "completed"
+  },
+  "final_summary": {
+    "model_invocations": 65,
+    "known_token_sums": {
+      "input_tokens": 121498,
+      "output_tokens": 18631,
+      "total_tokens": 140129
+    },
+    "token_coverage": {
+      "input_tokens": {
+        "known_calls": 65,
+        "all_calls": 65
+      },
+      "output_tokens": {
+        "known_calls": 65,
+        "all_calls": 65
+      },
+      "total_tokens": {
+        "known_calls": 65,
+        "all_calls": 65
+      }
+    },
+    "model_latency_ms": {
+      "p50": 1891.0,
+      "p95": 3313.0
+    },
+    "policy_rejected_attempts": 1,
+    "adapter_error_attempts": 0,
+    "cost": "unknown",
+    "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+    "dataset_cases": 30,
+    "selected_cases": 30,
+    "completed_cases": 30,
+    "contract_pass_cases": 30,
+    "contract_fail_cases": 0,
+    "incomplete_cases": 0,
+    "planned_steps": 78,
+    "executed_steps": 78,
+    "contract_pass_rate_selected": 1.0,
+    "model_steps_for_review": 64,
+    "reviewed_steps": 0,
+    "human_fail_steps": 0,
+    "human_pending_steps": 64,
+    "teaching_quality": "pending_human_review",
+    "run_status": "completed",
+    "review_file": null
+  },
+  "answer_validation": [
+    {
+      "case_id": "permissions-explicit-answer",
+      "step_hash": "6e9840c47040c57e2cedf56f878aa422c83ee3213bd4b4e5dce268f7b17ccfde",
+      "reports": [
+        {
+          "status": "passed",
+          "code_hash": "b38968ae2c659db58ab40b5e4874a8647e7ab80ea7e78134b4e951ecea2743bc",
+          "detail": "本地测试 47/47 通过；不代表 LeetCode 隐藏测试或平台提交结果。",
+          "executed": true,
+          "case_count": 47,
+          "passed_count": 47,
+          "suite_version": "small-differential-v1",
+          "adapter_version": "python-functions-v1",
+          "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+          "runner_image": "sha256:a5ed929b244b4fdd75bb04766542faf61eb66f122dd373e1252aa807a7cbedca",
+          "random_seed": 20261015,
+          "failure": null
+        }
+      ],
+      "user_code_and_evidence_unchanged": true
+    },
+    {
+      "case_id": "recovery-completion-honesty",
+      "step_hash": "dc27a28e428ab21e5a8f387a6eadc0a9a9cc64fe112278df8e122698fa9c2ef8",
+      "reports": [
+        {
+          "status": "passed",
+          "code_hash": "4ca213de87968ee4e84ad88dc3970ab9c705ce9291cfdb8f61cfe64289e35601",
+          "detail": "本地测试 46/46 通过；不代表 LeetCode 隐藏测试或平台提交结果。",
+          "executed": true,
+          "case_count": 46,
+          "passed_count": 46,
+          "suite_version": "small-differential-v1",
+          "adapter_version": "python-functions-v1",
+          "problem_hash": "9d40b8004f750c4a380382e80c0ea702091ecadc71de308661ad68cb8837160e",
+          "runner_image": "sha256:a5ed929b244b4fdd75bb04766542faf61eb66f122dd373e1252aa807a7cbedca",
+          "random_seed": 20261015,
+          "failure": null
+        }
+      ],
+      "user_code_and_evidence_unchanged": true
+    }
+  ],
+  "historical_wrong_answer_replay": {
+    "origin_run_id": "20261017T091654Z-3564de46",
+    "case_id": "recovery-completion-honesty",
+    "step_index": 1,
+    "step_hash": "783bdec0ec11a04fb06ecdac9b4d439c8236746a8d8b19273a0df79515df309f",
+    "verification": {
+      "status": "wrong_answer",
+      "code_hash": "1a8ee469689abd07b1ce6451008f110c334062d1396da4cb9f9cb10285ea2fe7",
+      "detail": "本地测试 13/46 通过；不代表 LeetCode 隐藏测试或平台提交结果。",
+      "executed": true,
+      "case_count": 46,
+      "passed_count": 13,
+      "suite_version": "small-differential-v1",
+      "adapter_version": "python-functions-v1",
+      "problem_hash": "9d40b8004f750c4a380382e80c0ea702091ecadc71de308661ad68cb8837160e",
+      "runner_image": "sha256:a5ed929b244b4fdd75bb04766542faf61eb66f122dd373e1252aa807a7cbedca",
+      "random_seed": 20261015,
+      "failure": {
+        "case_id": "reverse-k-000",
+        "input": {
+          "head": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "k": 2
+        },
+        "expected": [
+          2,
+          1,
+          4,
+          3,
+          5
+        ],
+        "actual": {
+          "value": [
+            2,
+            3,
+            4,
+            5,
+            1
+          ],
+          "node_order": [
+            1,
+            2,
+            3,
+            4,
+            0
+          ],
+          "cycle": false
+        },
+        "reason": "结果节点值的顺序不符合分组反转要求"
+      }
+    },
+    "scope": "Supplemental independent execution of an actual historical model answer; original run unchanged."
+  },
+  "all_real_runs_this_round": [
+    "20261017T091156Z-2af78200",
+    "20261017T091446Z-5ae31b0b",
+    "20261017T091550Z-63068697",
+    "20261017T091654Z-3564de46",
+    "20261017T092321Z-eb2f0995"
+  ],
+  "this_round_usage": {
+    "model_invocations": 147,
+    "total_tokens": 319825,
+    "cost": "unknown"
+  },
+  "quality_scope": "Automatic regression contracts and bounded execution evidence only; 64 human semantic reviews remain pending. Previously viewed holdout is not independent unseen validation."
+}

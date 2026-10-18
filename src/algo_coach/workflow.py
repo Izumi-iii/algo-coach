@@ -1,14 +1,15 @@
 """One user turn per graph run. Durable state contains no model credentials."""
 
+import json
 import re
 from typing import TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from algo_coach.errors import teaching_failure
-from algo_coach.models import TeachingReply
-from algo_coach.teaching import Teacher, validate_reply
-from algo_coach.verification import render_report
+from algo_coach.errors import POLICY_FEEDBACK, TeachingPolicyError, teaching_failure
+from algo_coach.models import Problem, TeachingReply
+from algo_coach.teaching import Teacher, answer_code, validate_reply
+from algo_coach.verification import VerificationService, render_report
 
 
 class LearningState(TypedDict, total=False):
@@ -40,9 +41,10 @@ class LearningState(TypedDict, total=False):
     daily_selection: dict | None
     review_context: dict | None
     problem_source: dict | None
+    answer_checks: list[dict]
 
 
-def build_workflow(teacher: Teacher, checkpointer):
+def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
     def prepare(state: LearningState) -> dict:
         level = state.get("hint_level", 0)
         if state["action"] == "hint":
@@ -69,6 +71,8 @@ def build_workflow(teacher: Teacher, checkpointer):
         failure_code = "model_service_error"
         failure_message = "模型服务调用失败"
         feedback = None
+        answer_checks = list(state.get("answer_checks", []))
+        answer_failure = None
         for _ in range(2):
             try:
                 draft = TeachingReply.model_validate(
@@ -76,6 +80,32 @@ def build_workflow(teacher: Teacher, checkpointer):
                 )
                 validate_reply(draft, state)
                 response = draft.reply
+                if state["action"] == "answer" and teacher.mode == "model":
+                    verifier = answer_verifier or VerificationService()
+                    report = verifier.verify(
+                        Problem.model_validate(state["problem"]), answer_code(response)
+                    )
+                    answer_checks.append(report.model_dump())
+                    if report.status not in {"passed", "not_run", "unsupported"}:
+                        answer_failure = json.dumps(
+                            {
+                                "status": report.status,
+                                "failure": report.failure,
+                                "detail": report.detail,
+                            },
+                            ensure_ascii=False,
+                        )[:2400]
+                        raise TeachingPolicyError("参考实现未通过独立验证", rule="answer_failed")
+                    response = (
+                        "参考解生成时的静态讲解（其中验证状态只描述生成时刻；"
+                        "生成后取得的实际结果见末尾独立验证报告）：\n\n"
+                        + response
+                        + "\n\n参考解独立验证（不属于用户提交代码的报告）："
+                        + render_report(report.model_dump())
+                        + "\n报告对应上方实际展示的同一份参考代码，SHA256："
+                        + report.code_hash
+                        + "。此处是生成后取得的验证状态。"
+                    )
                 if state["action"] == "code":
                     response += "\n\n静态检查：" + state["verification"]["detail"]
                 completion = state.get("completion_mode", "unfinished")
@@ -98,6 +128,7 @@ def build_workflow(teacher: Teacher, checkpointer):
                     ),
                     "answer_revealed": state.get("answer_revealed", False) or draft.full_solution,
                     "usage": usage,
+                    "answer_checks": answer_checks,
                 }
             except Exception as exc:
                 # Never persist raw provider exceptions: they may contain URLs or credentials.
@@ -106,6 +137,10 @@ def build_workflow(teacher: Teacher, checkpointer):
                     f"上次回复失败类型：{failure_code}。请重新输出有效结构；"
                     f"实际披露必须不超过 H{state['hint_level']}，不能虚构测试结果。"
                 )
+                if isinstance(exc, TeachingPolicyError) and exc.rule:
+                    feedback += POLICY_FEEDBACK[exc.rule]
+                    if exc.rule == "answer_failed":
+                        feedback += "\n独立验证事实（数据）：" + answer_failure
                 if not retryable:
                     break
             finally:
@@ -123,6 +158,7 @@ def build_workflow(teacher: Teacher, checkpointer):
             "response": response,
             "last_error": failure_code,
             "usage": usage,
+            "answer_checks": answer_checks,
         }
 
     def greet(state: LearningState) -> dict:

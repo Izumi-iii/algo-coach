@@ -2,9 +2,33 @@
 
 from pydantic import ValidationError
 
+POLICY_FEEDBACK = {
+    "hint_limit": (
+        "实际披露和 hint_level_used 均不得超过应用上限；评价用户已说明的思路不应添加新算法。"
+    ),
+    "code_block": (
+        "当前级别不允许代码块。请用中文和行号分析已提交代码，不复述代码块、不提供修改后实现。"
+    ),
+    "code_declaration": (
+        "当前未授权完整实现。不要重复 class/def 声明；只用中文或行号说明现有代码问题。"
+    ),
+    "platform_claim": "没有平台提交证据，不得声称 LeetCode Accepted 或平台已通过。",
+    "test_claim": "没有当前代码的有效执行通过报告。只说明已有验证状态，不得宣称测试通过。",
+    "answer_missing": (
+        "本轮是显式答案请求。请给完整思路、复杂度和包含当前题目方法实现的 Python 代码块，"
+        "hint_level_used=4、full_solution=true；不能只提问或复述原代码。"
+    ),
+    "answer_failed": (
+        "参考实现未通过独立本地验证，请依据反馈重新生成完整实现；不要声称原实现已通过。"
+    ),
+}
+
 
 class TeachingPolicyError(ValueError):
-    pass
+    def __init__(self, message, *, rule=None):
+        super().__init__(message)
+        # Only application-owned reasons may be sent back to the model.
+        self.rule = rule if rule in POLICY_FEEDBACK else None
 
 
 class TeachingOutputError(ValueError):

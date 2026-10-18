@@ -61,7 +61,9 @@ class Coach:
             self.daily = DailySelections(self.connection)
             self.reviews = Reviews(self.connection)
             self.remote = LeetCodeCN(self.connection, client=source_client)
-            self.graph = build_workflow(teacher, SqliteSaver(self.connection))
+            self.graph = build_workflow(
+                teacher, SqliteSaver(self.connection), answer_verifier=verifier
+            )
         except Exception:
             if hasattr(self, "connection"):
                 self.connection.close()
@@ -183,7 +185,7 @@ class Coach:
         if retry:
             if not state.get("last_error"):
                 raise ValueError("当前没有失败的教学请求需要重试")
-            action = "code" if state["action"] == "code" else "discuss"
+            action = state["action"] if state["action"] in {"code", "answer"} else "discuss"
         elif text in ("/hint", "给一点提示", "再具体一点", "给我一点提示"):
             action = "hint"
         elif text in ("/answer", "直接给答案", "直接给我答案", "直接看答案"):

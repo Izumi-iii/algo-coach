@@ -1,0 +1,213 @@
+{
+  "review_kind": "ai_assisted",
+  "run_id": "20261017T131755Z-3c16924b",
+  "model_steps": 20,
+  "ai_reviewed_steps": 20,
+  "ai_pending_steps": 0,
+  "ai_flagged_fail_steps": 3,
+  "ai_uncertain_steps": 11,
+  "dimensions": {
+    "semantic_leakage": {
+      "pass": 16,
+      "fail": 0,
+      "uncertain": 3,
+      "na": 1
+    },
+    "correctness": {
+      "pass": 17,
+      "fail": 2,
+      "uncertain": 0,
+      "na": 1
+    },
+    "counterexample_validity": {
+      "pass": 1,
+      "fail": 0,
+      "uncertain": 0,
+      "na": 19
+    },
+    "pedagogical_progress": {
+      "pass": 9,
+      "fail": 2,
+      "uncertain": 9,
+      "na": 0
+    },
+    "factual_fidelity": {
+      "pass": 17,
+      "fail": 1,
+      "uncertain": 2,
+      "na": 0
+    }
+  },
+  "findings": [
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-negative-io",
+      "step_index": 0,
+      "step_hash": "2ee9d106f732045e5d6639f0d8f9e9bf37f9e0644f7f374157193bbf95f220ba",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "pass",
+      "correctness": "pass",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "uncertain",
+      "factual_fidelity": "pass",
+      "evidence_notes": "下标与目标正负的解释正确；例子改用正 target，与用户问题贴合度稍弱。"
+    },
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-restrict-help",
+      "step_index": 1,
+      "step_hash": "b6db53eeca3bb64058e4f5ea9d95c01bdfecf686c33cc6231611a8ed90a6bbc7",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "pass",
+      "correctness": "fail",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "pass",
+      "factual_fidelity": "uncertain",
+      "evidence_notes": "尾部9的位置和 next 不变，但前后连接都不变的说法不准确：入边由8改为6。节点身份、位置和前驱关系应区分。"
+    },
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-one-question",
+      "step_index": 1,
+      "step_hash": "870ff31d6e49e1962a31cf07cec6440bc2e80706eb573643b42d2c25f1f3e9ba",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "pass",
+      "correctness": "pass",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "uncertain",
+      "factual_fidelity": "pass",
+      "evidence_notes": "举例答案属于题意演示，但同时追问怎样看出与为何排除，未严格聚焦一个问题。"
+    },
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-answer-after-restriction",
+      "step_index": 2,
+      "step_hash": "269d647e719b6cbdeba7c7d4c0e6e50c1d8ce9108ee8caad194e4718b9ba36a1",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "na",
+      "correctness": "na",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "fail",
+      "factual_fidelity": "uncertain",
+      "evidence_notes": "可见回复是受控失败，不能评价未交付内容的算法正确性；两份被拒原始回复均正确说明 not_run，因否定测试通过句触发过滤，是应用误拒绝。"
+    },
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-repaired-version",
+      "step_index": 0,
+      "step_hash": "0b9c440d77cdf38f9f983475a99a8807aef4b5258430dd03341d247aeab92634",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "uncertain",
+      "correctness": "pass",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "uncertain",
+      "factual_fidelity": "pass",
+      "evidence_notes": "先写后查诊断正确；两行怎样安排的修复方向与追加问题可能超出单个 H1 问题。"
+    },
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-repaired-version",
+      "step_index": 1,
+      "step_hash": "c76ee059e814429d2df5f0c63ba7ed1ecfd84b5e0e038a93c110bff0485a7d9f",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "pass",
+      "correctness": "fail",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "fail",
+      "factual_fidelity": "fail",
+      "evidence_notes": "当前第9行查询、第11行写入，却断言第11行先发生；即使收到新编号快照，模型仍把旧版诊断套到新代码。"
+    },
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-single-node-group",
+      "step_index": 0,
+      "step_hash": "cbfc360bd845aa88caae8b5110018bd6d3f79ee05e4c8aa169fcbcdf8dd79746",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "pass",
+      "correctness": "pass",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "uncertain",
+      "factual_fidelity": "pass",
+      "evidence_notes": "首轮写入 after 的静态事实正确；进一步要求画k=2、k=3两图，焦点较宽。"
+    },
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-single-node-group",
+      "step_index": 1,
+      "step_hash": "7ccb5d947e00cbe26f634fe355e13ab954e76f658daf51544d6f499a476e3880",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "pass",
+      "correctness": "pass",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "uncertain",
+      "factual_fidelity": "pass",
+      "evidence_notes": "正确说 k=1 条件初始为真，但没有直接回答循环一次，而是继续追问；需核对用户要求直接手推与教学风格的平衡。"
+    },
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-overwrite-nonpair",
+      "step_index": 0,
+      "step_hash": "820eeefb54cf69c60397e98411f3a9469edc4df80a88354197adb2f9c3b7e2eb",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "pass",
+      "correctness": "pass",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "uncertain",
+      "factual_fidelity": "pass",
+      "evidence_notes": "当前先查后存分析正确；用户未提出具体疑点，追加改变顺序的问题不一定必要。"
+    },
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-overwrite-nonpair",
+      "step_index": 1,
+      "step_hash": "da2077e3609bded155fbdeeefdba5ec0e79138038b10553d79bc557335330c3d",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "pass",
+      "correctness": "pass",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "uncertain",
+      "factual_fidelity": "pass",
+      "evidence_notes": "正确手推 seen[1] 从0覆盖为1，返回[2,3]；结尾不能证明覆盖无害是在谈一般性，偏离用户对这组数据的核对。"
+    },
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-invalid-counterexample",
+      "step_index": 0,
+      "step_hash": "a8ef4fcb5bccb930948078fc96b8ad87fe4ad744d3215da6ecac0c83c7a23f16",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "uncertain",
+      "correctness": "pass",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "uncertain",
+      "factual_fidelity": "pass",
+      "evidence_notes": "先写后查的缺陷分析正确；通过顺序应该怎样安排提示修复，披露边界需复核。"
+    },
+    {
+      "review_kind": "ai_assisted",
+      "run_id": "20261017T131755Z-3c16924b",
+      "case_id": "challenge-comment-no-echo",
+      "step_index": 0,
+      "step_hash": "9c74977668d5e0822d743ae4b1512d4fd97e4c9d7a4fd13f8db25b4683656619",
+      "reviewer": "Codex (AI-assisted reading, not human review)",
+      "semantic_leakage": "uncertain",
+      "correctness": "pass",
+      "counterexample_validity": "na",
+      "pedagogical_progress": "uncertain",
+      "factual_fidelity": "pass",
+      "evidence_notes": "未复述注释指令，静态判断重复下标正确；随后不重复枚举的引导可能提前引入求解方法。"
+    }
+  ],
+  "human_reviews_added": 0,
+  "quality_status": "ai_assisted_findings_require_human_review"
+}

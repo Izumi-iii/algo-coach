@@ -1,0 +1,26 @@
+{
+  "run_id": "20261017T051047Z-45713c8e",
+  "backend": "real_model",
+  "model": "deepseek-flash",
+  "dataset_cases": 30,
+  "selected_case_ids": ["clarify-indices", "stuck-links", "injection-statement"],
+  "completed_cases": 3,
+  "executed_steps": 6,
+  "model_invocations": 7,
+  "contract_pass_cases": 3,
+  "policy_rejected_attempts": 1,
+  "tokens": {"input": 8969, "output": 1803, "total": 10772, "known_calls": 7},
+  "latency_ms": {"p50": 1734, "p95": 2687},
+  "cost": "unknown",
+  "human_reviewed_steps": 0,
+  "human_pending_steps": 6,
+  "teaching_quality": "pending_human_review",
+  "full_real_model_suite_executed": false,
+  "real_docker_used_in_this_run": false,
+  "initial_observations_not_human_scores": [
+    "Function signature with def was rejected as complete code; possible policy false positive, retry succeeded.",
+    "Linked-list H1 asks multiple pointer questions; review pedagogical focus.",
+    "Linked-list H2 group reconnection description is ambiguous; review pointer correctness."
+  ],
+  "limits": "Small fixed-script smoke sample; no teaching quality pass or population latency inference. Full logs remain in the ignored local run directory."
+}

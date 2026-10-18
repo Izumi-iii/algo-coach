@@ -1,0 +1,1084 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-18T07:58:40.293926+00:00",
+  "source_hash": "22efe3785b4d75c27e8171d15a10a6f232c7c3ef6b881b01572b216a645f55bb",
+  "runs": [
+    {
+      "run_id": "20261018T075534Z-a69044e1",
+      "source_hash": "22efe3785b4d75c27e8171d15a10a6f232c7c3ef6b881b01572b216a645f55bb",
+      "suite_hash": "0adb762b1afe4f7dafc6176301f2818aff4046612460178611962f4130ed2ba4",
+      "summary": {
+        "model_invocations": 10,
+        "known_token_sums": {
+          "input_tokens": 37138,
+          "output_tokens": 4447,
+          "total_tokens": 41585
+        },
+        "token_coverage": {
+          "input_tokens": {
+            "known_calls": 10,
+            "all_calls": 10
+          },
+          "output_tokens": {
+            "known_calls": 10,
+            "all_calls": 10
+          },
+          "total_tokens": {
+            "known_calls": 10,
+            "all_calls": 10
+          }
+        },
+        "model_latency_ms": {
+          "p50": 2860.0,
+          "p95": 3218.0
+        },
+        "policy_rejected_attempts": 0,
+        "adapter_error_attempts": 0,
+        "cost": "unknown",
+        "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+        "dataset_cases": 4,
+        "selected_cases": 4,
+        "completed_cases": 4,
+        "contract_pass_cases": 4,
+        "contract_fail_cases": 0,
+        "incomplete_cases": 0,
+        "planned_steps": 10,
+        "executed_steps": 10,
+        "contract_pass_rate_selected": 1.0,
+        "model_steps_for_review": 10,
+        "reviewed_steps": 0,
+        "human_fail_steps": 0,
+        "human_pending_steps": 10,
+        "teaching_quality": "pending_human_review",
+        "run_status": "completed",
+        "review_file": null
+      },
+      "assisted_review": {
+        "review_kind": "ai_assisted",
+        "run_id": "20261018T075534Z-a69044e1",
+        "model_steps": 10,
+        "ai_reviewed_steps": 10,
+        "ai_pending_steps": 0,
+        "ai_flagged_fail_steps": 4,
+        "ai_uncertain_steps": 8,
+        "dimensions": {
+          "semantic_leakage": {
+            "pass": 10,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 0
+          },
+          "correctness": {
+            "pass": 9,
+            "fail": 1,
+            "uncertain": 0,
+            "na": 0
+          },
+          "counterexample_validity": {
+            "pass": 3,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 7
+          },
+          "pedagogical_progress": {
+            "pass": 1,
+            "fail": 3,
+            "uncertain": 6,
+            "na": 0
+          },
+          "factual_fidelity": {
+            "pass": 6,
+            "fail": 0,
+            "uncertain": 4,
+            "na": 0
+          }
+        },
+        "findings": [
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075534Z-a69044e1",
+            "case_id": "flow-current-order",
+            "step_index": 0,
+            "step_hash": "1a7b7b8707e7ee9b9652f0542ede0b13e49fc8ba56a2c4e8d0e235cfe492af11",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "旧版第5行先写、第6行后查及合法[3,3],6自配对分析正确；末尾问题偏长。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075534Z-a69044e1",
+            "case_id": "flow-current-order",
+            "step_index": 1,
+            "step_hash": "37a10b70690851cc3e054c77dc09ea15cdefc807190283b8d19bb174ce00a199",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "fail",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "uncertain",
+            "evidence_notes": "新版本第9/11行顺序及return跳过写入正确，未沿用旧缺陷；却写题目要求“两个不同位置且和不相同”，与和值等于target不符；称旧版正确诊断为误判也混淆版本变更。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075534Z-a69044e1",
+            "case_id": "flow-current-order",
+            "step_index": 2,
+            "step_hash": "3ae1cee74b509d637f1daf2227b7f839c82c84c87adfc345438fdcb914c0a934",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "fail",
+            "factual_fidelity": "uncertain",
+            "evidence_notes": "准确直接核对9查询/10return/11未命中写入，但把历史不同版本判断笼统撤回，仍在用户只求结论时追加已回答的问题。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075534Z-a69044e1",
+            "case_id": "flow-first-return",
+            "step_index": 0,
+            "step_hash": "ba629eea46d29c5c6f0030aa636956a4bee54b694b5012f13224157adff566de",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "正确说明目标两倍关系及首轮返回[0,0]，不将覆盖当缺陷；没有执行结论。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075534Z-a69044e1",
+            "case_id": "flow-first-return",
+            "step_index": 1,
+            "step_hash": "8a0b3e4cc876ffd37350dbc85b2052f97bc3d38dc6a05dd1b718a734e36650e2",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "pass",
+            "pedagogical_progress": "pass",
+            "factual_fidelity": "uncertain",
+            "evidence_notes": "实际路径正确：首轮[0,0]结束函数，第二轮写入不可达；明确把忽略return的覆盖描述标为假想路径，但忽略哪个return的反事实措辞仍可更严谨。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075534Z-a69044e1",
+            "case_id": "flow-hit-skips-store",
+            "step_index": 0,
+            "step_hash": "68ef8bb706d1d0ecb57e537e8d9678719c3daabd7174186781a977e91dfa9f3a",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "正确读取查询早于写入及命中后写入不执行；转向无解兜底的额外追问没有明显必要。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075534Z-a69044e1",
+            "case_id": "flow-hit-skips-store",
+            "step_index": 1,
+            "step_hash": "9c88bd7183733218725f2086180665a398aba0a6c9f227f4525b191ed1071a22",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "pass",
+            "pedagogical_progress": "fail",
+            "factual_fidelity": "pass",
+            "evidence_notes": "[5,5],10首轮写0、次轮返回[0,1]且不覆盖为1的推演正确；末尾再次追问已能直接解释的下标事实。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075534Z-a69044e1",
+            "case_id": "flow-reverse-version",
+            "step_index": 0,
+            "step_hash": "b4f3fbd141e0c65ea414561bf99f08a74c98cd20ad90827ab915c465393d9403",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "初始正确版前缀、顺序、命中后不写入正确；额外要求找失败场景可能诱导对合法代码编造错误。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075534Z-a69044e1",
+            "case_id": "flow-reverse-version",
+            "step_index": 1,
+            "step_hash": "5c73323498bce092f2107b580b9e587cce75db186a87ca043e149ece874f757b",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "uncertain",
+            "evidence_notes": "换回错误版后正确使用第5/6/7行，不沿用旧版正确结论；把版本变更描述为上一轮讲反、以及无条件“必然命中”后才加条件，措辞待人工核对。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075534Z-a69044e1",
+            "case_id": "flow-reverse-version",
+            "step_index": 2,
+            "step_hash": "1fb0015858beceb3e7f0e10accf46932ed3a0dec4dd735f4526696bb5e196989",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "pass",
+            "pedagogical_progress": "fail",
+            "factual_fidelity": "pass",
+            "evidence_notes": "[6,6],12首轮返回[0,0]，第二轮不可达，覆盖未发生的结论正确；用户要求局部结论后仍追问假想修复。"
+          }
+        ],
+        "human_reviews_added": 0,
+        "quality_status": "ai_assisted_findings_require_human_review"
+      },
+      "review_path": "Docs\\evidence\\control-flow-v4-assisted-review-2026-10-18.jsonl",
+      "step_flow_facts": [
+        {
+          "case_id": "flow-current-order",
+          "step_index": 0,
+          "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+          "mapping_scans": [
+            {
+              "function_line": 2,
+              "loop_line": 4,
+              "initial_empty_mapping_line": 3,
+              "lookup_line": 6,
+              "write_line": 5,
+              "return_line": 7,
+              "order": "write_before_lookup",
+              "mapping": "seen",
+              "index": "i",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 5,
+                  "kind": "write"
+                },
+                {
+                  "line": 6,
+                  "kind": "lookup_then_return_if_hit"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮下标为0。若 target == 2*nums[0]，首次写入空字典后查询命中，返回[0,0]；没有旧下标被覆盖，也不会进入第二轮。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "flow-current-order",
+          "step_index": 1,
+          "code_hash": "aff65ed9c8c1a60588d1278f66ae27df776e42f217a12470de8f2d1fe4cbd272",
+          "mapping_scans": [
+            {
+              "function_line": 5,
+              "loop_line": 7,
+              "initial_empty_mapping_line": 6,
+              "lookup_line": 9,
+              "write_line": 11,
+              "return_line": 10,
+              "order": "lookup_before_write",
+              "mapping": "seen",
+              "index": "index",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 9,
+                  "kind": "lookup_then_return_if_hit"
+                },
+                {
+                  "line": 11,
+                  "kind": "write"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮查询空字典不命中，然后写入下标0。每轮查询时仅有此前位置；命中即return，本轮后面的写入不执行，不能描述为命中后仍覆盖旧下标。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "flow-current-order",
+          "step_index": 2,
+          "code_hash": "aff65ed9c8c1a60588d1278f66ae27df776e42f217a12470de8f2d1fe4cbd272",
+          "mapping_scans": [
+            {
+              "function_line": 5,
+              "loop_line": 7,
+              "initial_empty_mapping_line": 6,
+              "lookup_line": 9,
+              "write_line": 11,
+              "return_line": 10,
+              "order": "lookup_before_write",
+              "mapping": "seen",
+              "index": "index",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 9,
+                  "kind": "lookup_then_return_if_hit"
+                },
+                {
+                  "line": 11,
+                  "kind": "write"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮查询空字典不命中，然后写入下标0。每轮查询时仅有此前位置；命中即return，本轮后面的写入不执行，不能描述为命中后仍覆盖旧下标。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "flow-first-return",
+          "step_index": 0,
+          "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+          "mapping_scans": [
+            {
+              "function_line": 2,
+              "loop_line": 4,
+              "initial_empty_mapping_line": 3,
+              "lookup_line": 6,
+              "write_line": 5,
+              "return_line": 7,
+              "order": "write_before_lookup",
+              "mapping": "seen",
+              "index": "i",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 5,
+                  "kind": "write"
+                },
+                {
+                  "line": 6,
+                  "kind": "lookup_then_return_if_hit"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮下标为0。若 target == 2*nums[0]，首次写入空字典后查询命中，返回[0,0]；没有旧下标被覆盖，也不会进入第二轮。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "flow-first-return",
+          "step_index": 1,
+          "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+          "mapping_scans": [
+            {
+              "function_line": 2,
+              "loop_line": 4,
+              "initial_empty_mapping_line": 3,
+              "lookup_line": 6,
+              "write_line": 5,
+              "return_line": 7,
+              "order": "write_before_lookup",
+              "mapping": "seen",
+              "index": "i",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 5,
+                  "kind": "write"
+                },
+                {
+                  "line": 6,
+                  "kind": "lookup_then_return_if_hit"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮下标为0。若 target == 2*nums[0]，首次写入空字典后查询命中，返回[0,0]；没有旧下标被覆盖，也不会进入第二轮。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "flow-hit-skips-store",
+          "step_index": 0,
+          "code_hash": "aff65ed9c8c1a60588d1278f66ae27df776e42f217a12470de8f2d1fe4cbd272",
+          "mapping_scans": [
+            {
+              "function_line": 5,
+              "loop_line": 7,
+              "initial_empty_mapping_line": 6,
+              "lookup_line": 9,
+              "write_line": 11,
+              "return_line": 10,
+              "order": "lookup_before_write",
+              "mapping": "seen",
+              "index": "index",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 9,
+                  "kind": "lookup_then_return_if_hit"
+                },
+                {
+                  "line": 11,
+                  "kind": "write"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮查询空字典不命中，然后写入下标0。每轮查询时仅有此前位置；命中即return，本轮后面的写入不执行，不能描述为命中后仍覆盖旧下标。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "flow-hit-skips-store",
+          "step_index": 1,
+          "code_hash": "aff65ed9c8c1a60588d1278f66ae27df776e42f217a12470de8f2d1fe4cbd272",
+          "mapping_scans": [
+            {
+              "function_line": 5,
+              "loop_line": 7,
+              "initial_empty_mapping_line": 6,
+              "lookup_line": 9,
+              "write_line": 11,
+              "return_line": 10,
+              "order": "lookup_before_write",
+              "mapping": "seen",
+              "index": "index",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 9,
+                  "kind": "lookup_then_return_if_hit"
+                },
+                {
+                  "line": 11,
+                  "kind": "write"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮查询空字典不命中，然后写入下标0。每轮查询时仅有此前位置；命中即return，本轮后面的写入不执行，不能描述为命中后仍覆盖旧下标。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "flow-reverse-version",
+          "step_index": 0,
+          "code_hash": "aff65ed9c8c1a60588d1278f66ae27df776e42f217a12470de8f2d1fe4cbd272",
+          "mapping_scans": [
+            {
+              "function_line": 5,
+              "loop_line": 7,
+              "initial_empty_mapping_line": 6,
+              "lookup_line": 9,
+              "write_line": 11,
+              "return_line": 10,
+              "order": "lookup_before_write",
+              "mapping": "seen",
+              "index": "index",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 9,
+                  "kind": "lookup_then_return_if_hit"
+                },
+                {
+                  "line": 11,
+                  "kind": "write"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮查询空字典不命中，然后写入下标0。每轮查询时仅有此前位置；命中即return，本轮后面的写入不执行，不能描述为命中后仍覆盖旧下标。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "flow-reverse-version",
+          "step_index": 1,
+          "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+          "mapping_scans": [
+            {
+              "function_line": 2,
+              "loop_line": 4,
+              "initial_empty_mapping_line": 3,
+              "lookup_line": 6,
+              "write_line": 5,
+              "return_line": 7,
+              "order": "write_before_lookup",
+              "mapping": "seen",
+              "index": "i",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 5,
+                  "kind": "write"
+                },
+                {
+                  "line": 6,
+                  "kind": "lookup_then_return_if_hit"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮下标为0。若 target == 2*nums[0]，首次写入空字典后查询命中，返回[0,0]；没有旧下标被覆盖，也不会进入第二轮。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "flow-reverse-version",
+          "step_index": 2,
+          "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+          "mapping_scans": [
+            {
+              "function_line": 2,
+              "loop_line": 4,
+              "initial_empty_mapping_line": 3,
+              "lookup_line": 6,
+              "write_line": 5,
+              "return_line": 7,
+              "order": "write_before_lookup",
+              "mapping": "seen",
+              "index": "i",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 5,
+                  "kind": "write"
+                },
+                {
+                  "line": 6,
+                  "kind": "lookup_then_return_if_hit"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮下标为0。若 target == 2*nums[0]，首次写入空字典后查询命中，返回[0,0]；没有旧下标被覆盖，也不会进入第二轮。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        }
+      ],
+      "reference_checks": []
+    },
+    {
+      "run_id": "20261018T075702Z-469e8cab",
+      "source_hash": "22efe3785b4d75c27e8171d15a10a6f232c7c3ef6b881b01572b216a645f55bb",
+      "suite_hash": "e8737b245398989071509fbcdde63960fb557426d57e901073a0711732132d2a",
+      "summary": {
+        "model_invocations": 3,
+        "known_token_sums": {
+          "input_tokens": 11428,
+          "output_tokens": 1432,
+          "total_tokens": 12860
+        },
+        "token_coverage": {
+          "input_tokens": {
+            "known_calls": 3,
+            "all_calls": 3
+          },
+          "output_tokens": {
+            "known_calls": 3,
+            "all_calls": 3
+          },
+          "total_tokens": {
+            "known_calls": 3,
+            "all_calls": 3
+          }
+        },
+        "model_latency_ms": {
+          "p50": 3203.0,
+          "p95": 3328.0
+        },
+        "policy_rejected_attempts": 0,
+        "adapter_error_attempts": 0,
+        "cost": "unknown",
+        "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+        "dataset_cases": 4,
+        "selected_cases": 1,
+        "completed_cases": 1,
+        "contract_pass_cases": 1,
+        "contract_fail_cases": 0,
+        "incomplete_cases": 0,
+        "planned_steps": 3,
+        "executed_steps": 3,
+        "contract_pass_rate_selected": 1.0,
+        "model_steps_for_review": 3,
+        "reviewed_steps": 0,
+        "human_fail_steps": 0,
+        "human_pending_steps": 3,
+        "teaching_quality": "pending_human_review",
+        "run_status": "completed",
+        "review_file": null
+      },
+      "assisted_review": {
+        "review_kind": "ai_assisted",
+        "run_id": "20261018T075702Z-469e8cab",
+        "model_steps": 3,
+        "ai_reviewed_steps": 3,
+        "ai_pending_steps": 0,
+        "ai_flagged_fail_steps": 0,
+        "ai_uncertain_steps": 3,
+        "dimensions": {
+          "semantic_leakage": {
+            "pass": 3,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 0
+          },
+          "correctness": {
+            "pass": 2,
+            "fail": 0,
+            "uncertain": 1,
+            "na": 0
+          },
+          "counterexample_validity": {
+            "pass": 0,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 3
+          },
+          "pedagogical_progress": {
+            "pass": 0,
+            "fail": 0,
+            "uncertain": 3,
+            "na": 0
+          },
+          "factual_fidelity": {
+            "pass": 1,
+            "fail": 0,
+            "uncertain": 2,
+            "na": 0
+          }
+        },
+        "findings": [
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075702Z-469e8cab",
+            "case_id": "duplicate-current-version",
+            "step_index": 0,
+            "step_hash": "74b69058b7a58bbddb69858bb86506c2808537f6ea9b77864c89a7650d01e0b0",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "准确读取旧版第5写/6查，首次空字典写入无覆盖，条件成立时返回[0,0]。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075702Z-469e8cab",
+            "case_id": "duplicate-current-version",
+            "step_index": 1,
+            "step_hash": "9462a9a26cb3d46a7d2899d53db0c4042a3aa24178c4897570f8e0c7b725f369",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "uncertain",
+            "evidence_notes": "新版本第9查/11写且第10行命中return后不写入，旧自配对诊断未沿用；把不同版本的旧诊断笼统说成误判，版本叙述含混。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075702Z-469e8cab",
+            "case_id": "duplicate-current-version",
+            "step_index": 2,
+            "step_hash": "0af600711fe6d63fa039ca41c270fa4f8f53a660c8e63bd6c26cbd60a96f55f8",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "uncertain",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "uncertain",
+            "evidence_notes": "直接回答当前无自配对和没有独立覆盖缺陷，准确说明未执行；但一面给出等值替换推理，一面称“只是没找到反例”，混淆可证明局部性质与整段正确性。"
+          }
+        ],
+        "human_reviews_added": 0,
+        "quality_status": "ai_assisted_findings_require_human_review"
+      },
+      "review_path": "Docs\\evidence\\control-flow-regression-review-20261018T075702Z-469e8cab.jsonl",
+      "step_flow_facts": [
+        {
+          "case_id": "duplicate-current-version",
+          "step_index": 0,
+          "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+          "mapping_scans": [
+            {
+              "function_line": 2,
+              "loop_line": 4,
+              "initial_empty_mapping_line": 3,
+              "lookup_line": 6,
+              "write_line": 5,
+              "return_line": 7,
+              "order": "write_before_lookup",
+              "mapping": "seen",
+              "index": "i",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 5,
+                  "kind": "write"
+                },
+                {
+                  "line": 6,
+                  "kind": "lookup_then_return_if_hit"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮下标为0。若 target == 2*nums[0]，首次写入空字典后查询命中，返回[0,0]；没有旧下标被覆盖，也不会进入第二轮。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "duplicate-current-version",
+          "step_index": 1,
+          "code_hash": "aff65ed9c8c1a60588d1278f66ae27df776e42f217a12470de8f2d1fe4cbd272",
+          "mapping_scans": [
+            {
+              "function_line": 5,
+              "loop_line": 7,
+              "initial_empty_mapping_line": 6,
+              "lookup_line": 9,
+              "write_line": 11,
+              "return_line": 10,
+              "order": "lookup_before_write",
+              "mapping": "seen",
+              "index": "index",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 9,
+                  "kind": "lookup_then_return_if_hit"
+                },
+                {
+                  "line": 11,
+                  "kind": "write"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮查询空字典不命中，然后写入下标0。每轮查询时仅有此前位置；命中即return，本轮后面的写入不执行，不能描述为命中后仍覆盖旧下标。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "duplicate-current-version",
+          "step_index": 2,
+          "code_hash": "aff65ed9c8c1a60588d1278f66ae27df776e42f217a12470de8f2d1fe4cbd272",
+          "mapping_scans": [
+            {
+              "function_line": 5,
+              "loop_line": 7,
+              "initial_empty_mapping_line": 6,
+              "lookup_line": 9,
+              "write_line": 11,
+              "return_line": 10,
+              "order": "lookup_before_write",
+              "mapping": "seen",
+              "index": "index",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 9,
+                  "kind": "lookup_then_return_if_hit"
+                },
+                {
+                  "line": 11,
+                  "kind": "write"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮查询空字典不命中，然后写入下标0。每轮查询时仅有此前位置；命中即return，本轮后面的写入不执行，不能描述为命中后仍覆盖旧下标。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        }
+      ],
+      "reference_checks": []
+    },
+    {
+      "run_id": "20261018T075718Z-1ed8298b",
+      "source_hash": "22efe3785b4d75c27e8171d15a10a6f232c7c3ef6b881b01572b216a645f55bb",
+      "suite_hash": "e4c22a1f232b4a75238f46aecf5d0690f88271835e85b284e9724c418165aedb",
+      "summary": {
+        "model_invocations": 3,
+        "known_token_sums": {
+          "input_tokens": 12242,
+          "output_tokens": 1447,
+          "total_tokens": 13689
+        },
+        "token_coverage": {
+          "input_tokens": {
+            "known_calls": 3,
+            "all_calls": 3
+          },
+          "output_tokens": {
+            "known_calls": 3,
+            "all_calls": 3
+          },
+          "total_tokens": {
+            "known_calls": 3,
+            "all_calls": 3
+          }
+        },
+        "model_latency_ms": {
+          "p50": 3219.0,
+          "p95": 3266.0
+        },
+        "policy_rejected_attempts": 0,
+        "adapter_error_attempts": 0,
+        "cost": "unknown",
+        "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+        "dataset_cases": 12,
+        "selected_cases": 1,
+        "completed_cases": 1,
+        "contract_pass_cases": 1,
+        "contract_fail_cases": 0,
+        "incomplete_cases": 0,
+        "planned_steps": 4,
+        "executed_steps": 4,
+        "contract_pass_rate_selected": 1.0,
+        "model_steps_for_review": 3,
+        "reviewed_steps": 0,
+        "human_fail_steps": 0,
+        "human_pending_steps": 3,
+        "teaching_quality": "pending_human_review",
+        "run_status": "completed",
+        "review_file": null
+      },
+      "assisted_review": {
+        "review_kind": "ai_assisted",
+        "run_id": "20261018T075718Z-1ed8298b",
+        "model_steps": 3,
+        "ai_reviewed_steps": 3,
+        "ai_pending_steps": 0,
+        "ai_flagged_fail_steps": 0,
+        "ai_uncertain_steps": 1,
+        "dimensions": {
+          "semantic_leakage": {
+            "pass": 3,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 0
+          },
+          "correctness": {
+            "pass": 3,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 0
+          },
+          "counterexample_validity": {
+            "pass": 3,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 0
+          },
+          "pedagogical_progress": {
+            "pass": 2,
+            "fail": 0,
+            "uncertain": 1,
+            "na": 0
+          },
+          "factual_fidelity": {
+            "pass": 3,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 0
+          }
+        },
+        "findings": [
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T075718Z-1ed8298b",
+            "case_id": "challenge-reference-separation",
+            "step_index": 0,
+            "step_hash": "2d8fe809734ceda1b5afbeb6127dedc80eda03063645ff9e6ff7d48b7b56549b",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "pass",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "正确手推[3,3],6首轮[0,0]，未再把覆盖旧下标的第二轮描述成可达；仍额外追问修复。"
+          }
+        ],
+        "human_reviews_added": 0,
+        "quality_status": "ai_assisted_findings_require_human_review"
+      },
+      "review_path": "Docs\\evidence\\control-flow-regression-review-20261018T075718Z-1ed8298b.jsonl",
+      "step_flow_facts": [
+        {
+          "case_id": "challenge-reference-separation",
+          "step_index": 0,
+          "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+          "mapping_scans": [
+            {
+              "function_line": 2,
+              "loop_line": 4,
+              "initial_empty_mapping_line": 3,
+              "lookup_line": 6,
+              "write_line": 5,
+              "return_line": 7,
+              "order": "write_before_lookup",
+              "mapping": "seen",
+              "index": "i",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 5,
+                  "kind": "write"
+                },
+                {
+                  "line": 6,
+                  "kind": "lookup_then_return_if_hit"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮下标为0。若 target == 2*nums[0]，首次写入空字典后查询命中，返回[0,0]；没有旧下标被覆盖，也不会进入第二轮。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "challenge-reference-separation",
+          "step_index": 1,
+          "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+          "mapping_scans": [
+            {
+              "function_line": 2,
+              "loop_line": 4,
+              "initial_empty_mapping_line": 3,
+              "lookup_line": 6,
+              "write_line": 5,
+              "return_line": 7,
+              "order": "write_before_lookup",
+              "mapping": "seen",
+              "index": "i",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 5,
+                  "kind": "write"
+                },
+                {
+                  "line": 6,
+                  "kind": "lookup_then_return_if_hit"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮下标为0。若 target == 2*nums[0]，首次写入空字典后查询命中，返回[0,0]；没有旧下标被覆盖，也不会进入第二轮。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "challenge-reference-separation",
+          "step_index": 2,
+          "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+          "mapping_scans": [
+            {
+              "function_line": 2,
+              "loop_line": 4,
+              "initial_empty_mapping_line": 3,
+              "lookup_line": 6,
+              "write_line": 5,
+              "return_line": 7,
+              "order": "write_before_lookup",
+              "mapping": "seen",
+              "index": "i",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 5,
+                  "kind": "write"
+                },
+                {
+                  "line": 6,
+                  "kind": "lookup_then_return_if_hit"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮下标为0。若 target == 2*nums[0]，首次写入空字典后查询命中，返回[0,0]；没有旧下标被覆盖，也不会进入第二轮。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        },
+        {
+          "case_id": "challenge-reference-separation",
+          "step_index": 3,
+          "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+          "mapping_scans": [
+            {
+              "function_line": 2,
+              "loop_line": 4,
+              "initial_empty_mapping_line": 3,
+              "lookup_line": 6,
+              "write_line": 5,
+              "return_line": 7,
+              "order": "write_before_lookup",
+              "mapping": "seen",
+              "index": "i",
+              "value": "value",
+              "sequence": [
+                {
+                  "line": 5,
+                  "kind": "write"
+                },
+                {
+                  "line": 6,
+                  "kind": "lookup_then_return_if_hit"
+                }
+              ],
+              "on_hit": "return 结束本次函数调用；后续语句和下一轮均不再执行。",
+              "first_iteration": "首轮下标为0。若 target == 2*nums[0]，首次写入空字典后查询命中，返回[0,0]；没有旧下标被覆盖，也不会进入第二轮。",
+              "scope": "有条件的局部控制流事实：enumerate为内置函数、输入为普通整数列表且目标为整数、该循环正常进入；不执行提交，不证明整段程序正确或已通过测试。"
+            }
+          ]
+        }
+      ],
+      "reference_checks": [
+        [
+          {
+            "status": "passed",
+            "code_hash": "a3d342a1e6c1ab8ce505c53ce7426c38fdbb2339eb7da68687c14499b95c2101",
+            "detail": "本地测试 47/47 通过；不代表 LeetCode 隐藏测试或平台提交结果。",
+            "executed": true,
+            "case_count": 47,
+            "passed_count": 47,
+            "suite_version": "small-differential-v1",
+            "adapter_version": "python-functions-v1",
+            "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+            "runner_image": "sha256:a5ed929b244b4fdd75bb04766542faf61eb66f122dd373e1252aa807a7cbedca",
+            "random_seed": 20261015,
+            "failure": null
+          }
+        ]
+      ]
+    }
+  ],
+  "total_model_calls": 16,
+  "total_tokens": 68134,
+  "cost": "unknown",
+  "scope": "Four new wording/context cases for the same problem plus two reused regressions. AI-assisted readings only; no human scores and no general Python control-flow correctness claim.",
+  "target_findings": "Current order and return-unreachable actions were read correctly in these samples; unnecessary questions, inaccurate constraint wording and confusing old-versus-new-version narration remain.",
+  "checks": {
+    "targeted_flow_and_policy_tests_passed": 54,
+    "targeted_adapter_evaluation_failure_tests_passed": 44,
+    "full_engineering_regression": {
+      "passed": 329,
+      "skipped": 1,
+      "elapsed_seconds": 186.02,
+      "docker_integration_enabled": true,
+      "docker_integration_passed": 7,
+      "live_leetcode_enabled": false
+    },
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "git_diff_check": "passed"
+  }
+}

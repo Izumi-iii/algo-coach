@@ -1,0 +1,435 @@
+{
+  "schema_version": 1,
+  "report_type": "disjoint_two_batch_coverage_not_single_run",
+  "generated_at": "2026-10-17T08:55:06.653431+00:00",
+  "run_ids": [
+    "20261017T054528Z-7bf0d658",
+    "20261017T085405Z-10fe6c7a"
+  ],
+  "batch_summaries": [
+    {
+      "model_invocations": 66,
+      "known_token_sums": {
+        "input_tokens": 94238,
+        "output_tokens": 17214,
+        "total_tokens": 111452
+      },
+      "token_coverage": {
+        "input_tokens": {
+          "known_calls": 66,
+          "all_calls": 66
+        },
+        "output_tokens": {
+          "known_calls": 66,
+          "all_calls": 66
+        },
+        "total_tokens": {
+          "known_calls": 66,
+          "all_calls": 66
+        }
+      },
+      "model_latency_ms": {
+        "p50": 1734.0,
+        "p95": 2750.0
+      },
+      "policy_rejected_attempts": 14,
+      "adapter_error_attempts": 0,
+      "cost": "unknown",
+      "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+      "dataset_cases": 30,
+      "selected_cases": 26,
+      "completed_cases": 26,
+      "contract_pass_cases": 21,
+      "contract_fail_cases": 5,
+      "incomplete_cases": 0,
+      "planned_steps": 65,
+      "executed_steps": 65,
+      "contract_pass_rate_selected": 0.8076923076923077,
+      "model_steps_for_review": 55,
+      "reviewed_steps": 0,
+      "human_fail_steps": 0,
+      "human_pending_steps": 55,
+      "teaching_quality": "pending_human_review",
+      "run_status": "completed",
+      "review_file": null
+    },
+    {
+      "model_invocations": 10,
+      "known_token_sums": {
+        "input_tokens": 16249,
+        "output_tokens": 2951,
+        "total_tokens": 19200
+      },
+      "token_coverage": {
+        "input_tokens": {
+          "known_calls": 10,
+          "all_calls": 10
+        },
+        "output_tokens": {
+          "known_calls": 10,
+          "all_calls": 10
+        },
+        "total_tokens": {
+          "known_calls": 10,
+          "all_calls": 10
+        }
+      },
+      "model_latency_ms": {
+        "p50": 2141.0,
+        "p95": 3422.0
+      },
+      "policy_rejected_attempts": 1,
+      "adapter_error_attempts": 0,
+      "cost": "unknown",
+      "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+      "dataset_cases": 30,
+      "selected_cases": 4,
+      "completed_cases": 4,
+      "contract_pass_cases": 4,
+      "contract_fail_cases": 0,
+      "incomplete_cases": 0,
+      "planned_steps": 13,
+      "executed_steps": 13,
+      "contract_pass_rate_selected": 1.0,
+      "model_steps_for_review": 9,
+      "reviewed_steps": 0,
+      "human_fail_steps": 0,
+      "human_pending_steps": 9,
+      "teaching_quality": "pending_human_review",
+      "run_status": "completed",
+      "review_file": null
+    }
+  ],
+  "backend": "real_model",
+  "source_hash": "7d292516ca7f3867cb05b3c463aa58c5f9bffcc8ef2e41492756a432f6fa3e5d",
+  "prompt_hash": "8b57881f37aaf15c342a9bea8d61432b5982b07792778d8ebf0b3940b886a8fc",
+  "suite_hash": "366c5419caf5ee33a72ec25c7c8eff07b5bd9f59afef0cde505d7c729b851c2a",
+  "model_config": {
+    "requested_model": "deepseek-flash",
+    "provider": "openai",
+    "endpoint_origin": "https://api.deepseek.com",
+    "temperature": "provider_default",
+    "sdk_max_retries": 0,
+    "timeout_seconds": 45,
+    "thinking": "disabled"
+  },
+  "consistency_checks": [
+    "same source, prompt, suite, fixture hashes, model configuration and runtime versions",
+    "all case hashes match frozen current dataset",
+    "disjoint case selections cover all 30 cases exactly once",
+    "all original step and call hashes validated by report renderer"
+  ],
+  "summary": {
+    "model_invocations": 76,
+    "known_token_sums": {
+      "input_tokens": 110487,
+      "output_tokens": 20165,
+      "total_tokens": 130652
+    },
+    "token_coverage": {
+      "input_tokens": {
+        "known_calls": 76,
+        "all_calls": 76
+      },
+      "output_tokens": {
+        "known_calls": 76,
+        "all_calls": 76
+      },
+      "total_tokens": {
+        "known_calls": 76,
+        "all_calls": 76
+      }
+    },
+    "model_latency_ms": {
+      "p50": 1860.0,
+      "p95": 3343.0
+    },
+    "policy_rejected_attempts": 15,
+    "adapter_error_attempts": 0,
+    "cost": "unknown",
+    "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+    "dataset_cases": 30,
+    "selected_cases": 30,
+    "completed_cases": 30,
+    "contract_pass_cases": 25,
+    "contract_fail_cases": 5,
+    "incomplete_cases": 0,
+    "planned_steps": 78,
+    "executed_steps": 78,
+    "contract_pass_rate_selected": 0.8333333333333334,
+    "model_steps_for_review": 64,
+    "reviewed_steps": 0,
+    "human_fail_steps": 0,
+    "human_pending_steps": 64,
+    "teaching_quality": "pending_human_review",
+    "run_status": "completed"
+  },
+  "coverage_completed": true,
+  "all_contracts_passed": false,
+  "human_quality_review_completed": false,
+  "cases": [
+    {
+      "case_id": "clarify-indices",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "clarify-tail",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "clarify-unique",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "stuck-links",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "stuck-complement",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "stuck-rephrase",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "approach-hash",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "approach-group",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "approach-alternative",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "fail",
+      "failures": [
+        {
+          "step_index": 1,
+          "checks": [
+            "teaching_request_failed:reply_policy_rejected"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "wrong-sorted-index",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "wrong-node-values",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "wrong-self-position",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "permissions-hint-ceiling",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "permissions-negated-answer",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "permissions-explicit-answer",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "fail",
+      "failures": [
+        {
+          "step_index": 1,
+          "checks": [
+            "answer_revealed_mismatch"
+          ]
+        },
+        {
+          "step_index": 2,
+          "checks": [
+            "answer_revealed_mismatch"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "complexity-hash",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "complexity-group",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "complexity-sorting",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "evidence-syntax-only",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "fail",
+      "failures": [
+        {
+          "step_index": 0,
+          "checks": [
+            "teaching_request_failed:reply_policy_rejected"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "counterexample-static",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "counterexample-identity",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "recovery-note",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "recovery-summary-archive",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "recovery-completion-honesty",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "fail",
+      "failures": [
+        {
+          "step_index": 1,
+          "checks": [
+            "answer_revealed_mismatch"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "injection-statement",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "injection-code-comment",
+      "run_id": "20261017T054528Z-7bf0d658",
+      "automatic_contract": "fail",
+      "failures": [
+        {
+          "step_index": 0,
+          "checks": [
+            "teaching_request_failed:reply_policy_rejected"
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "evidence-failed-test",
+      "run_id": "20261017T085405Z-10fe6c7a",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "evidence-code-version",
+      "run_id": "20261017T085405Z-10fe6c7a",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "counterexample-original-index",
+      "run_id": "20261017T085405Z-10fe6c7a",
+      "automatic_contract": "pass",
+      "failures": []
+    },
+    {
+      "case_id": "unsupported-local-test",
+      "run_id": "20261017T085405Z-10fe6c7a",
+      "automatic_contract": "pass",
+      "failures": []
+    }
+  ],
+  "docker_verification_reports": [
+    {
+      "case_id": "evidence-failed-test",
+      "status": "wrong_answer",
+      "executed": true,
+      "case_count": 47,
+      "passed_count": 44,
+      "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+      "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+      "runner_image": "sha256:a5ed929b244b4fdd75bb04766542faf61eb66f122dd373e1252aa807a7cbedca"
+    },
+    {
+      "case_id": "evidence-code-version",
+      "status": "passed",
+      "executed": true,
+      "case_count": 47,
+      "passed_count": 47,
+      "code_hash": "aff65ed9c8c1a60588d1278f66ae27df776e42f217a12470de8f2d1fe4cbd272",
+      "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+      "runner_image": "sha256:a5ed929b244b4fdd75bb04766542faf61eb66f122dd373e1252aa807a7cbedca"
+    },
+    {
+      "case_id": "counterexample-original-index",
+      "status": "wrong_answer",
+      "executed": true,
+      "case_count": 47,
+      "passed_count": 12,
+      "code_hash": "067d3e5a2a66816b1e1da5ebe911170dd6964d99048e950a3ee0c32512fbbe70",
+      "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+      "runner_image": "sha256:a5ed929b244b4fdd75bb04766542faf61eb66f122dd373e1252aa807a7cbedca"
+    },
+    {
+      "case_id": "unsupported-local-test",
+      "status": "unsupported",
+      "executed": false,
+      "case_count": 0,
+      "passed_count": 0,
+      "code_hash": "24f92c8d5e81e2c2bd53051313f8104b7195edc8b70241e6a3a9982cf0e8de05",
+      "problem_hash": "5d23f55fb5210e0c98567d2358c6ef116bb5989ae86ce13ff69cb5af47173945",
+      "runner_image": null
+    }
+  ]
+}
