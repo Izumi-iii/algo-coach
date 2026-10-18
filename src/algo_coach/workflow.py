@@ -119,7 +119,13 @@ def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
                 return {
                     "response": response,
                     "history": state.get("history", [])
-                    + [{"role": "assistant", "content": response}],
+                    + [
+                        {
+                            "role": "assistant",
+                            "content": response,
+                            "user_code_hash": state.get("code_hash", ""),
+                        }
+                    ],
                     "stage": draft.stage,
                     "completion_mode": completion,
                     "max_hint_level_used": max(

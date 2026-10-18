@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-10-18T13:28:27.063106+00:00",
+  "application_source_hash": "8c1a13fb0a3e121b61750cad4e45f16d2923c6a8db75c3e490d8e059da5e4850",
+  "assets_sha256": {
+    "src\\algo_coach\\web_assets\\app.js": "e56111d62fcf0fefdc70ca865eccf5ccd4b3f8eff3d7e27d0b92e76c2ef29a16",
+    "src\\algo_coach\\web_assets\\index.html": "8d74a038fa3b2b92e3d70072283b87dc87316b31ab311fa397e0bb28ec7e21de",
+    "src\\algo_coach\\web_assets\\style.css": "4d6600616117d34270bc7fc5541fa8681b09a0beb914065d9282abc816899baa"
+  },
+  "http_tests": {
+    "passed": 7,
+    "backend": "real Coach and temporary SQLite; explicit offline teacher and simulated verdict"
+  },
+  "full_tests": {
+    "passed": 351,
+    "skipped": 1,
+    "elapsed_seconds": 234.09,
+    "docker_integration_passed": 7,
+    "live_leetcode_enabled": false
+  },
+  "browser_checks": {
+    "browser": "existing Edge isolated headless profile",
+    "new_browser_or_node_packages_installed": false,
+    "checks": [
+      "select local problem",
+      "chat and progressive hint",
+      "code submission is not_run",
+      "explicit Docker wrong_answer",
+      "reload restores submitted code and report",
+      "chat preserves unsaved draft",
+      "draft cannot execute as saved code",
+      "HTML input rendered as text",
+      "mobile has no horizontal overflow",
+      "no uncaught Runtime exceptions"
+    ],
+    "viewports": [
+      [
+        1440,
+        1050
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "real_mode_read_only_restore": true,
+    "screenshots": [
+      {
+        "path": ".algo-coach\\web-preview\\desktop.png",
+        "width": 1440,
+        "height": 1050,
+        "sha256": "5d467123b13c1896ae6bf5be00f02419d0264d922c7cfebcb660e747450a5f45"
+      },
+      {
+        "path": ".algo-coach\\web-preview\\mobile.png",
+        "width": 390,
+        "height": 844,
+        "sha256": "d14f2a2c995cdc5973416ee382fa2f5e90580a8d17721b7e5f84db1185369215"
+      },
+      {
+        "path": ".algo-coach\\web-preview\\model.png",
+        "width": 1440,
+        "height": 1050,
+        "sha256": "d5607052227660f6b9fa5d59cd4ca8d5fa6b99dcc4d3f7786c64058af4b4185b"
+      }
+    ]
+  },
+  "real_model_web_smoke": {
+    "mode": "model",
+    "teaching_actions_completed": 2,
+    "last_error": null,
+    "hint_level": 1,
+    "verification_status": "wrong_answer",
+    "executed": true,
+    "case_count": 47,
+    "passed_count": 0,
+    "session_recovered": true,
+    "network_problem_source_tested": false,
+    "cost": "unknown"
+  },
+  "active_service": {
+    "url": "http://127.0.0.1:8765",
+    "mode": "model",
+    "data_dir": ".algo-coach/web",
+    "default_cli_dir_locked": true,
+    "existing_cli_process_stopped": false
+  },
+  "runtime_dependencies_added": [],
+  "packaging": {
+    "resource_manifest_updated": true,
+    "offline_wheel_build": "not_completed_missing_setuptools",
+    "build_tools_installed": false,
+    "source_entrypoint": "verified"
+  },
+  "checks": {
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "node_syntax": "passed",
+    "diff_check": "passed"
+  },
+  "limits": [
+    "Local personal test server, no multi-user authentication or deployment claim.",
+    "Remote and daily routes unit tested with source fixtures; no live source fetch in this round.",
+    "Existing teaching semantic weaknesses remain.",
+    "No archive or Git write routes.",
+    "Unsaved drafts are not persisted by browser refresh."
+  ]
+}

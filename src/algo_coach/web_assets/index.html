@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AlgoCoach · 每次想明白一点</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/" aria-label="AlgoCoach 首页"><span class="brand-icon">a<span>c</span></span><span>AlgoCoach<small>YOUR DAILY PRACTICE</small></span></a>
+    <div class="sidebar-intro"><span class="tiny-dot"></span> 每次想明白一点。</div>
+    <form id="new-session" class="new-session">
+      <label for="source">开始一道题</label>
+      <select id="source"><option value="local">本地题库</option><option value="remote">LeetCode 中国站</option><option value="daily">中国站每日一题</option></select>
+      <input id="reference" placeholder="题号或链接，如 leetcode25" value="leetcode25" maxlength="1000" aria-label="题号或链接" list="problem-options">
+      <datalist id="problem-options"></datalist>
+      <button class="primary wide" type="submit">＋ 开始练习</button>
+      <p id="source-help">本地题库无需联网获取题面。</p>
+    </form>
+    <div class="section-label">学习记录 <button id="refresh-sessions" class="icon-button" aria-label="刷新学习记录">↻</button></div>
+    <div id="sessions" class="sessions"><p class="quiet">正在读取会话…</p></div>
+    <footer class="sidebar-footer"><span class="local-dot"></span> 本地工作区<span id="session-count">—</span></footer>
+  </aside>
+
+  <main class="app-main">
+    <header class="topbar"><div><span class="eyebrow">PRACTICE WORKSPACE</span><h1>把思路，变成自己的。</h1></div><div class="top-meta"><span id="date-label"></span><span id="mode" class="badge">连接中</span></div></header>
+    <div id="notice" class="notice" role="status" aria-live="polite">正在连接本地学习服务…</div>
+    <div class="workspace">
+      <section class="learning-column">
+        <article class="card problem-card">
+          <div class="card-top"><span class="eyebrow">01 / 理解问题</span><a id="problem-link" class="text-link" target="_blank" rel="noopener noreferrer" hidden>原题 ↗</a></div>
+          <div class="problem-summary"><h2 id="problem-title">今天，从一道题开始。</h2><button id="problem-toggle" class="problem-toggle" aria-expanded="false" aria-controls="problem-details" hidden>展开题面 ↓</button></div>
+          <p id="empty-intro" class="intro">选择题目，写下你的想法。教练会根据你的卡点逐步引导，完整答案由你主动决定何时查看。</p>
+          <div id="problem-details" hidden><div class="problem-scroll" tabindex="0" aria-label="题面、约束与示例"><div id="problem-body"></div></div><div id="provenance" class="provenance">题面、来源和缓存状态将在这里显示。</div></div>
+        </article>
+
+        <section class="card chat-card" aria-label="教学对话">
+          <div class="card-top"><span class="eyebrow">02 / 一起推演</span><span id="hint-level" class="mini-badge">H0 · 从题意开始</span></div>
+          <div id="messages" class="messages" aria-live="polite"><div class="chat-empty"><span class="chat-symbol">↗</span><h3>先说说，你想到了什么？</h3><p>可以分享思路，也可以只问一个具体问题。</p></div></div>
+          <div class="chat-tools"><button id="hint" class="chip" disabled>一点提示</button><button id="answer" class="chip" disabled>查看完整解答</button><button id="retry" class="chip" hidden disabled>重试上一请求</button></div>
+          <form id="chat-form" class="composer"><label class="sr-only" for="message">发送给教练</label><textarea id="message" rows="2" maxlength="16000" placeholder="写下思路或卡点… Enter 发送，Shift+Enter 换行" disabled></textarea><button id="send" class="send-button" type="submit" disabled aria-label="发送消息">↑</button></form>
+          <p id="model-notice" class="composer-note">正在读取运行模式。</p>
+        </section>
+      </section>
+
+      <section class="coding-column">
+        <section class="card editor-card" aria-label="Python 代码编辑器">
+          <div class="card-top"><span class="eyebrow">03 / 写下解法</span><span class="language">● Python</span></div>
+          <div class="filebar"><span>solution.py</span><span id="draft-status">等待选择题目</span></div>
+          <div class="editor-wrap"><pre id="line-numbers" aria-hidden="true">1</pre><textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-label="Python 解题代码" placeholder="# 选择题目后，在这里写下你的实现。" disabled></textarea></div>
+          <div class="editor-actions"><span id="attempts">尚无提交</span><button id="submit-code" class="primary" disabled>提交并分析</button></div>
+          <p class="editor-note">提交后保存代码并分析；执行测试需单独点击下方按钮。</p>
+        </section>
+
+        <section class="card verification-card" aria-label="代码验证报告">
+          <div class="card-top"><span class="eyebrow">04 / 验证想法</span><button id="doctor" class="text-button">检查执行环境</button></div>
+          <div class="report-heading"><h2>用户代码报告</h2><span id="verdict" class="verdict neutral">未提交</span></div>
+          <p id="draft-report-note" class="report-detail" hidden>编辑器有未提交修改，下方报告仅对应已保存版本。</p>
+          <p id="verification-detail" class="report-detail">这里显示你实际提交的代码的验证结果。</p>
+          <div id="verification-stats" class="verification-stats"></div>
+          <pre id="failure" class="failure" hidden></pre>
+          <div class="verify-actions"><span>支持本地第 1、25 题及已审核题面</span><button id="test-code" class="secondary" disabled>运行本地测试</button></div>
+          <p id="execution-environment" class="environment-note">执行环境尚未检查。</p>
+          <details id="reference-report" hidden><summary>参考解独立报告（与用户代码分开）</summary><div id="reference-reports"></div></details>
+        </section>
+      </section>
+    </div>
+    <footer class="page-footer"><span>理解过程比抄下一份答案更重要。</span><span>LOCAL FIRST · ALGOCOACH</span></footer>
+  </main>
+</body>
+</html>

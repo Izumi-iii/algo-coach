@@ -29,7 +29,7 @@ algo-coach = "algo_coach.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-algo_coach = ["data/*.json"]
+algo_coach = ["data/*.json", "web_assets/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,0 +1,728 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-18T08:13:35.828623+00:00",
+  "current_source_hash": "13727246e272c4c93c028d91029a9dd4a0cd46f8e109280663bd4a6019c52538",
+  "runs": [
+    {
+      "run_id": "20261018T080732Z-a8fa5653",
+      "source_hash": "5ef3721b4f6930292e32ec98010fbf659f7507add71b4e9fab4905a47447d24c",
+      "suite_hash": "8e85bc8cb1b2d89b105793f070350ae212317679df64a224618e23b885e2fa15",
+      "summary": {
+        "model_invocations": 11,
+        "known_token_sums": {
+          "input_tokens": 56066,
+          "output_tokens": 5265,
+          "total_tokens": 61331
+        },
+        "token_coverage": {
+          "input_tokens": {
+            "known_calls": 11,
+            "all_calls": 11
+          },
+          "output_tokens": {
+            "known_calls": 11,
+            "all_calls": 11
+          },
+          "total_tokens": {
+            "known_calls": 11,
+            "all_calls": 11
+          }
+        },
+        "model_latency_ms": {
+          "p50": 3093.0,
+          "p95": 4516.0
+        },
+        "policy_rejected_attempts": 0,
+        "adapter_error_attempts": 0,
+        "cost": "unknown",
+        "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+        "dataset_cases": 4,
+        "selected_cases": 4,
+        "completed_cases": 4,
+        "contract_pass_cases": 4,
+        "contract_fail_cases": 0,
+        "incomplete_cases": 0,
+        "planned_steps": 11,
+        "executed_steps": 11,
+        "contract_pass_rate_selected": 1.0,
+        "model_steps_for_review": 11,
+        "reviewed_steps": 0,
+        "human_fail_steps": 0,
+        "human_pending_steps": 11,
+        "teaching_quality": "pending_human_review",
+        "run_status": "completed",
+        "review_file": null
+      },
+      "assisted_review": {
+        "review_kind": "ai_assisted",
+        "run_id": "20261018T080732Z-a8fa5653",
+        "model_steps": 11,
+        "ai_reviewed_steps": 11,
+        "ai_pending_steps": 0,
+        "ai_flagged_fail_steps": 3,
+        "ai_uncertain_steps": 7,
+        "dimensions": {
+          "semantic_leakage": {
+            "pass": 11,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 0
+          },
+          "correctness": {
+            "pass": 8,
+            "fail": 3,
+            "uncertain": 0,
+            "na": 0
+          },
+          "counterexample_validity": {
+            "pass": 0,
+            "fail": 1,
+            "uncertain": 0,
+            "na": 10
+          },
+          "pedagogical_progress": {
+            "pass": 3,
+            "fail": 1,
+            "uncertain": 7,
+            "na": 0
+          },
+          "factual_fidelity": {
+            "pass": 7,
+            "fail": 3,
+            "uncertain": 1,
+            "na": 0
+          }
+        },
+        "findings": [
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T080732Z-a8fa5653",
+            "case_id": "focus-version-change",
+            "step_index": 0,
+            "step_hash": "81df128e5baea15457ebe29979661cb7d0e0b2f82fc7bcd7be4b406c0bbebd58",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "fail",
+            "counterexample_validity": "fail",
+            "pedagogical_progress": "fail",
+            "factual_fidelity": "fail",
+            "evidence_notes": "反例段反复给出无解输入、错否定合法[3,2,4],6，最后改用[2,5,2],4才自洽；不能因最后正确而忽略整段混乱。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T080732Z-a8fa5653",
+            "case_id": "focus-version-change",
+            "step_index": 1,
+            "step_hash": "ca2be951c7ce521f66e72e881c0a1fd8dd138a9bfc2fa31d14706f081e2dc099",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "uncertain",
+            "evidence_notes": "当前行序与旧版不适用正确，但仍笼统称更正上一轮；附加自测题。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T080732Z-a8fa5653",
+            "case_id": "focus-reverse-change",
+            "step_index": 0,
+            "step_hash": "4166fa65a4a93dbbd8730e5c7b52fe45ab9b66a4dc67a8f5fe53e38c875ee983",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "正确版行序与报告状态正确，额外追问兜底策略。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T080732Z-a8fa5653",
+            "case_id": "focus-reverse-change",
+            "step_index": 1,
+            "step_hash": "b38f966ecb49e0dd78165e81d018e63c9cfcdedd42bf11e34a1ca8b9fda0374a",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "fail",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "fail",
+            "evidence_notes": "当前顺序判断正确，却明确说先前对另一版的判断不是版本变化而是控制流误读，与两次提交事实矛盾。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T080732Z-a8fa5653",
+            "case_id": "focus-reverse-change",
+            "step_index": 2,
+            "step_hash": "6bf277289cae94b6a8cd12145f5898d0d6cfe216dbcb534b8fac9b0678c2f1dc",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "fail",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "fail",
+            "evidence_notes": "已说明前版无自配对风险正确，但编造此前曾把前版说成先写后查；不存在那段历史原话。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T080732Z-a8fa5653",
+            "case_id": "focus-identical-resubmit",
+            "step_index": 0,
+            "step_hash": "f1a739e29ff026c004838541e94a3f3a3b6a1610845dd0119a302450851bf6be",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "相同错误版首轮条件、自配对和return正确，追问多项。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T080732Z-a8fa5653",
+            "case_id": "focus-identical-resubmit",
+            "step_index": 1,
+            "step_hash": "a8ea042ebad37938dab8e28d676bcc2368da4c8f211387c70fa85c97051f5edf",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "正确识别相同哈希重交，不假称换版或修好。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T080732Z-a8fa5653",
+            "case_id": "focus-direct-hit",
+            "step_index": 0,
+            "step_hash": "c14caea23e827aa0a12abcf3ded8f41a790bd64797b46206e14610ea6ceeb579",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "当前版本和return正确，额外追问无解兜底。"
+          }
+        ],
+        "human_reviews_added": 0,
+        "quality_status": "ai_assisted_findings_require_human_review"
+      },
+      "review_path": "Docs\\evidence\\response-focus-review-20261018T080732Z-a8fa5653.jsonl"
+    },
+    {
+      "run_id": "20261018T081011Z-b5c6ca91",
+      "source_hash": "a44be852d0bb7ca820596387b0121f1091d38e27d98aedec5b3f923758da02b4",
+      "suite_hash": "8e85bc8cb1b2d89b105793f070350ae212317679df64a224618e23b885e2fa15",
+      "summary": {
+        "model_invocations": 8,
+        "known_token_sums": {
+          "input_tokens": 35797,
+          "output_tokens": 3374,
+          "total_tokens": 39171
+        },
+        "token_coverage": {
+          "input_tokens": {
+            "known_calls": 8,
+            "all_calls": 8
+          },
+          "output_tokens": {
+            "known_calls": 8,
+            "all_calls": 8
+          },
+          "total_tokens": {
+            "known_calls": 8,
+            "all_calls": 8
+          }
+        },
+        "model_latency_ms": {
+          "p50": 2797.0,
+          "p95": 3375.0
+        },
+        "policy_rejected_attempts": 0,
+        "adapter_error_attempts": 0,
+        "cost": "unknown",
+        "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+        "dataset_cases": 4,
+        "selected_cases": 3,
+        "completed_cases": 3,
+        "contract_pass_cases": 3,
+        "contract_fail_cases": 0,
+        "incomplete_cases": 0,
+        "planned_steps": 8,
+        "executed_steps": 8,
+        "contract_pass_rate_selected": 1.0,
+        "model_steps_for_review": 8,
+        "reviewed_steps": 0,
+        "human_fail_steps": 0,
+        "human_pending_steps": 8,
+        "teaching_quality": "pending_human_review",
+        "run_status": "completed",
+        "review_file": null
+      },
+      "assisted_review": {
+        "review_kind": "ai_assisted",
+        "run_id": "20261018T081011Z-b5c6ca91",
+        "model_steps": 8,
+        "ai_reviewed_steps": 8,
+        "ai_pending_steps": 0,
+        "ai_flagged_fail_steps": 2,
+        "ai_uncertain_steps": 6,
+        "dimensions": {
+          "semantic_leakage": {
+            "pass": 8,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 0
+          },
+          "correctness": {
+            "pass": 6,
+            "fail": 2,
+            "uncertain": 0,
+            "na": 0
+          },
+          "counterexample_validity": {
+            "pass": 0,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 8
+          },
+          "pedagogical_progress": {
+            "pass": 2,
+            "fail": 0,
+            "uncertain": 6,
+            "na": 0
+          },
+          "factual_fidelity": {
+            "pass": 5,
+            "fail": 2,
+            "uncertain": 1,
+            "na": 0
+          }
+        },
+        "findings": [
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081011Z-b5c6ca91",
+            "case_id": "focus-version-change",
+            "step_index": 0,
+            "step_hash": "8ba2723316334a41ead5594d5794f56ac33607d7bae8b78856d6630cf1ecbdc4",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "uncertain",
+            "evidence_notes": "合法[3,4,2],6反例正确；把先写后查放在“已确认无问题的部分”标题下容易造成歧义。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081011Z-b5c6ca91",
+            "case_id": "focus-version-change",
+            "step_index": 1,
+            "step_hash": "f90e0110b2d8c207d1e171921fdbcc5b0e25935a467c289c0d0c10359908adbc",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "绑定旧/新哈希，正确说明旧诊断不适用于当前版，无虚构道歉，但仍主动建议自测。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081011Z-b5c6ca91",
+            "case_id": "focus-reverse-change",
+            "step_index": 0,
+            "step_hash": "df976e0aa8f97d73c2ea1312a7d241a1b16d4102f3d1e9af1de99e347e58b3b8",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "正确读取先查后写；“不要求答案唯一性判定”指不必验证前提，不等于可违反输入保证，但表述可更清楚。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081011Z-b5c6ca91",
+            "case_id": "focus-reverse-change",
+            "step_index": 1,
+            "step_hash": "dccf0d9330740fbf9438769873db98d3561233e50003d5eafef43d85116f173d",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "fail",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "fail",
+            "evidence_notes": "版本变化与当前顺序解释正确，却编造第7行在无解时因缺键异常；该索引受同键in条件保护。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081011Z-b5c6ca91",
+            "case_id": "focus-reverse-change",
+            "step_index": 2,
+            "step_hash": "cacc5f1517326513f59a08d3877e9099baad909168cfdc948194d8b827525679",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "fail",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "fail",
+            "evidence_notes": "开头准确说明旧好新坏，第3点却套用固定方向示例“旧版确有此问题”，与本场景相反；触发中性说明修正。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081011Z-b5c6ca91",
+            "case_id": "focus-direct-hit",
+            "step_index": 0,
+            "step_hash": "6d599b37b929a904e868e828a4f541a25ccd7e9f1fc43b36515b2c25a0f3b6eb",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "当前顺序和return正确，题外兜底疑问多余。"
+          }
+        ],
+        "human_reviews_added": 0,
+        "quality_status": "ai_assisted_findings_require_human_review"
+      },
+      "review_path": "Docs\\evidence\\response-focus-review-20261018T081011Z-b5c6ca91.jsonl"
+    },
+    {
+      "run_id": "20261018T081042Z-8f91f101",
+      "source_hash": "a44be852d0bb7ca820596387b0121f1091d38e27d98aedec5b3f923758da02b4",
+      "suite_hash": "0adb762b1afe4f7dafc6176301f2818aff4046612460178611962f4130ed2ba4",
+      "summary": {
+        "model_invocations": 5,
+        "known_token_sums": {
+          "input_tokens": 21766,
+          "output_tokens": 2042,
+          "total_tokens": 23808
+        },
+        "token_coverage": {
+          "input_tokens": {
+            "known_calls": 5,
+            "all_calls": 5
+          },
+          "output_tokens": {
+            "known_calls": 5,
+            "all_calls": 5
+          },
+          "total_tokens": {
+            "known_calls": 5,
+            "all_calls": 5
+          }
+        },
+        "model_latency_ms": {
+          "p50": 2843.0,
+          "p95": 3062.0
+        },
+        "policy_rejected_attempts": 0,
+        "adapter_error_attempts": 0,
+        "cost": "unknown",
+        "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+        "dataset_cases": 4,
+        "selected_cases": 2,
+        "completed_cases": 2,
+        "contract_pass_cases": 2,
+        "contract_fail_cases": 0,
+        "incomplete_cases": 0,
+        "planned_steps": 5,
+        "executed_steps": 5,
+        "contract_pass_rate_selected": 1.0,
+        "model_steps_for_review": 5,
+        "reviewed_steps": 0,
+        "human_fail_steps": 0,
+        "human_pending_steps": 5,
+        "teaching_quality": "pending_human_review",
+        "run_status": "completed",
+        "review_file": null
+      },
+      "assisted_review": {
+        "review_kind": "ai_assisted",
+        "run_id": "20261018T081042Z-8f91f101",
+        "model_steps": 5,
+        "ai_reviewed_steps": 5,
+        "ai_pending_steps": 0,
+        "ai_flagged_fail_steps": 1,
+        "ai_uncertain_steps": 4,
+        "dimensions": {
+          "semantic_leakage": {
+            "pass": 5,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 0
+          },
+          "correctness": {
+            "pass": 4,
+            "fail": 0,
+            "uncertain": 1,
+            "na": 0
+          },
+          "counterexample_validity": {
+            "pass": 0,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 5
+          },
+          "pedagogical_progress": {
+            "pass": 1,
+            "fail": 1,
+            "uncertain": 3,
+            "na": 0
+          },
+          "factual_fidelity": {
+            "pass": 4,
+            "fail": 0,
+            "uncertain": 1,
+            "na": 0
+          }
+        },
+        "findings": [
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081042Z-8f91f101",
+            "case_id": "flow-current-order",
+            "step_index": 0,
+            "step_hash": "81ed5619a68af929b89c3a093a4d056cf5c3bd388b7954aaec5881b4d1bbc05d",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "旧版先写后查推断正确。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081042Z-8f91f101",
+            "case_id": "flow-current-order",
+            "step_index": 1,
+            "step_hash": "3b004bf9cf1f3fffd11bfecc65d81016d09dece144cb3ba8c9008b67ff189a0a",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "已用旧哈希标签区分旧诊断与当前版本，不再称此前误判。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081042Z-8f91f101",
+            "case_id": "flow-current-order",
+            "step_index": 2,
+            "step_hash": "37c939738c08c228d5918f317e4a408708ad10215bbd94553f265fefb9f7fcd1",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "uncertain",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "pass",
+            "factual_fidelity": "uncertain",
+            "evidence_notes": "当前顺序判断与直接回答正确；用户引用的“第10行写入”在旧版也不精确，却被笼统归属旧版，需人工核对。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081042Z-8f91f101",
+            "case_id": "flow-hit-skips-store",
+            "step_index": 0,
+            "step_hash": "99f978435161d6b3de10f441791be49aa548182f2c5907f973c3b55cdf51d39d",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "pass",
+            "evidence_notes": "控制流正确，但多项额外问题。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081042Z-8f91f101",
+            "case_id": "flow-hit-skips-store",
+            "step_index": 1,
+            "step_hash": "450b3e62964c8d7fa59a2b431b7f1fe9e9fd6d041a184b1ee6eb7102beba3469",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "fail",
+            "factual_fidelity": "pass",
+            "evidence_notes": "正确直接解释次轮返回不覆盖，却在末尾附加“最想确定哪部分”的追问；隐含局部核对请求未被有限偏好识别完全覆盖。"
+          }
+        ],
+        "human_reviews_added": 0,
+        "quality_status": "ai_assisted_findings_require_human_review"
+      },
+      "review_path": "Docs\\evidence\\response-focus-review-20261018T081042Z-8f91f101.jsonl"
+    },
+    {
+      "run_id": "20261018T081140Z-f5782b0d",
+      "source_hash": "13727246e272c4c93c028d91029a9dd4a0cd46f8e109280663bd4a6019c52538",
+      "suite_hash": "8e85bc8cb1b2d89b105793f070350ae212317679df64a224618e23b885e2fa15",
+      "summary": {
+        "model_invocations": 3,
+        "known_token_sums": {
+          "input_tokens": 14257,
+          "output_tokens": 1869,
+          "total_tokens": 16126
+        },
+        "token_coverage": {
+          "input_tokens": {
+            "known_calls": 3,
+            "all_calls": 3
+          },
+          "output_tokens": {
+            "known_calls": 3,
+            "all_calls": 3
+          },
+          "total_tokens": {
+            "known_calls": 3,
+            "all_calls": 3
+          }
+        },
+        "model_latency_ms": {
+          "p50": 4125.0,
+          "p95": 4578.0
+        },
+        "policy_rejected_attempts": 0,
+        "adapter_error_attempts": 0,
+        "cost": "unknown",
+        "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+        "dataset_cases": 4,
+        "selected_cases": 1,
+        "completed_cases": 1,
+        "contract_pass_cases": 1,
+        "contract_fail_cases": 0,
+        "incomplete_cases": 0,
+        "planned_steps": 3,
+        "executed_steps": 3,
+        "contract_pass_rate_selected": 1.0,
+        "model_steps_for_review": 3,
+        "reviewed_steps": 0,
+        "human_fail_steps": 0,
+        "human_pending_steps": 3,
+        "teaching_quality": "pending_human_review",
+        "run_status": "completed",
+        "review_file": null
+      },
+      "assisted_review": {
+        "review_kind": "ai_assisted",
+        "run_id": "20261018T081140Z-f5782b0d",
+        "model_steps": 3,
+        "ai_reviewed_steps": 3,
+        "ai_pending_steps": 0,
+        "ai_flagged_fail_steps": 2,
+        "ai_uncertain_steps": 3,
+        "dimensions": {
+          "semantic_leakage": {
+            "pass": 3,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 0
+          },
+          "correctness": {
+            "pass": 1,
+            "fail": 2,
+            "uncertain": 0,
+            "na": 0
+          },
+          "counterexample_validity": {
+            "pass": 0,
+            "fail": 0,
+            "uncertain": 0,
+            "na": 3
+          },
+          "pedagogical_progress": {
+            "pass": 1,
+            "fail": 0,
+            "uncertain": 2,
+            "na": 0
+          },
+          "factual_fidelity": {
+            "pass": 0,
+            "fail": 2,
+            "uncertain": 1,
+            "na": 0
+          }
+        },
+        "findings": [
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081140Z-f5782b0d",
+            "case_id": "focus-reverse-change",
+            "step_index": 0,
+            "step_hash": "1440be1ee6215334a9ed6bc4e7d9a3010f95dcd4165e7fa104aa74b31b97cc8b",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "fail",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "fail",
+            "evidence_notes": "正确版控制流无误，却再次声称第11行只记录首次出现的下标，与代码覆盖事实矛盾。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081140Z-f5782b0d",
+            "case_id": "focus-reverse-change",
+            "step_index": 1,
+            "step_hash": "d0048555cb582f68a98f7a7f71f5909519325cbc89bf326ce99b4b3c9a86452c",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "fail",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "uncertain",
+            "factual_fidelity": "fail",
+            "evidence_notes": "当前错误版判断正确，但声称上一轮把同值覆盖单独当作缺陷，实际上一回复并未这样说，历史叙述仍编造。"
+          },
+          {
+            "review_kind": "ai_assisted",
+            "run_id": "20261018T081140Z-f5782b0d",
+            "case_id": "focus-reverse-change",
+            "step_index": 2,
+            "step_hash": "b9f40f1f68dcc27a4361537dcd87f4affdfe91b2daac357aec0f47f3dda372be",
+            "reviewer": "Codex offline AI-assisted review",
+            "semantic_leakage": "pass",
+            "correctness": "pass",
+            "counterexample_validity": "na",
+            "pedagogical_progress": "pass",
+            "factual_fidelity": "uncertain",
+            "evidence_notes": "最终直接区分前版无风险/当前有风险，无固定方向套话或附加问题；以[2,...]说明条件未给完整合法反例，不能视作已验证反例。"
+          }
+        ],
+        "human_reviews_added": 0,
+        "quality_status": "ai_assisted_findings_require_human_review"
+      },
+      "review_path": "Docs\\evidence\\response-focus-review-20261018T081140Z-f5782b0d.jsonl"
+    }
+  ],
+  "total_model_calls": 27,
+  "total_tokens": 140436,
+  "cost": "unknown",
+  "human_reviews_added": 0,
+  "quality_scope": "Finite Chinese preference phrases and explicit submission hashes; not general historical-claim validation. New wording on the same problem; later runs are reused regressions on changed source, not rewritten first passes.",
+  "remaining_findings": [
+    "Fabricated historical statements still occur in code-upload replies.",
+    "Counterexample generation and dict overwrite descriptions remain imperfect.",
+    "Implicit local-fact requests may still receive unnecessary questions."
+  ],
+  "checks": {
+    "targeted_tests_passed": 59,
+    "full_engineering_regression": {
+      "passed": 344,
+      "skipped": 1,
+      "elapsed_seconds": 182.77,
+      "docker_integration_enabled": true,
+      "docker_integration_passed": 7,
+      "live_leetcode_enabled": false
+    },
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "git_diff_check": "passed"
+  },
+  "interrupted_checks": "Two earlier full test runs were intentionally stopped before source edits and are not counted as passing."
+}
