@@ -18,6 +18,7 @@ from dotenv import load_dotenv
 from filelock import Timeout
 from pydantic import ValidationError
 
+from algo_coach.browser_bridge import BridgeError, BrowserBridge
 from algo_coach.runner import DockerRunner
 from algo_coach.service import Coach
 from algo_coach.teaching import DemoTeacher, ModelTeacher
@@ -73,6 +74,7 @@ class WebApplication:
         self.jobs_lock = threading.Lock()
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="algo-coach-web")
         self.jobs = {}
+        self.bridge = BrowserBridge(coach.connection)
         self.problem_list = [
             {"key": p.key, "id": p.frontend_id, "title": p.title} for p in coach.problems.all()
         ]
@@ -231,7 +233,9 @@ def make_server(app, port=8765):
         def log_message(self, *args):
             pass
 
-        def send_data(self, status, value, content_type="application/json; charset=utf-8"):
+        def send_data(
+            self, status, value, content_type="application/json; charset=utf-8", *, cors_origin=None
+        ):
             body = (
                 json.dumps(value, ensure_ascii=False).encode() if isinstance(value, dict) else value
             )
@@ -249,17 +253,27 @@ def make_server(app, port=8765):
                 ),
             }.items():
                 self.send_header(name, data)
+            if cors_origin:
+                self.send_header("Access-Control-Allow-Origin", cors_origin)
+                self.send_header("Vary", "Origin")
+                self.send_header("Access-Control-Allow-Methods", "POST")
+                self.send_header("Access-Control-Allow-Headers", "Content-Type, X-AlgoCoach-Bridge")
+                self.send_header("Access-Control-Allow-Private-Network", "true")
             self.end_headers()
             try:
                 self.wfile.write(body)
             except (BrokenPipeError, ConnectionResetError):
                 pass
 
-        def trusted_request(self, *, mutation=False):
+        def trusted_host(self):
             actual_port = self.server.server_address[1]
             host = self.headers.get("Host", "")
             if host not in {f"127.0.0.1:{actual_port}", f"localhost:{actual_port}"}:
                 raise APIError("仅允许本机地址访问", 403)
+            return host
+
+        def trusted_request(self, *, mutation=False):
+            host = self.trusted_host()
             origin = self.headers.get("Origin")
             if origin and origin != f"http://{host}":
                 raise APIError("不接受跨站请求", 403)
@@ -287,6 +301,13 @@ def make_server(app, port=8765):
                     )
                 elif path == "/api/bootstrap":
                     self.send_data(200, app.bootstrap())
+                elif path == "/api/bridge/results":
+                    if not app.operation_lock.acquire(blocking=False):
+                        raise APIError("正在处理学习操作，请稍后刷新。", 409)
+                    try:
+                        self.send_data(200, {"receipts": app.bridge.recent()})
+                    finally:
+                        app.operation_lock.release()
                 elif re.fullmatch(r"/api/sessions/[a-f0-9]{32}", path):
                     self.send_data(200, app.get_session(path.rsplit("/", 1)[1]))
                 elif re.fullmatch(r"/api/jobs/[a-f0-9]{32}", path):
@@ -299,6 +320,7 @@ def make_server(app, port=8765):
                 self.send_data(500, {"error": "无法读取本地数据，请稍后重试。"})
 
         def do_POST(self):
+            cors_origin = None
             try:
                 length = int(self.headers.get("Content-Length", "0"))
                 if not 0 < length <= MAX_BODY:
@@ -307,7 +329,33 @@ def make_server(app, port=8765):
                 # a socket with unread body bytes can reset it before the error is delivered.
                 self.connection.settimeout(5)
                 raw = self.rfile.read(length)
+                if self.path == "/api/bridge/results":
+                    self.trusted_host()
+                    origin = self.headers.get("Origin", "")
+                    if not app.bridge.allowed_origin(origin):
+                        raise APIError("扩展未连接或来源不符。", 403)
+                    cors_origin = origin
+                    if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
+                        raise APIError("仅接受 JSON 请求", 415)
+                    if not app.operation_lock.acquire(blocking=False):
+                        raise APIError("正在处理学习操作，请稍后重试回传。", 409)
+                    try:
+                        receipt = app.bridge.receive(
+                            self.headers.get("X-AlgoCoach-Bridge", ""), origin, json.loads(raw)
+                        )
+                    finally:
+                        app.operation_lock.release()
+                    self.send_data(200, receipt, cors_origin=origin)
+                    return
                 self.trusted_request(mutation=True)
+                if self.path == "/api/bridge/pair":
+                    if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
+                        raise APIError("仅接受 JSON 请求", 415)
+                    payload = json.loads(raw)
+                    if not isinstance(payload, dict) or set(payload) != {"extension_id"}:
+                        raise APIError("连接字段无效。")
+                    self.send_data(200, app.bridge.pair(payload["extension_id"]))
+                    return
                 if self.path != "/api/actions":
                     raise APIError("接口不存在", 404)
                 if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
@@ -315,10 +363,32 @@ def make_server(app, port=8765):
                 payload = json.loads(raw)
                 self.send_data(202, app.submit(payload))
             except (APIError, ValueError, UnicodeError, OSError, RecursionError) as exc:
+                if isinstance(exc, BridgeError):
+                    self.send_data(403, {"error": str(exc)}, cors_origin=cors_origin)
+                    return
                 message = str(exc) if isinstance(exc, APIError) else "请求内容无效或未完整发送"
-                self.send_data(getattr(exc, "status", 400), {"error": message})
+                self.send_data(
+                    getattr(exc, "status", 400), {"error": message}, cors_origin=cors_origin
+                )
 
         def do_OPTIONS(self):
+            origin = self.headers.get("Origin", "")
+            if self.path == "/api/bridge/results" and app.bridge.allowed_origin(origin):
+                try:
+                    self.trusted_host()
+                    if self.headers.get("Access-Control-Request-Method") != "POST":
+                        raise APIError("不支持此方法", 405)
+                    requested = {
+                        h.strip().lower()
+                        for h in self.headers.get("Access-Control-Request-Headers", "").split(",")
+                        if h.strip()
+                    }
+                    if requested - {"content-type", "x-algocoach-bridge"}:
+                        raise APIError("不支持请求头", 403)
+                    self.send_data(200, {}, cors_origin=origin)
+                except APIError:
+                    self.send_data(403, {"error": "扩展请求无效。"})
+                return
             self.send_data(405, {"error": "不支持跨站访问"})
 
     server = ThreadingHTTPServer(("127.0.0.1", port), Handler)

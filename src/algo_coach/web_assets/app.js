@@ -285,10 +285,27 @@ $("code").addEventListener("keydown",(event) => { if (event.key === "Tab") { eve
 $("refresh-sessions").addEventListener("click",async () => { try { await refreshBoot(); if (recalled("pending")) await recoverPending(); } catch (error) { notice(error.message,"error"); } });
 $("date-label").textContent = new Date().toLocaleDateString("zh-CN",{timeZone:"Asia/Shanghai",month:"long",day:"numeric",weekday:"short"});
 
+async function refreshBrowserReceipts() {
+  const result = await api("/api/bridge/results");
+  const panel = $("browser-receipts"); panel.replaceChildren();
+  if (!result.receipts.length) panel.textContent = "暂无回传。加载 extensions/leetcode-bridge 扩展后连接本页。";
+  for (const receipt of result.receipts) {
+    const row = element("p",`提交 ${receipt.submission_id} · 浏览器报告：${receipt.verdict}\n${receipt.scope} `);
+    const link = element("a","查看原站记录 ↗");
+    link.href = `https://leetcode.cn/submissions/detail/${encodeURIComponent(receipt.submission_id)}/`;
+    link.target = "_blank"; link.rel = "noopener noreferrer"; row.append(link); panel.append(row);
+  }
+}
+$("refresh-browser").addEventListener("click",async () => { try { await refreshBrowserReceipts(); } catch(error) { notice(error.message,"error"); } });
+
 async function init() {
   controls();
   try {
     await refreshBoot();
+    if (!boot.busy) {
+      try { await refreshBrowserReceipts(); }
+      catch { $("browser-receipts").textContent = "回传服务暂不可用；若刚更新代码，请重启 Web 服务。"; }
+    }
     $("execution-environment").textContent = boot.runner_enabled ? "执行器配置已启用。可检查环境后运行已提交版本。" : "执行器尚未启用，测试会如实返回未执行。配置见 Docs/RUNNER.md。";
     const sid = recalled("session");
     if (sid && boot.sessions.some((s) => s.id === sid) && !boot.busy) await restore(sid,true);

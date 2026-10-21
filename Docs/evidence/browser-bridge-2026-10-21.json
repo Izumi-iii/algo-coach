@@ -1,0 +1,35 @@
+{
+  "scope": "Browser extension receipt prototype, no new LeetCode submissions or exported session cookies.",
+  "source_hashes": {
+    "src/algo_coach/browser_bridge.py": "5a2ae6ab561dbf417d3910eae44e2ea4893f9e68cec74ae6279c132698fdb5d9",
+    "src/algo_coach/web.py": "7b19fca48d0bd3f05ed8733eb90a12fb197d57661bf03796fb2d04243d0242a4",
+    "src/algo_coach/web_assets/app.js": "f558322f7fb7f913518aedd83308c65158020febd9e8e2e171c4d52e2b415b48",
+    "extensions/leetcode-bridge/manifest.json": "745a379c121241af007264515e19172f67c2131ab9a296e80e6da72710e96456",
+    "extensions/leetcode-bridge/popup.js": "d756083ca93fdfa82239a2d9002ee54de3f9e039eacad8b93a55e2784f57b6f1",
+    "extensions/leetcode-bridge/read-submission.js": "327b106f9c1ffec6204fc602c162dce933a4d4cd16cc5d59720e8ee8c70a6eec"
+  },
+  "http_tests": {
+    "passed": 22,
+    "includes_existing_web": 7
+  },
+  "injection_script_fixture_flows": 10,
+  "ruff_check": "passed",
+  "ruff_format": "passed",
+  "javascript_syntax": "passed",
+  "native_browser_automation": "launch_rejected_by_policy; no detailed reason returned",
+  "actual_browser_login_read_callback": "user_manually_verified_one_compile_error_receipt",
+  "dependencies_installed": false,
+  "extension_installed_in_user_profile": "user_manually_loaded; not installed by agent",
+  "receiver": "http://127.0.0.1:8767",
+  "receipt_trust": "browser report only; not server-attested or bound to current code",
+  "manual_verification": {
+    "date": "2026-10-21",
+    "evidence": "user-provided original-site and local-page screenshots",
+    "submission_id": "756110115",
+    "original_verdict": "compile_error",
+    "local_verdict": "Compile Error",
+    "id_and_verdict_match": true,
+    "new_platform_submission_verified": false,
+    "code_binding": "unbound"
+  }
+}

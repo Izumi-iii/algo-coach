@@ -20,3 +20,4 @@
 .chat-card>.card-top,.chat-tools,.composer,.composer-note{flex-shrink:0}
 @media(max-width:1100px){.learning-column{height:auto}.chat-card{height:580px;flex:none}.problem-scroll{max-height:300px}}
 @media(max-width:650px){.problem-summary{padding:14px;gap:10px;flex-wrap:wrap}.problem-summary h2{font-size:16px;flex-basis:100%}.problem-scroll{max-height:280px}.chat-card{height:560px}}
+.browser-card{margin-top:18px}.browser-card>.report-detail{padding-top:12px}.browser-card a{color:var(--accent)}
