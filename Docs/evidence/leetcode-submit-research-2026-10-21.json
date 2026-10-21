@@ -1,0 +1,49 @@
+{
+  "observed_at": "2026-10-21T04:02:05.140341+00:00",
+  "source_reads": [
+    {
+      "name": "client",
+      "url": "https://raw.githubusercontent.com/clearloop/leetcode-cli/main/src/plugins/leetcode.rs",
+      "http_status": 200,
+      "sha256": "2d8a1b3e06890068d05698b68fc516350b949446cd5cc715aa3270ed02b33e89",
+      "size": 9474
+    },
+    {
+      "name": "endpoints",
+      "url": "https://raw.githubusercontent.com/clearloop/leetcode-cli/main/src/config/sys.rs",
+      "http_status": 200,
+      "sha256": "0ba403c1bb28f4ab2b9c5e3276b1bf2ed896855da3c88d9277d177660db55b8a",
+      "size": 4207
+    },
+    {
+      "name": "submit_flow",
+      "url": "https://raw.githubusercontent.com/clearloop/leetcode-cli/main/src/cache/mod.rs",
+      "http_status": 200,
+      "sha256": "ed57efc09afcf76828a471ff52e590c5dc1ddb54b51b800d27227a90984ad2e2",
+      "size": 12893
+    },
+    {
+      "name": "cookie_guide",
+      "url": "https://raw.githubusercontent.com/clearloop/leetcode-cli/main/docs/cookies.md",
+      "http_status": 200,
+      "sha256": "8d93ecd4ffa5a50b0e56c38d54d65cf707fa2aaaec2dc2cbca158458675952b5",
+      "size": 2103
+    }
+  ],
+  "anonymous_graphql_probe": {
+    "http_status": 200,
+    "response_sha256": "aaa28d329a87f557c524ee781b041b389b91f202d7ba173603b19fca02e86ffc",
+    "size": 121,
+    "cookies_used": false,
+    "purpose": "Read-only question ID mapping and anonymous sign-in status; no submit, interpret or poll requests.",
+    "graphql_errors": [],
+    "question": {
+      "questionId": "1",
+      "questionFrontendId": "1",
+      "titleSlug": "two-sum"
+    },
+    "isSignedIn": false
+  },
+  "authenticated_submission": "not_attempted",
+  "note": "Remote branches are moving refs; source response hashes identify observed bytes, not a pinned Git commit. GitHub tree API was denied (403); not retried."
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "scope": "Experimental CLI CN submission backend; simulated HTTP with real Coach/SQLite.",
+  "source_hashes": {
+    "src/algo_coach/platform_judge.py": "1d4711b72c258453eff73b3eb94c09f9c0916c6b7ee6e2c4a938211bae448492",
+    "src/algo_coach/cli.py": "139ff2412d3ddbac742d26d55640a998493387c9e9958f1167440492d3ce5fa5",
+    "tests/test_platform_judge.py": "8a7b21dfd3b9c4846722c60187a7be0f4edd4e62ee558894eb483d00de42f9ca",
+    ".env.example": "01eec7139a1717d09eed99dac0b479e5a56aef934d53ee6105113364f2c323a0"
+  },
+  "targeted_tests": {
+    "passed": 108,
+    "platform_tests_included": 35
+  },
+  "existing_cli_regression": {
+    "passed": 4
+  },
+  "ruff_check": "passed",
+  "ruff_format": "passed",
+  "git_diff_check": "passed",
+  "authenticated_preflight": "pending_local_credentials",
+  "live_submit": "not_attempted",
+  "live_poll": "not_attempted",
+  "web_platform_controls": "not_implemented",
+  "model_report_integration": "not_implemented",
+  "credential_values_persisted": false,
+  "new_dependencies": false,
+  "adapter_expansion": "paused_at_existing_two_problems"
+}

@@ -67,6 +67,16 @@ def parser() -> argparse.ArgumentParser:
     sub.add_parser("problems", help="列出本地题库")
     sub.add_parser("sessions", help="列出历史会话")
     sub.add_parser("doctor", help="检查 Docker 与执行器镜像，不调用模型")
+    platform = sub.add_parser("platform", help="实验性中国站提交后端，不调用模型")
+    actions = platform.add_subparsers(dest="platform_action", required=True)
+    actions.add_parser("doctor", help="只读确认中国站登录，不提交")
+    item = actions.add_parser("preview", help="预览当前保存版本，不提交")
+    item.add_argument("session_id")
+    item.add_argument("--show-code", action="store_true", help="显示待提交原代码供审阅")
+    for name in ("apply", "poll", "show"):
+        item = actions.add_parser(name)
+        item.add_argument("session_id")
+        item.add_argument("operation_id")
     item = sub.add_parser("fetch", help="获取中国站题目或读取独立远程缓存，不调用模型")
     item.add_argument("reference", help="数字题号、leetcode25 或中国站原题链接")
     source_options(item)
@@ -333,6 +343,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     data_dir = args.data_dir or Path(os.getenv("ALGOCOACH_DATA_DIR", ".algo-coach"))
     try:
+        if args.command == "platform" and args.platform_action == "doctor":
+            from algo_coach.platform_judge import CNSubmissionClient
+
+            account = CNSubmissionClient().account()
+            print(json.dumps({"signed_in": True, "account_hash": account, "submitted": False}))
+            return 0
         if args.command == "doctor":
             print(json.dumps(DockerRunner.from_env().doctor(), ensure_ascii=False, indent=2))
             return 0
@@ -350,7 +366,27 @@ def main(argv: list[str] | None = None) -> int:
         )
         teacher = ModelTeacher() if needs_model else DemoTeacher()
         with Coach(data_dir, teacher) as coach:
-            if args.command == "problems":
+            if args.command == "platform":
+                from algo_coach.platform_judge import PlatformSubmissions
+
+                backend = PlatformSubmissions(coach)
+                if args.platform_action == "preview":
+                    result = backend.preview(args.session_id)
+                    if args.show_code:
+                        result["submitted_code"] = coach.get(args.session_id)["current_code"]
+                elif args.platform_action == "show":
+                    result = backend.view(backend.load(args.operation_id, args.session_id))
+                else:
+                    result = getattr(backend, args.platform_action)(
+                        args.session_id, args.operation_id
+                    )
+                print(json.dumps(result, ensure_ascii=False, indent=2))
+                return (
+                    1
+                    if result.get("last_error") or result.get("state") in {"unknown", "sending"}
+                    else 0
+                )
+            elif args.command == "problems":
                 for problem in coach.problems.all():
                     print(f"{problem.key}\t{problem.title}")
             elif args.command == "fetch":
