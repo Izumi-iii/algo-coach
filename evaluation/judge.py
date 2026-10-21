@@ -36,6 +36,7 @@ class HumanReview(StrictModel):
 def facts(state):
     return {
         "answer_checks": state.get("answer_checks", []),
+        "teaching_evidence": state.get("teaching_evidence", []),
         "stage": state["stage"],
         "history_hash": fingerprint(state.get("history", [])),
         "pending_archive_id": state.get("pending_archive_id"),

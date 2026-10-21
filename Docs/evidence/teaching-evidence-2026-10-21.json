@@ -1,0 +1,423 @@
+{
+  "schema_version": 1,
+  "scope": "Structured examples and exact history citations; not proof of narrative correctness or candidate failure.",
+  "final_source_hash": "9a42084ff0c00809a35091ee0f187f460921335efa599bd3f8be41f3496c2ae8",
+  "runs": [
+    {
+      "run_id": "20261021T021710Z-0174d9c1",
+      "source_hash": "8df1299d233e1b1d788653350e1c0187e23f874d18b7a0e92151b47a707522c0",
+      "suite_hash": "26121cd54d87dfcf236c882bd7a17c06e378fa547c556e779a77e865b573924b",
+      "summary": {
+        "model_invocations": 4,
+        "known_token_sums": {
+          "input_tokens": 21194,
+          "output_tokens": 2329,
+          "total_tokens": 23523
+        },
+        "token_coverage": {
+          "input_tokens": {
+            "known_calls": 4,
+            "all_calls": 4
+          },
+          "output_tokens": {
+            "known_calls": 4,
+            "all_calls": 4
+          },
+          "total_tokens": {
+            "known_calls": 4,
+            "all_calls": 4
+          }
+        },
+        "model_latency_ms": {
+          "p50": 3313.0,
+          "p95": 3813.0
+        },
+        "policy_rejected_attempts": 2,
+        "adapter_error_attempts": 0,
+        "cost": "unknown",
+        "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+        "dataset_cases": 1,
+        "selected_cases": 1,
+        "completed_cases": 1,
+        "contract_pass_cases": 0,
+        "contract_fail_cases": 1,
+        "incomplete_cases": 0,
+        "planned_steps": 3,
+        "executed_steps": 3,
+        "contract_pass_rate_selected": 0.0,
+        "model_steps_for_review": 3,
+        "reviewed_steps": 0,
+        "human_fail_steps": 0,
+        "human_pending_steps": 3,
+        "teaching_quality": "pending_human_review",
+        "run_status": "completed",
+        "review_file": null
+      },
+      "calls": [
+        {
+          "call_index": 1,
+          "step_index": 0,
+          "policy_result": "accepted_by_application_filter",
+          "policy_rule": null,
+          "teaching_evidence": {
+            "counterexamples": [],
+            "history_citations": []
+          }
+        },
+        {
+          "call_index": 2,
+          "step_index": 1,
+          "policy_result": "reply_policy_rejected",
+          "policy_rule": "counterexample_evidence",
+          "teaching_evidence": {
+            "counterexamples": [
+              {
+                "kind": "candidate",
+                "inputs": {
+                  "nums": [
+                    4,
+                    5,
+                    7,
+                    3
+                  ],
+                  "target": 8
+                },
+                "expected": [
+                  1,
+                  3
+                ],
+                "status": "input_expected_checked",
+                "detail": "输入约束与预期输出核验通过；未执行用户代码。",
+                "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+                "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+                "execution_evidence_matched": false,
+                "scope": "未证实当前代码在此输入上失败；链表预期仅核对值序列，不证明节点身份。"
+              }
+            ],
+            "history_citations": []
+          }
+        },
+        {
+          "call_index": 3,
+          "step_index": 1,
+          "policy_result": "reply_policy_rejected",
+          "policy_rule": "counterexample_evidence",
+          "teaching_evidence": {
+            "counterexamples": [
+              {
+                "kind": "candidate",
+                "inputs": {
+                  "nums": [
+                    3,
+                    2,
+                    4
+                  ],
+                  "target": 6
+                },
+                "expected": [
+                  0,
+                  1
+                ],
+                "status": "invalid_expected",
+                "detail": "预期输出不是唯一有效的两个不同下标。",
+                "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+                "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+                "execution_evidence_matched": false,
+                "scope": "未证实当前代码在此输入上失败；链表预期仅核对值序列，不证明节点身份。"
+              }
+            ],
+            "history_citations": []
+          }
+        },
+        {
+          "call_index": 4,
+          "step_index": 2,
+          "policy_result": "accepted_by_application_filter",
+          "policy_rule": null,
+          "teaching_evidence": {
+            "counterexamples": [
+              {
+                "kind": "candidate",
+                "inputs": {
+                  "nums": [
+                    3,
+                    4,
+                    2
+                  ],
+                  "target": 6
+                },
+                "expected": [
+                  1,
+                  2
+                ],
+                "status": "input_expected_checked",
+                "detail": "输入约束与预期输出核验通过；未执行用户代码。",
+                "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+                "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+                "execution_evidence_matched": false,
+                "scope": "未证实当前代码在此输入上失败；链表预期仅核对值序列，不证明节点身份。"
+              }
+            ],
+            "history_citations": [
+              {
+                "message_id": "m2-9f0a50bc915ec97ae090d99ea572ba1d5a51411ff2f75c858869112a3377e1ec",
+                "quote": "第5行先把当前下标 i 写进字典，第6行才查询 target - value 是否在字典里。",
+                "user_code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+                "source_role": "assistant",
+                "status": "source_matched",
+                "scope": "仅核对原文和版本归属，不证明原诊断正确或当前引用语义恰当。"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "run_id": "20261021T021817Z-240e586d",
+      "source_hash": "9a42084ff0c00809a35091ee0f187f460921335efa599bd3f8be41f3496c2ae8",
+      "suite_hash": "26121cd54d87dfcf236c882bd7a17c06e378fa547c556e779a77e865b573924b",
+      "summary": {
+        "model_invocations": 5,
+        "known_token_sums": {
+          "input_tokens": 27139,
+          "output_tokens": 3231,
+          "total_tokens": 30370
+        },
+        "token_coverage": {
+          "input_tokens": {
+            "known_calls": 5,
+            "all_calls": 5
+          },
+          "output_tokens": {
+            "known_calls": 5,
+            "all_calls": 5
+          },
+          "total_tokens": {
+            "known_calls": 5,
+            "all_calls": 5
+          }
+        },
+        "model_latency_ms": {
+          "p50": 3156.0,
+          "p95": 4813.0
+        },
+        "policy_rejected_attempts": 3,
+        "adapter_error_attempts": 0,
+        "cost": "unknown",
+        "cost_reason": "未配置可靠的供应商定价与缓存计费规则，不能按零成本计算",
+        "dataset_cases": 1,
+        "selected_cases": 1,
+        "completed_cases": 1,
+        "contract_pass_cases": 0,
+        "contract_fail_cases": 1,
+        "incomplete_cases": 0,
+        "planned_steps": 3,
+        "executed_steps": 3,
+        "contract_pass_rate_selected": 0.0,
+        "model_steps_for_review": 3,
+        "reviewed_steps": 0,
+        "human_fail_steps": 0,
+        "human_pending_steps": 3,
+        "teaching_quality": "pending_human_review",
+        "run_status": "completed",
+        "review_file": null
+      },
+      "calls": [
+        {
+          "call_index": 1,
+          "step_index": 0,
+          "policy_result": "accepted_by_application_filter",
+          "policy_rule": null,
+          "teaching_evidence": {
+            "counterexamples": [],
+            "history_citations": []
+          }
+        },
+        {
+          "call_index": 2,
+          "step_index": 1,
+          "policy_result": "reply_policy_rejected",
+          "policy_rule": "counterexample_evidence",
+          "teaching_evidence": {
+            "counterexamples": [
+              {
+                "kind": "candidate",
+                "inputs": {
+                  "nums": [
+                    3,
+                    4,
+                    5
+                  ],
+                  "target": 6
+                },
+                "expected": [
+                  0,
+                  0
+                ],
+                "status": "invalid_input",
+                "detail": "题面要求恰有一个有效下标对，当前输入不满足。",
+                "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+                "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+                "execution_evidence_matched": false,
+                "scope": "未证实当前代码在此输入上失败；链表预期仅核对值序列，不证明节点身份。"
+              }
+            ],
+            "history_citations": []
+          }
+        },
+        {
+          "call_index": 3,
+          "step_index": 1,
+          "policy_result": "reply_policy_rejected",
+          "policy_rule": "counterexample_evidence",
+          "teaching_evidence": {
+            "counterexamples": [
+              {
+                "kind": "candidate",
+                "inputs": {
+                  "nums": [
+                    3,
+                    3
+                  ],
+                  "target": 6
+                },
+                "expected": [
+                  0,
+                  1
+                ],
+                "status": "input_expected_checked",
+                "detail": "输入约束与预期输出核验通过；未执行用户代码。",
+                "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+                "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+                "execution_evidence_matched": false,
+                "scope": "未证实当前代码在此输入上失败；链表预期仅核对值序列，不证明节点身份。"
+              }
+            ],
+            "history_citations": [
+              {
+                "message_id": "m2-284276d0c1329db942e8cebc341bb22bb2cc7ea729c1edc09857226014cdcb63",
+                "quote": "确定的问题在第 5–6 行的顺序：先把当前下标 i 写进字典，再去查 target - value 是否存在。",
+                "user_code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+                "source_role": "assistant",
+                "status": "source_matched",
+                "scope": "仅核对原文和版本归属，不证明原诊断正确或当前引用语义恰当。"
+              }
+            ]
+          }
+        },
+        {
+          "call_index": 4,
+          "step_index": 2,
+          "policy_result": "reply_policy_rejected",
+          "policy_rule": "counterexample_evidence",
+          "teaching_evidence": {
+            "counterexamples": [
+              {
+                "kind": "candidate",
+                "inputs": {
+                  "nums": [
+                    3,
+                    4,
+                    2,
+                    6
+                  ],
+                  "target": 7
+                },
+                "expected": [
+                  0,
+                  1
+                ],
+                "status": "input_expected_checked",
+                "detail": "输入约束与预期输出核验通过；未执行用户代码。",
+                "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+                "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+                "execution_evidence_matched": false,
+                "scope": "未证实当前代码在此输入上失败；链表预期仅核对值序列，不证明节点身份。"
+              }
+            ],
+            "history_citations": [
+              {
+                "message_id": "m2-284276d0c1329db942e8cebc341bb22bb2cc7ea729c1edc09857226014cdcb63",
+                "quote": "先把当前下标 i 写进字典，再去查 target - value 是否存在。",
+                "user_code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+                "source_role": "assistant",
+                "status": "source_matched",
+                "scope": "仅核对原文和版本归属，不证明原诊断正确或当前引用语义恰当。"
+              }
+            ]
+          }
+        },
+        {
+          "call_index": 5,
+          "step_index": 2,
+          "policy_result": "accepted_by_application_filter",
+          "policy_rule": null,
+          "teaching_evidence": {
+            "counterexamples": [
+              {
+                "kind": "candidate",
+                "inputs": {
+                  "nums": [
+                    3,
+                    3
+                  ],
+                  "target": 6
+                },
+                "expected": [
+                  0,
+                  1
+                ],
+                "status": "input_expected_checked",
+                "detail": "输入约束与预期输出核验通过；未执行用户代码。",
+                "problem_hash": "468c0d516c1838131fa4c3c97bfc8714467b2280aa5a02809543a3647ea61ef8",
+                "code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+                "execution_evidence_matched": false,
+                "scope": "未证实当前代码在此输入上失败；链表预期仅核对值序列，不证明节点身份。"
+              }
+            ],
+            "history_citations": [
+              {
+                "message_id": "m2-284276d0c1329db942e8cebc341bb22bb2cc7ea729c1edc09857226014cdcb63",
+                "quote": "确定的问题在第 5–6 行的顺序：先把当前下标 i 写进字典，再去查 target - value 是否存在。",
+                "user_code_hash": "32c9b1eca7a5b2363ea11d57ea081cd2c04f38b04fd378f5a4457917aa1fa596",
+                "source_role": "assistant",
+                "status": "source_matched",
+                "scope": "仅核对原文和版本归属，不证明原诊断正确或当前引用语义恰当。"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "total_model_calls": 9,
+  "total_tokens": 53893,
+  "cost": "unknown",
+  "human_reviews_added": 0,
+  "execution": "No new submitted code execution; Docker and remote-source evaluation not enabled.",
+  "interrupted_tests": "One full suite interrupted during implementation; no pass count assigned. A subsequent full run overlaps prompt feedback changes; final targeted regression is recorded separately.",
+  "checks": {
+    "final_source_targeted": {
+      "passed": 104,
+      "scope": [
+        "teaching_evidence",
+        "response_focus",
+        "teaching_evaluation",
+        "teaching_reliability",
+        "model_adapter",
+        "web"
+      ]
+    },
+    "full_run": {
+      "passed": 381,
+      "skipped": 8,
+      "seconds": 217.56,
+      "scope": "Run overlapped prompt/feedback changes; not a single frozen final-source acceptance."
+    },
+    "ruff_check": "passed",
+    "ruff_format": "passed",
+    "git_diff_check": "passed",
+    "live_docker": "not_run",
+    "live_leetcode": "not_run"
+  }
+}

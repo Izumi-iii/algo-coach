@@ -5,6 +5,7 @@ from datetime import UTC, datetime
 
 from algo_coach.errors import POLICY_FEEDBACK, teaching_failure
 from algo_coach.teaching import validate_reply
+from algo_coach.teaching_evidence import check_evidence, enforce_evidence, render_evidence
 
 
 class BudgetExceeded(RuntimeError):
@@ -43,7 +44,14 @@ def visible_result(result):
         "tool_calls": [],
     }
     allowed = {
-        "TeachingReply": {"reply", "hint_level_used", "stage", "full_solution"},
+        "TeachingReply": {
+            "reply",
+            "hint_level_used",
+            "stage",
+            "full_solution",
+            "counterexamples",
+            "history_citations",
+        },
         "SolutionSummary": {"approach", "correctness", "complexity", "limitations"},
     }
     for call in getattr(raw, "tool_calls", []) or []:
@@ -132,6 +140,15 @@ class RecordingTeacher:
             if method.__name__ == "reply":
                 try:
                     validate_reply(result, state)
+                    checks = check_evidence(result, state)
+                    if len(self.events) > start:
+                        self.events[-1]["teaching_evidence"] = checks
+                    enforce_evidence(result, checks)
+                    attachment = render_evidence(checks)
+                    if attachment:
+                        validate_reply(
+                            result.model_copy(update={"reply": result.reply + attachment}), state
+                        )
                     policy = "accepted_by_application_filter"
                 except Exception as exc:
                     policy = teaching_failure(exc)[0]

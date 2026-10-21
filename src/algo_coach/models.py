@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, model_validator
 
 Stage = Literal["understand", "explore", "implement", "debug", "reflect"]
 
@@ -59,11 +59,31 @@ class Problem(StrictModel):
         return "\n".join(lines)
 
 
+class CounterexampleProposal(StrictModel):
+    kind: Literal["candidate", "constraint_example"] = Field(
+        default="candidate", description="候选反例，或专门说明输入违反约束的示例"
+    )
+    inputs: dict = Field(
+        description="反例输入，仅 JSON 数据；两数之和用 nums/target，链表用 head/k"
+    )
+    expected: list[StrictInt] = Field(
+        max_length=200, description="声称的正确输出，不是用户代码实际输出"
+    )
+
+
+class HistoryCitation(StrictModel):
+    message_id: str = Field(min_length=1, max_length=80)
+    quote: str = Field(min_length=1, max_length=500)
+    user_code_hash: str | None = Field(default=None, max_length=64)
+
+
 class TeachingReply(StrictModel):
     reply: str = Field(min_length=1, max_length=16000)
     hint_level_used: int = Field(ge=0, le=4)
     stage: Stage
     full_solution: bool
+    counterexamples: list[CounterexampleProposal] = Field(default_factory=list, max_length=2)
+    history_citations: list[HistoryCitation] = Field(default_factory=list, max_length=3)
 
 
 class SolutionSummary(StrictModel):

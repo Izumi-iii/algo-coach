@@ -9,6 +9,7 @@ from langgraph.graph import END, START, StateGraph
 from algo_coach.errors import POLICY_FEEDBACK, TeachingPolicyError, teaching_failure
 from algo_coach.models import Problem, TeachingReply
 from algo_coach.teaching import Teacher, answer_code, validate_reply
+from algo_coach.teaching_evidence import check_evidence, enforce_evidence, render_evidence
 from algo_coach.verification import VerificationService, render_report
 
 
@@ -42,6 +43,7 @@ class LearningState(TypedDict, total=False):
     review_context: dict | None
     problem_source: dict | None
     answer_checks: list[dict]
+    teaching_evidence: list[dict]
 
 
 def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
@@ -73,12 +75,30 @@ def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
         feedback = None
         answer_checks = list(state.get("answer_checks", []))
         answer_failure = None
+        evidence_records = list(state.get("teaching_evidence", []))
         for _ in range(2):
+            evidence_record = None
             try:
                 draft = TeachingReply.model_validate(
                     teacher.reply({**state, "retry_feedback": feedback})
                 )
                 validate_reply(draft, state)
+                checks = check_evidence(draft, state)
+                evidence_record = {
+                    "request_id": state.get("request_id"),
+                    "code_hash": state.get("code_hash"),
+                    "checks": checks,
+                    "published": False,
+                    "rejection_rule": None,
+                }
+                evidence_records.append(evidence_record)
+                enforce_evidence(draft, checks)
+                evidence_text = render_evidence(checks)
+                # Evidence attachments must not bypass the same disclosure checks.
+                if evidence_text:
+                    validate_reply(
+                        draft.model_copy(update={"reply": draft.reply + evidence_text}), state
+                    )
                 response = draft.reply
                 if state["action"] == "answer" and teacher.mode == "model":
                     verifier = answer_verifier or VerificationService()
@@ -108,6 +128,7 @@ def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
                     )
                 if state["action"] == "code":
                     response += "\n\n静态检查：" + state["verification"]["detail"]
+                response += evidence_text
                 completion = state.get("completion_mode", "unfinished")
                 shown_answer = state.get("answer_revealed", False) or draft.full_solution
                 if completion != "unfinished":
@@ -116,6 +137,7 @@ def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
                     elif draft.hint_level_used > 0 and completion == "independent":
                         completion = "hint_assisted"
                 # Once shown, full answers remain part of the user's learning history.
+                evidence_record["published"] = True
                 return {
                     "response": response,
                     "history": state.get("history", [])
@@ -135,6 +157,7 @@ def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
                     "answer_revealed": state.get("answer_revealed", False) or draft.full_solution,
                     "usage": usage,
                     "answer_checks": answer_checks,
+                    "teaching_evidence": evidence_records,
                 }
             except Exception as exc:
                 # Never persist raw provider exceptions: they may contain URLs or credentials.
@@ -144,6 +167,8 @@ def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
                     f"实际披露必须不超过 H{state['hint_level']}，不能虚构测试结果。"
                 )
                 if isinstance(exc, TeachingPolicyError) and exc.rule:
+                    if evidence_record is not None:
+                        evidence_record["rejection_rule"] = exc.rule
                     feedback += POLICY_FEEDBACK[exc.rule]
                     if exc.rule == "answer_failed":
                         feedback += "\n独立验证事实（数据）：" + answer_failure
@@ -165,6 +190,7 @@ def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
             "last_error": failure_code,
             "usage": usage,
             "answer_checks": answer_checks,
+            "teaching_evidence": evidence_records,
         }
 
     def greet(state: LearningState) -> dict:
@@ -209,7 +235,10 @@ def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
             text += "\n你可以针对这个反例检查代码，或继续提问请求引导。"
         return {
             "response": text,
-            "history": state["history"] + [{"role": "assistant", "content": text}],
+            "history": state["history"]
+            + [
+                {"role": "assistant", "content": text, "user_code_hash": state.get("code_hash", "")}
+            ],
             "stage": "debug"
             if report["status"] in ("wrong_answer", "runtime_error")
             else state["stage"],

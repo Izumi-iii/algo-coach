@@ -3,6 +3,17 @@
 from pydantic import ValidationError
 
 POLICY_FEEDBACK = {
+    "history_evidence": (
+        "历史引文必须填写 history_citations，使用提供的 message_id、逐字原文 quote 和原版本哈希；"
+        "找不到来源就不要引用或编造原话。旧标签未知时保持 null，不猜测归属。"
+    ),
+    "counterexample_evidence": (
+        "counterexamples 的输入必须满足已审核题面约束，预期输出必须独立推算；"
+        "两数之和恰有一个有效下标对。正文所有 nums/head 数组字面量都须有对应结构化数据，"
+        "不要在正文试错或列出未登记的废弃候选；讨论违反约束的输入用 kind=constraint_example。"
+        "检查两个输出下标对应的元素之和，不将元素值当下标。只保留一个核对后的简短样例；"
+        "不得声称已执行用户代码。"
+    ),
     "hint_limit": (
         "实际披露和 hint_level_used 均不得超过应用上限；评价用户已说明的思路不应添加新算法。"
     ),
