@@ -57,6 +57,8 @@ class TeachingOutputError(ValueError):
 def teaching_failure(exc: Exception) -> tuple[str, str, bool]:
     """Return a stable category, controlled user message and whether retry can help."""
     if isinstance(exc, TeachingPolicyError):
+        if exc.rule == "history_evidence":
+            return "reply_policy_rejected", "历史引文或版本归属未通过核对", True
         return "reply_policy_rejected", "模型回复超过当前提示范围或包含无依据结论", True
     if isinstance(exc, (TeachingOutputError, ValidationError)):
         return "invalid_model_output", "模型未返回有效的结构化教学内容", True

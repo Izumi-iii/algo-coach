@@ -30,7 +30,12 @@ def history_sources(state: dict) -> list[dict]:
             json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
         ).hexdigest()
         sources.append(
-            {"message_id": f"m{index}-{digest}", **payload, "content": payload["content"][:16000]}
+            {
+                "message_id": f"m{index}-{digest}",
+                **payload,
+                "user_code_hash": payload["user_code_hash"] or None,
+                "content": payload["content"][:16000],
+            }
         )
     return sources
 
@@ -140,6 +145,18 @@ def browser_failure_facts(state: dict) -> dict | None:
     }
 
 
+def _quote_display_text(text):
+    # Protect code verbatim: paired exponent operators must not become bold markup.
+    pieces = re.split(r"(```[\s\S]*?```|`[^`\n]*`)", text)
+    for index in range(0, len(pieces), 2):
+        pieces[index] = re.sub(
+            r"(?<![A-Za-z0-9_*])\*\*(?=\S)([^*\n]+?)(?<=\S)\*\*(?![A-Za-z0-9_*])",
+            r"\1",
+            pieces[index],
+        )
+    return "".join(pieces)
+
+
 def check_evidence(reply: TeachingReply, state: dict) -> dict:
     """Return application-owned records, with no inferred runtime or semantic verdict."""
     result = {
@@ -150,18 +167,29 @@ def check_evidence(reply: TeachingReply, state: dict) -> dict:
     sources = {s["message_id"]: s for s in history_sources(state)}
     for citation in reply.history_citations:
         source = sources.get(citation.message_id)
+        exact = bool(source and citation.quote in source["content"][:16000])
+        # Only remove paired Markdown bold delimiters. No punctuation, whitespace,
+        # wording or mathematical normalization; the original source/ID is unchanged.
+        display_match = bool(
+            source and citation.quote in _quote_display_text(source["content"][:16000])
+        )
         valid = (
             source is not None
             and citation.quote.strip()
-            and citation.quote in source["content"][:16000]
-            and citation.user_code_hash == source["user_code_hash"]
+            and (exact or display_match)
+            and (citation.user_code_hash or None) == source["user_code_hash"]
         )
         result["history_citations"].append(
             {
                 **citation.model_dump(),
                 "source_role": source["role"] if source else None,
                 "status": "source_matched" if valid else "invalid_citation",
-                "scope": "仅核对原文和版本归属，不证明原诊断正确或当前引用语义恰当。",
+                "match_kind": ("exact" if exact else "paired_bold_removed") if valid else None,
+                "scope": (
+                    "仅去除成对加粗标记核对显示文本和版本，不证明原诊断正确或当前引用语义恰当。"
+                    if valid and not exact
+                    else "仅核对原文和版本归属，不证明原诊断正确或当前引用语义恰当。"
+                ),
             }
         )
     adapter, digest = None, None

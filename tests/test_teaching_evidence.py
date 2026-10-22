@@ -179,6 +179,108 @@ def test_sources_are_stable_on_append_and_unknown_binding_is_not_inferred(state)
     assert before[0]["message_id"] not in {s["message_id"] for s in history_sources(state)}
 
 
+def test_bold_only_quotation_and_empty_no_code_binding_are_not_false_rejections(state):
+    state["history"] = [
+        {
+            "role": "assistant",
+            "content": "所以**能排序当且仅当**：序列是循环移位。",
+            "user_code_hash": "",
+        }
+    ]
+    source = history_sources(state)[0]
+    assert source["user_code_hash"] is None
+    assert state["history"][0]["user_code_hash"] == ""
+    citation = {
+        "message_id": source["message_id"],
+        "quote": "能排序当且仅当：序列是循环移位。",
+        "user_code_hash": None,
+    }
+    checks = check_evidence(reply(history_citations=[citation]), state)
+    enforce_evidence(reply(history_citations=[citation]), checks)
+    assert checks["history_citations"][0]["match_kind"] == "paired_bold_removed"
+    for fields in [
+        {"quote": "能排序当且仅当：序列不是循环移位。"},
+        {"quote": "能排序当且仅当:序列是循环移位。"},
+        {"user_code_hash": "a" * 64},
+        {"message_id": "missing"},
+    ]:
+        bad = reply(history_citations=[{**citation, **fields}])
+        with pytest.raises(TeachingPolicyError):
+            enforce_evidence(bad, check_evidence(bad, state))
+
+
+def test_authorized_full_answer_survives_display_only_history_quote(tmp_path):
+    from algo_coach.models import Verification
+
+    class Teacher:
+        mode = "model"
+
+        def reply(self, state):
+            assert state["action"] == "answer" and state["hint_level"] == 4
+            source = history_sources(state)[0]
+            return TeachingReply(
+                reply="使用双循环核对两个不同位置，最坏时间O(n²)，额外空间O(1)。\n"
+                "```python\nclass Solution:\n    def twoSum(self, nums, target):\n"
+                "        for i in range(len(nums)):\n"
+                "            for j in range(i+1, len(nums)):\n"
+                "                if nums[i]+nums[j] == target:\n"
+                "                    return [i,j]\n```",
+                hint_level_used=4,
+                stage="debug",
+                full_solution=True,
+                history_citations=[
+                    {
+                        "message_id": source["message_id"],
+                        "quote": "两个不同位置",
+                        "user_code_hash": None,
+                    }
+                ],
+            )
+
+    class NoExecution:
+        def verify(self, problem, code):
+            return Verification(
+                status="not_run", code_hash=inspect_code(code).code_hash, detail="Fixture: 未执行。"
+            )
+
+    with Coach(tmp_path, Teacher(), verifier=NoExecution()) as coach:
+        initial = coach.start(coach.problems.resolve("1"))
+        sid = initial["session_id"]
+        coach.graph.update_state(
+            coach.config(sid),
+            {
+                "history": [
+                    {
+                        "role": "assistant",
+                        "content": "核对**两个不同位置**。",
+                        "user_code_hash": "",
+                    }
+                ]
+            },
+        )
+        result = coach.turn(sid, "/answer")
+        assert result["last_error"] is None and result["answer_revealed"] is True
+        assert result.get("current_code", "") == ""
+        assert result["teaching_evidence"][-1]["published"] is True
+        assert result["answer_checks"][-1]["executed"] is False
+
+
+@pytest.mark.parametrize(
+    "content,quote",
+    [
+        ("指数 `a ** b ** c`。", "a  b  c"),
+        ("```python\nx = a**b**c\n```", "x = abc"),
+        ("a**b**c", "abc"),
+    ],
+)
+def test_quote_format_normalization_never_rewrites_code_or_exponentiation(state, content, quote):
+    state["history"] = [{"role": "assistant", "content": content}]
+    source = history_sources(state)[0]
+    draft = reply(history_citations=[{"message_id": source["message_id"], "quote": quote}])
+    with pytest.raises(TeachingPolicyError):
+        enforce_evidence(draft, check_evidence(draft, state))
+
+
 def test_explicit_fabricated_quote_and_unstructured_example_are_rejected(state):
     for text in ["我之前说过：“已修复”。", "例如 nums=[1,1,2]，target=3，是反例。"]:
         draft = reply().model_copy(update={"reply": text})
