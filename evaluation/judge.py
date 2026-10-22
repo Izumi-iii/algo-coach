@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import Field
 
 from algo_coach.adapters import problem_hash
+from algo_coach.browser_bridge import current_browser_feedback
 from algo_coach.models import Problem, StrictModel
 from evaluation.cases import fingerprint
 
@@ -37,6 +38,8 @@ def facts(state):
     return {
         "answer_checks": state.get("answer_checks", []),
         "teaching_evidence": state.get("teaching_evidence", []),
+        "browser_feedback": current_browser_feedback(state),
+        "browser_report_count": len(state.get("browser_reports", [])),
         "stage": state["stage"],
         "history_hash": fingerprint(state.get("history", [])),
         "pending_archive_id": state.get("pending_archive_id"),
@@ -74,6 +77,17 @@ def check_step(step, before, after, *, error=None, artifact=None):
         if getattr(expected, key) is not None and after[key] != getattr(expected, key):
             failures.append(key + "_mismatch")
     report = after.get("verification") or {}
+    browser = after.get("browser_feedback")
+    if expected.browser_feedback is not None and bool(browser) != (
+        expected.browser_feedback == "present"
+    ):
+        failures.append("browser_feedback_presence_mismatch")
+    if expected.browser_status is not None and (
+        not browser or browser["status_code"] != expected.browser_status
+    ):
+        failures.append("browser_feedback_status_mismatch")
+    if step.operation in {"save_code", "browser_report"} and report.get("executed"):
+        failures.append("browser_fixture_executed_implicitly")
     if expected.verification_status and report.get("status") != expected.verification_status:
         failures.append("verification_status_mismatch")
     if after.get("current_code"):

@@ -23,6 +23,7 @@ from algo_coach.runner import DockerRunner
 from algo_coach.service import Coach
 from algo_coach.teaching import SYSTEM_PROMPT, ModelTeacher
 from algo_coach.verification import VerificationService
+from evaluation.browser_fixtures import apply_browser_fixture, browser_fixtures
 from evaluation.cases import DEFAULT_CASES, fingerprint, load_cases, problem_for, select_cases
 from evaluation.fixtures import CODE, GROUND_TRUTH, ROOT, check_counterexample
 from evaluation.judge import check_step, facts, review_template
@@ -115,6 +116,12 @@ def execute_step(coach, sid, step, case_dir):
             sid, "请分析这段提交的代码，不要替我改写完整答案。", code=CODE[step.fixture]
         )
         output = state["response"]
+    elif operation == "save_code":
+        state = coach.save_code(sid, CODE[step.fixture])
+        output = "已保存代码版本；未调用模型、未执行代码。"
+    elif operation == "browser_report":
+        state = apply_browser_fixture(coach, sid, step.fixture)
+        output = "评估证据已回放并绑定；无平台请求。"
     elif operation == "test":
         state = coach.test(sid)
         output = state["response"]
@@ -215,6 +222,9 @@ def run(
         "dataset_cases": dataset_size,
         "case_hashes": {case.id: fingerprint(case.model_dump()) for case in cases},
         "fixture_hashes": {name: fingerprint(code) for name, code in CODE.items()},
+        "browser_fixture_hashes": {
+            name: fingerprint(f.model_dump(mode="json")) for name, f in browser_fixtures().items()
+        },
         "problem_hashes": {key: problem_hash(p) for key, p in problems.items()},
         "prompt_hash": fingerprint(SYSTEM_PROMPT),
         "source_hash": source_fingerprint(),
@@ -230,7 +240,16 @@ def run(
     writer.json(
         "source.snapshot.json", {"source_hash": manifest["source_hash"], "files": source_files()}
     )
-    writer.json("fixtures.snapshot.json", {"code": CODE, "known_defects": GROUND_TRUTH})
+    writer.json(
+        "fixtures.snapshot.json",
+        {
+            "code": CODE,
+            "known_defects": GROUND_TRUTH,
+            "browser_reports": {
+                name: f.model_dump(mode="json") for name, f in browser_fixtures().items()
+            },
+        },
+    )
     writer.json("problems.snapshot.json", {key: p.model_dump() for key, p in problems.items()})
     results = {
         "run_id": run_id,

@@ -8,6 +8,7 @@ from typing import Literal
 from pydantic import Field, model_validator
 
 from algo_coach.models import Problem, StrictModel
+from evaluation.browser_fixtures import browser_fixtures
 from evaluation.fixtures import CODE
 
 DEFAULT_CASES = Path(__file__).with_name("cases.jsonl")
@@ -20,6 +21,8 @@ class Contract(StrictModel):
     reflection: str | None = None
     completion_mode: str | None = None
     expected_error: str | None = None
+    browser_feedback: Literal["present", "absent"] | None = None
+    browser_status: int | None = None
 
 
 class Step(StrictModel):
@@ -34,6 +37,8 @@ class Step(StrictModel):
         "summarize",
         "archive",
         "complete",
+        "save_code",
+        "browser_report",
     ]
     text: str = Field(default="", max_length=16000)
     fixture: str | None = None
@@ -41,9 +46,11 @@ class Step(StrictModel):
 
     @model_validator(mode="after")
     def valid_action(self):
-        if self.operation == "code" and self.fixture not in CODE:
+        if self.operation in {"code", "save_code"} and self.fixture not in CODE:
             raise ValueError("代码步骤必须选择已有 fixture")
-        if self.fixture and self.operation != "code":
+        if self.operation == "browser_report" and self.fixture not in browser_fixtures():
+            raise ValueError("浏览器报告步骤必须选择冻结 fixture")
+        if self.fixture and self.operation not in {"code", "save_code", "browser_report"}:
             raise ValueError("只有代码步骤可指定 fixture")
         if self.operation in {"say", "note", "explain", "complete"} and not self.text.strip():
             raise ValueError("步骤需要非空输入")
@@ -102,7 +109,12 @@ def select_cases(cases, profile="smoke", split="all", ids=None):
 
 
 def problem_for(case, catalogue):
-    if case.problem == "local":
+    report = next((s.fixture for s in case.steps if s.operation == "browser_report"), None)
+    if report:
+        p = browser_fixtures()[report].problem
+        if p.frontend_id != case.problem:
+            raise ValueError("浏览器报告场景题目不一致")
+    elif case.problem == "local":
         p = Problem(
             site="local",
             frontend_id="eval-sum",
