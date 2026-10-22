@@ -1,0 +1,159 @@
+{
+  "date": "2026-10-22",
+  "browser_fixture": {
+    "passed": true,
+    "real_model_calls": 0,
+    "real_platform_submissions": 0,
+    "turn_posts": 2,
+    "checks": [
+      "live checked paragraph before completion",
+      "input and editor enabled",
+      "no global busy banner",
+      "history switching during generation",
+      "no session jump on completion",
+      "per-session drafts preserved",
+      "no duplicate user message",
+      "refresh recovers original job without resubmission"
+    ],
+    "screenshots": [
+      "stream-waiting.png",
+      "stream-first-paragraph.png",
+      "stream-complete.png"
+    ]
+  },
+  "real_model_smoke": {
+    "mode": "model",
+    "scenario": "two_sum_statement_clarification",
+    "last_error": null,
+    "provider_attempts": 2,
+    "usage": [
+      {
+        "tokens": {
+          "input_tokens": 3293,
+          "output_tokens": 310,
+          "total_tokens": 3603,
+          "input_token_details": {
+            "cache_read": 1152
+          },
+          "output_token_details": {}
+        },
+        "cost": "unknown"
+      },
+      {
+        "tokens": {
+          "input_tokens": 3555,
+          "output_tokens": 395,
+          "total_tokens": 3950,
+          "input_token_details": {
+            "cache_read": 2560
+          },
+          "output_token_details": {}
+        },
+        "cost": "unknown"
+      }
+    ],
+    "events": [
+      {
+        "kind": "reset",
+        "characters": null,
+        "phase": null,
+        "elapsed_ms": 4812
+      },
+      {
+        "kind": "phase",
+        "characters": null,
+        "phase": "generating",
+        "elapsed_ms": 4812
+      },
+      {
+        "kind": "phase",
+        "characters": null,
+        "phase": "generating",
+        "elapsed_ms": 4812
+      },
+      {
+        "kind": "preview",
+        "characters": 186,
+        "phase": null,
+        "elapsed_ms": 6750
+      },
+      {
+        "kind": "phase",
+        "characters": null,
+        "phase": "checking",
+        "elapsed_ms": 7172
+      },
+      {
+        "kind": "reset",
+        "characters": null,
+        "phase": null,
+        "elapsed_ms": 7172
+      },
+      {
+        "kind": "phase",
+        "characters": null,
+        "phase": "retrying",
+        "elapsed_ms": 7172
+      },
+      {
+        "kind": "reset",
+        "characters": null,
+        "phase": null,
+        "elapsed_ms": 7172
+      },
+      {
+        "kind": "phase",
+        "characters": null,
+        "phase": "generating",
+        "elapsed_ms": 7172
+      },
+      {
+        "kind": "phase",
+        "characters": null,
+        "phase": "generating",
+        "elapsed_ms": 7172
+      },
+      {
+        "kind": "preview",
+        "characters": 87,
+        "phase": null,
+        "elapsed_ms": 8562
+      },
+      {
+        "kind": "phase",
+        "characters": null,
+        "phase": "checking",
+        "elapsed_ms": 9062
+      }
+    ],
+    "complete_ms": 9062,
+    "preview_before_completion": true,
+    "new_platform_submissions": 0,
+    "response_characters": 529
+  },
+  "engineering": {
+    "passed": 509,
+    "skipped": 8,
+    "elapsed_seconds": 260.98,
+    "ruff_check": "passed",
+    "ruff_format_files": 103,
+    "js_syntax": "passed",
+    "git_diff_check": "passed",
+    "docker_and_remote_problem_integration_enabled": false
+  },
+  "service_health": {
+    "model_port": 8765,
+    "demo_port": 8767,
+    "model_sessions_preserved": 1,
+    "model_busy_at_restart": false,
+    "demo_busy_at_restart": false,
+    "native_sse_client_loaded": true
+  },
+  "limitations": [
+    "Preview is checked cumulatively by existing finite rules, not proved semantically correct.",
+    "A later rejected full reply clears the preview and retries; already read text cannot be undone.",
+    "H3/H4, incomplete metadata and replies without paragraph boundaries are buffered.",
+    "Drafts persist in page memory, not across a full page reload.",
+    "Readonly busy session views are bounded cached snapshots."
+  ]
+}

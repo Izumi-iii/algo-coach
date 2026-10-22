@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-22",
+  "observed_rule": "history_evidence",
+  "observed_permission": "H4 answer already authorized",
+  "causes": [
+    "Paired Markdown bold markers omitted in model citation.",
+    "No-code history binding stored as empty string but cited as null."
+  ],
+  "source_history_preserved": true,
+  "matching_scope": "Only paired bold delimiter removal; no punctuation or wording changes. Unknown binding is never inferred as current.",
+  "real_replay": {
+    "problem_id": "3942",
+    "last_error": null,
+    "answer_revealed": true,
+    "provider_attempts": 1,
+    "usage": [
+      {
+        "tokens": {
+          "input_tokens": 5481,
+          "output_tokens": 1658,
+          "total_tokens": 7139,
+          "input_token_details": {
+            "cache_read": 3328
+          },
+          "output_token_details": {}
+        },
+        "cost": "unknown"
+      }
+    ],
+    "phases": [
+      {
+        "kind": "reset",
+        "phase": null
+      },
+      {
+        "kind": "phase",
+        "phase": "generating"
+      },
+      {
+        "kind": "phase",
+        "phase": "generating"
+      },
+      {
+        "kind": "phase",
+        "phase": "checking"
+      },
+      {
+        "kind": "phase",
+        "phase": "answer_check"
+      }
+    ],
+    "reference_reports": [
+      {
+        "status": "unsupported",
+        "executed": false,
+        "code_hash": "69763f310228f27ff7673e51de8a6ed2d0f24d76df52dde96aabea558c4248ea"
+      }
+    ],
+    "published_checks": [
+      {
+        "published": true,
+        "rejection_rule": null
+      }
+    ],
+    "original_session_modified": false,
+    "new_platform_submissions": 0,
+    "response_characters": 3621
+  },
+  "original_rejected_citation_sets_now_matched": 4,
+  "normalization_code_protection": "Inline/fenced code remains verbatim; adjacent ASCII exponent expressions are not stripped.",
+  "validation": {
+    "main_fix_full_regression": {
+      "passed": 511,
+      "skipped": 8,
+      "reported_elapsed_seconds": 8976.16
+    },
+    "final_code_exponent_protection_targeted": {
+      "passed": 42
+    },
+    "ruff": "passed",
+    "format": "passed",
+    "js_syntax": "passed",
+    "diff_check": "passed"
+  },
+  "service_restart": {
+    "status": "rejected_by_automatic_approval",
+    "action": "stop and restart existing model Web service",
+    "reason": "blocked by policy; no further reason provided",
+    "backend_fix_loaded_in_existing_service": false
+  }
+}
