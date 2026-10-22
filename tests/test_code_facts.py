@@ -3,6 +3,22 @@ import pytest
 from algo_coach.code_facts import code_facts
 
 
+def test_length_subscript_distinguishes_exception_from_counterfactual_value():
+    facts = code_facts("def f(items):\n    return items[len(items)]\n")
+    item = facts["length_subscripts"][0]
+    assert item["line"] == 2 and item["container"] == "items"
+    assert "不会返回" in item["conditional_meaning"]
+    assert "元素值，不是位置编号" in item["conditional_meaning"]
+    assert "len未被重定义" in item["scope"]
+
+
+@pytest.mark.parametrize(
+    "expression", ["items[0]", "items[len(other)]", "items[len(items)-1]", "len(items)"]
+)
+def test_length_subscript_does_not_generalize_other_expressions(expression):
+    assert code_facts("def f(items):\n    return " + expression)["length_subscripts"] == []
+
+
 def test_first_pointer_write_resolves_entry_alias_without_running_code():
     facts = code_facts(
         "previous, current = after, before.next\nwhile current is not after:\n"

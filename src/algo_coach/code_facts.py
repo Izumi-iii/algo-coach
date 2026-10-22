@@ -25,6 +25,40 @@ def _same(left, right):
     return ast.dump(left, include_attributes=False) == ast.dump(right, include_attributes=False)
 
 
+def _length_subscripts(nodes):
+    """Record syntax only; len binding, value type and reachability remain conditional."""
+    facts = []
+    for node in nodes:
+        value = node.value if isinstance(node, ast.Return) else None
+        if not isinstance(value, ast.Subscript) or not isinstance(value.value, ast.Name):
+            continue
+        index = value.slice
+        if (
+            isinstance(index, ast.Call)
+            and isinstance(index.func, ast.Name)
+            and index.func.id == "len"
+            and len(index.args) == 1
+            and not index.keywords
+            and _same(index.args[0], value.value)
+        ):
+            facts.append(
+                {
+                    "line": node.lineno,
+                    "container": value.value.id,
+                    "pattern": "return container[len(container)]",
+                    "conditional_meaning": (
+                        "若本行被执行，容器是标准list且len为内置函数，下标等于长度，"
+                        "会抛IndexError；return不会返回元素或下标。"
+                        "反事实：若改用合法下标，容器下标表达式取出的是元素值，不是位置编号。"
+                    ),
+                    "scope": "仅语法匹配，不证明可达、实参类型或len未被重定义；未执行代码。",
+                }
+            )
+        if len(facts) == 12:
+            break
+    return facts
+
+
 def _mapping_scans(nodes):
     """Recognize a narrow dictionary scan; do not evaluate AST expressions or inputs."""
     scans = []
@@ -177,6 +211,7 @@ def code_facts(code: str) -> dict:
         "code_hash": hashlib.sha256(code.encode("utf-8")).hexdigest(),
         "loops": [],
         "mapping_scans": [],
+        "length_subscripts": [],
         "coverage": (
             "loops仅覆盖受支持的 while 局部赋值模式，mapping_scans仅覆盖精确字典扫描模板。"
             "loops=[] 只表示没有提取到匹配事实，"
@@ -194,6 +229,7 @@ def code_facts(code: str) -> dict:
     if len(nodes) > 4000:
         return {**result, "analysis_skipped": "AST exceeds bounded evidence budget"}
     result["mapping_scans"] = _mapping_scans(nodes)
+    result["length_subscripts"] = _length_subscripts(nodes)
     for owner in nodes:
         # Inspect only sibling statements: no cross-branch or cross-iteration inference.
         body = getattr(owner, "body", None)
