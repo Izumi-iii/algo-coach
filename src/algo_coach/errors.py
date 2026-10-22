@@ -3,6 +3,14 @@
 from pydantic import ValidationError
 
 POLICY_FEEDBACK = {
+    "question_budget": (
+        "当前诊断只聚焦一个卡点。删去多余追问，最多保留一个与本次错误直接相关的问题；"
+        "若用户明确要求直接回答，则不提问。不要把多个问题用逗号串成一个问号。"
+    ),
+    "browser_claim": (
+        "只能按 browser_feedback 非空时的 verdict 描述当前版本，明确标注浏览器回传报告；"
+        "没有匹配报告时不要引用历史判题状态，不将它当作本地执行或独立认证。"
+    ),
     "history_evidence": (
         "历史引文必须填写 history_citations，使用提供的 message_id、逐字原文 quote 和原版本哈希；"
         "找不到来源就不要引用或编造原话。旧标签未知时保持 null，不猜测归属。"

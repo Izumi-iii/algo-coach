@@ -1,4 +1,6 @@
 import threading
+import time
+from uuid import uuid4
 
 import httpx
 import pytest
@@ -181,3 +183,58 @@ def test_preflight_does_not_open_general_cors(bridge_site):
         )
         assert response.status_code in (403, 405)
         assert "access-control-allow-origin" not in response.headers
+
+
+def test_http_binding_requires_saved_version_and_preserves_local_report(bridge_site):
+    client, app, coach = bridge_site
+    code = "class Solution:\n    def twoSum(self, nums, target):\n        return [0, 0]\n"
+    sid = coach.start(coach.problems.resolve("1"))["session_id"]
+    state = coach.turn(sid, "保存代码", code=code)
+    token = connect(client, app)
+    response = client.post(
+        "/api/bridge/results",
+        json={
+            **RECEIPT,
+            "detail": {
+                "submission_id": "12345",
+                "question_id": "1",
+                "frontend_id": "1",
+                "slug": "two-sum",
+                "language": "python3",
+                "source_code": code,
+            },
+        },
+        headers={"Origin": ORIGIN, "X-AlgoCoach-Bridge": token},
+    )
+    assert response.status_code == 200
+    receipt = response.json()
+    payload = {
+        "operation": "bind_browser",
+        "request_id": uuid4().hex,
+        "session_id": sid,
+        "receipt_id": receipt["receipt_id"],
+        "code_hash": state["code_hash"],
+    }
+    # Extension capability cannot bind; mutation requires the local page's CSRF token.
+    assert (
+        client.post(
+            "/api/actions", json=payload, headers={"Origin": ORIGIN, "X-AlgoCoach-Bridge": token}
+        ).status_code
+        == 403
+    )
+    result = client.post(
+        "/api/actions",
+        json=payload,
+        headers={"X-AlgoCoach-Token": app.token, "Origin": str(client.base_url).rstrip("/")},
+    )
+    assert result.status_code == 202
+    for _ in range(100):
+        job = client.get("/api/jobs/" + payload["request_id"]).json()
+        if job["status"] != "running":
+            break
+        time.sleep(0.01)
+    assert job["status"] == "completed", job
+    view = job["result"]["state"]
+    assert view["browser_feedback"]["verdict"] == "Accepted"
+    assert view["verification"] == state["verification"]
+    assert client.get("/api/sessions/" + sid).json()["browser_feedback"] == view["browser_feedback"]

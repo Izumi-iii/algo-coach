@@ -36,5 +36,5 @@ document.getElementById("read").addEventListener("click", () => action(async () 
   const response = await fetch(base+"/api/bridge/results",{method:"POST",redirect:"error",headers:{"Content-Type":"application/json","X-AlgoCoach-Bridge":connection.token},body:JSON.stringify(result)});
   const receipt = await response.json();
   if (!response.ok) { status.textContent=receipt.error || "回传失败，请重新连接。"; return; }
-  status.textContent=`已回传提交 ${receipt.submission_id}：${receipt.verdict}。回到 AlgoCoach 点击“刷新回传”。它尚未绑定当前代码。`;
+  status.textContent=`已回传提交 ${receipt.submission_id}：${receipt.verdict}。回到 AlgoCoach 点击“刷新回传”。${receipt.detail ? "可选择“匹配当前保存代码”后用于教学。" : "缺少匹配字段，仅展示历史状态。"}`;
 }));

@@ -25,6 +25,23 @@
     if (!Number.isSafeInteger(result.status_code)) return {error:"未取得可识别的判题状态，停止回传。"};
     const qid = result.question_id == null ? null : String(result.question_id);
     if (qid !== null && !/^[0-9]{1,30}$/.test(qid)) return {error:"题目标识格式不匹配。"};
-    return {submission_id:match[1],state:"SUCCESS",status_code:result.status_code,question_id:qid,runtime:String(result.status_runtime ?? "").slice(0,200),memory:String(result.status_memory ?? "").slice(0,200)};
+    const receipt = {submission_id:match[1],state:"SUCCESS",status_code:result.status_code,question_id:qid,runtime:String(result.status_runtime ?? "").slice(0,200),memory:String(result.status_memory ?? "").slice(0,200)};
+    // Query the saved submission, never the editable code currently shown on the page.
+    let response;
+    try {
+      response = await request("/graphql/", {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({query:"query AlgoCoachSubmission($id: ID!) { submissionDetail(submissionId: $id) { id code lang question { questionId questionFrontendId titleSlug } } }",variables:{id:match[1]}})});
+    } catch { return receipt; } // Historical status remains usable for display only.
+    const detail = response.data?.submissionDetail;
+    if (response.errors || !detail) return receipt;
+    if (String(detail.id) !== match[1]) return {error:"提交详情标识不一致，停止回传。"};
+    const question = detail.question;
+    if (!question || typeof detail.code !== "string" || !detail.code.length || detail.code.length > 131072 || typeof detail.lang !== "string") return receipt;
+    const questionId = String(question.questionId);
+    const frontendId = String(question.questionFrontendId);
+    const slug = question.titleSlug;
+    if (!/^[0-9]{1,30}$/.test(questionId) || !/^[0-9]{1,20}$/.test(frontendId) || typeof slug !== "string" || !/^[a-z0-9][a-z0-9-]{0,119}$/.test(slug)) return receipt;
+    if ((qid !== null && qid !== questionId) || (url.pathname.startsWith("/problems/") && url.pathname.split("/")[2] !== slug)) return {error:"题目详情与提交页面不一致，停止回传。"};
+    receipt.detail = {submission_id:match[1],question_id:questionId,frontend_id:frontendId,slug,language:detail.lang,source_code:detail.code};
+    return receipt;
   } catch { return {error:"读取失败：请在原站确认登录或访问验证。没有新建提交，也没有导出登录态。"}; }
 })();

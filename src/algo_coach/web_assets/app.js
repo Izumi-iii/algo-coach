@@ -9,6 +9,10 @@ let current = null;
 let busy = false;
 let uncertain = false;
 let remoteBusy = false;
+let platformConnected = false;
+let platformRunning = false;
+let platformTimer = null;
+let platformGeneration = 0;
 const statusNames = {not_run:"未执行", syntax_error:"语法错误", passed:"本地通过", wrong_answer:"答案错误", runtime_error:"运行错误", timeout:"执行超时", resource_limit:"资源超限", unsupported:"题型未支持", runner_error:"执行器错误", cancelled:"已取消"};
 
 function notice(text, kind = "") {
@@ -49,6 +53,11 @@ function controls() {
   $("test-code").disabled = blocked || !current?.current_code || draft;
   $("test-code").title = draft ? "请先提交当前编辑的代码，再验证该版本。" : "仅测试已提交版本，不调用教学模型。";
   $("draft-status").textContent = !current ? "等待选择题目" : !current.current_code ? "尚未提交" : draft ? "有未提交修改" : "已保存到会话";
+  document.querySelectorAll("[data-browser-bind]").forEach(node => { node.disabled = blocked || !current?.current_code || draft; });
+  $("submit-platform").disabled = blocked || platformRunning || !platformConnected || !current?.current_code || draft;
+  document.querySelectorAll("[data-platform-control]").forEach(node => { node.disabled = blocked || platformRunning || !platformConnected; });
+  const feedback = current?.browser_feedback;
+  $("browser-binding").textContent = feedback ? `已匹配当前保存版本：提交 ${feedback.submission_id} · 浏览器回传报告 ${feedback.verdict}。${draft ? "编辑器有草稿修改，报告仅对应保存版本。" : "可在聊天中询问此结果；它不代表独立完成。"}` : "当前保存代码尚未匹配浏览器报告；其他会话或版本的结果不能用于当前教学。";
 }
 
 function renderSessions() {
@@ -160,6 +169,10 @@ function renderState(next, discardDraft = false) {
   const oldDraft = $("code").value;
   const keepDraft = !discardDraft && previous?.session_id === next.session_id && oldDraft !== (previous.current_code || starter(previous.problem)) && oldDraft !== next.current_code;
   current = next;
+  if (previous?.session_id !== current.session_id) {
+    platformGeneration++; clearTimeout(platformTimer);
+    $("platform-status").textContent = "正式提交会增加原站账号记录；模型不会自动提交。";
+  }
   if (previous?.session_id !== current.session_id) $("message").value = "";
   remember("session",current.session_id);
   renderProblem(current.problem);
@@ -179,6 +192,7 @@ function renderState(next, discardDraft = false) {
   if (!keepDraft) $("code").value = current.current_code || starter(current.problem);
   $("attempts").textContent = `已保存 ${current.attempt_count} 次代码提交`;
   renderReport(); renderSessions(); lineNumbers(); controls();
+  refreshPlatform().catch(() => {});
 }
 
 function hasUnsaved() {
@@ -189,6 +203,9 @@ async function restore(sid, force = false) {
   if (!force && hasUnsaved() && !confirm("有未提交的代码或消息。切换会话会丢弃这些修改，是否继续？")) return;
   try {
     const state = await api(`/api/sessions/${sid}`); renderState(state,!force);
+    const submissions = await refreshPlatform().catch(() => []);
+    const pending = submissions?.find(item => ["prepared","checking","queued","judging"].includes(item.state) && !item.last_error);
+    if (pending && platformConnected && !platformRunning) drivePlatform(pending.operation_id);
     notice(state.last_error ? "上次教学请求未完成，输入已保存，可以重试。" : "会话已恢复，可以继续推演。",state.last_error ? "error" : "");
   } catch (error) { notice(error.message,"error"); }
 }
@@ -290,11 +307,22 @@ async function refreshBrowserReceipts() {
   const panel = $("browser-receipts"); panel.replaceChildren();
   if (!result.receipts.length) panel.textContent = "暂无回传。加载 extensions/leetcode-bridge 扩展后连接本页。";
   for (const receipt of result.receipts) {
-    const row = element("p",`提交 ${receipt.submission_id} · 浏览器报告：${receipt.verdict}\n${receipt.scope} `);
+    const scope = receipt.detail ? "浏览器历史记录；是否用于当前教学，以上方代码匹配状态为准。" : receipt.scope;
+    const row = element("p",`提交 ${receipt.submission_id} · 浏览器报告：${receipt.verdict}\n${scope} `);
     const link = element("a","查看原站记录 ↗");
     link.href = `https://leetcode.cn/submissions/detail/${encodeURIComponent(receipt.submission_id)}/`;
     link.target = "_blank"; link.rel = "noopener noreferrer"; row.append(link); panel.append(row);
+    if (receipt.detail) {
+      row.append(element("span",` · 题号 ${receipt.detail.frontend_id} · ${receipt.detail.language} `));
+      const button = element("button","匹配当前保存代码","text-button"); button.dataset.browserBind = receipt.receipt_id;
+      button.addEventListener("click",async () => {
+        if (!current || $("code").value !== current.current_code) return;
+        if (await act("bind_browser",{session_id:current.session_id,receipt_id:receipt.receipt_id,code_hash:current.code_hash})) notice("匹配成功。可在聊天中询问这条浏览器报告；未运行本地测试，也未自动标记完成。");
+      });
+      row.append(button);
+    } else row.append(element("span"," · 缺少匹配字段，请更新扩展后重新读取。"));
   }
+  controls();
 }
 $("refresh-browser").addEventListener("click",async () => { try { await refreshBrowserReceipts(); } catch(error) { notice(error.message,"error"); } });
 
@@ -302,6 +330,7 @@ async function init() {
   controls();
   try {
     await refreshBoot();
+    await detectPlatform();
     if (!boot.busy) {
       try { await refreshBrowserReceipts(); }
       catch { $("browser-receipts").textContent = "回传服务暂不可用；若刚更新代码，请重启 Web 服务。"; }
@@ -313,4 +342,4 @@ async function init() {
     if (recalled("pending")) await recoverPending();
   } catch (error) { notice(error.message,"error"); }
 }
-init();
+window.addEventListener("DOMContentLoaded", init);

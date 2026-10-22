@@ -1,9 +1,11 @@
 {
   "manifest_version": 3,
   "name": "AlgoCoach 提交结果桥接",
-  "version": "0.1.0",
-  "description": "在用户点击时读取中国站已有提交结果，回传已连接的本地 AlgoCoach。",
+  "version": "0.3.0",
+  "description": "从本地 AlgoCoach 显式提交 Python3 代码到中国站，回传判题结果；不导出登录会话。",
   "permissions": ["activeTab", "scripting", "storage"],
-  "host_permissions": ["http://127.0.0.1/*"],
+  "host_permissions": ["http://127.0.0.1/*", "https://leetcode.cn/*"],
+  "background": {"service_worker": "background.js"},
+  "content_scripts": [{"matches": ["http://127.0.0.1/*"], "js": ["local-page.js"], "run_at": "document_idle"}],
   "action": {"default_popup": "popup.html"}
 }

@@ -18,7 +18,8 @@ from dotenv import load_dotenv
 from filelock import Timeout
 from pydantic import ValidationError
 
-from algo_coach.browser_bridge import BridgeError, BrowserBridge
+from algo_coach.browser_bridge import BridgeError, BrowserBridge, current_browser_feedback
+from algo_coach.browser_submit import BrowserSubmissions
 from algo_coach.runner import DockerRunner
 from algo_coach.service import Coach
 from algo_coach.teaching import DemoTeacher, ModelTeacher
@@ -60,6 +61,7 @@ def session_view(state):
         "history_total": len(history),
         "attempt_count": len(state.get("attempts", [])),
         "answer_checks": state.get("answer_checks", [])[-10:],
+        "browser_feedback": current_browser_feedback(state),
     }
 
 
@@ -75,6 +77,7 @@ class WebApplication:
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="algo-coach-web")
         self.jobs = {}
         self.bridge = BrowserBridge(coach.connection)
+        self.platform = BrowserSubmissions(coach, self.bridge)
         self.problem_list = [
             {"key": p.key, "id": p.frontend_id, "title": p.title} for p in coach.problems.all()
         ]
@@ -116,6 +119,59 @@ class WebApplication:
         finally:
             self.operation_lock.release()
 
+    def platform_request(self, action, payload):
+        fields = {
+            "prepare": {"session_id", "operation_id", "code_hash"},
+            "recover": {"session_id", "operation_id", "submission_id"},
+            "claim": {"operation_id"},
+            "authorize": {"operation_id", "target"},
+            "accepted": {"operation_id", "submission_id"},
+            "pending": {"operation_id"},
+            "finish": {"operation_id", "receipt"},
+            "fail": {"operation_id", "code"},
+        }
+        if action not in fields or not isinstance(payload, dict) or set(payload) != fields[action]:
+            raise APIError("平台操作字段无效。")
+        if not isinstance(payload["operation_id"], str) or not IDENTIFIER.fullmatch(
+            payload["operation_id"]
+        ):
+            raise APIError("平台操作 ID 无效。")
+        if not self.operation_lock.acquire(blocking=False):
+            raise APIError("正在处理学习操作，请稍后继续查询。", 409)
+        try:
+            if action == "prepare":
+                return self.platform.prepare(
+                    self._get(payload["session_id"]), payload["operation_id"], payload["code_hash"]
+                )
+            if action == "recover":
+                self._get(payload["session_id"])
+                record = self.platform.load(payload["operation_id"])
+                if record["session_id"] != payload["session_id"]:
+                    raise APIError("提交操作不属于当前会话。", 403)
+                return self.platform.recover(payload["operation_id"], payload["submission_id"])
+            record = self.platform.load(payload["operation_id"])
+            self._get(record["session_id"])
+            if action == "claim":
+                return self.platform.claim(payload["operation_id"])
+            method = (
+                self.platform.authorize_send
+                if action == "authorize"
+                else getattr(self.platform, action)
+            )
+            value_key = {
+                "authorize": "target",
+                "accepted": "submission_id",
+                "finish": "receipt",
+                "fail": "code",
+            }.get(action)
+            return (
+                method(payload["operation_id"], payload[value_key])
+                if value_key
+                else method(payload["operation_id"])
+            )
+        finally:
+            self.operation_lock.release()
+
     @staticmethod
     def validate_request(payload):
         if not isinstance(payload, dict):
@@ -126,6 +182,7 @@ class WebApplication:
             "turn": {"session_id", "text"},
             "code": {"session_id", "code"},
             "test": {"session_id", "code_hash"},
+            "bind_browser": {"session_id", "receipt_id", "code_hash"},
             "doctor": set(),
         }
         if not isinstance(operation, str) or operation not in fields:
@@ -199,6 +256,10 @@ class WebApplication:
                 elif operation == "code":
                     state = self.coach.turn(
                         sid, "请分析我提交的代码，不要执行。", code=payload["code"]
+                    )
+                elif operation == "bind_browser":
+                    state = self.coach.bind_browser_result(
+                        sid, payload["receipt_id"], payload["code_hash"]
                     )
                 else:
                     state = self.coach.turn(sid, payload["text"])
@@ -290,6 +351,7 @@ def make_server(app, port=8765):
                 assets = {
                     "/": ("index.html", "text/html; charset=utf-8"),
                     "/app.js": ("app.js", "text/javascript; charset=utf-8"),
+                    "/platform.js": ("platform.js", "text/javascript; charset=utf-8"),
                     "/style.css": ("style.css", "text/css; charset=utf-8"),
                 }
                 if path in assets:
@@ -301,6 +363,15 @@ def make_server(app, port=8765):
                     )
                 elif path == "/api/bootstrap":
                     self.send_data(200, app.bootstrap())
+                elif re.fullmatch(r"/api/platform/session/[a-f0-9]{32}", path):
+                    if not app.operation_lock.acquire(blocking=False):
+                        raise APIError("正在处理学习操作，请稍后刷新。", 409)
+                    try:
+                        sid = path.rsplit("/", 1)[1]
+                        app._get(sid)
+                        self.send_data(200, {"submissions": app.platform.recent(sid)})
+                    finally:
+                        app.operation_lock.release()
                 elif path == "/api/bridge/results":
                     if not app.operation_lock.acquire(blocking=False):
                         raise APIError("正在处理学习操作，请稍后刷新。", 409)
@@ -329,6 +400,30 @@ def make_server(app, port=8765):
                 # a socket with unread body bytes can reset it before the error is delivered.
                 self.connection.settimeout(5)
                 raw = self.rfile.read(length)
+                if self.path == "/api/bridge/submit/step":
+                    self.trusted_host()
+                    origin = self.headers.get("Origin", "")
+                    app.bridge.authorize(
+                        self.headers.get("X-AlgoCoach-Bridge", ""), origin, "submit"
+                    )
+                    cors_origin = origin
+                    if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
+                        raise APIError("仅接受 JSON 请求", 415)
+                    payload = json.loads(raw)
+                    if not isinstance(payload, dict) or not isinstance(payload.get("action"), str):
+                        raise APIError("扩展操作无效。")
+                    action = payload.pop("action")
+                    if action not in {
+                        "claim",
+                        "authorize",
+                        "accepted",
+                        "pending",
+                        "finish",
+                        "fail",
+                    }:
+                        raise APIError("不支持的扩展操作。")
+                    self.send_data(200, app.platform_request(action, payload), cors_origin=origin)
+                    return
                 if self.path == "/api/bridge/results":
                     self.trusted_host()
                     origin = self.headers.get("Origin", "")
@@ -352,9 +447,22 @@ def make_server(app, port=8765):
                     if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
                         raise APIError("仅接受 JSON 请求", 415)
                     payload = json.loads(raw)
-                    if not isinstance(payload, dict) or set(payload) != {"extension_id"}:
+                    if not isinstance(payload, dict) or set(payload) not in (
+                        {"extension_id"},
+                        {"extension_id", "purpose"},
+                    ):
                         raise APIError("连接字段无效。")
-                    self.send_data(200, app.bridge.pair(payload["extension_id"]))
+                    self.send_data(
+                        200,
+                        app.bridge.pair(payload["extension_id"], payload.get("purpose", "receipt")),
+                    )
+                    return
+                if self.path in {"/api/platform/prepare", "/api/platform/recover"}:
+                    if self.headers.get("Content-Type", "").split(";")[0] != "application/json":
+                        raise APIError("仅接受 JSON 请求", 415)
+                    self.send_data(
+                        200, app.platform_request(self.path.rsplit("/", 1)[1], json.loads(raw))
+                    )
                     return
                 if self.path != "/api/actions":
                     raise APIError("接口不存在", 404)
@@ -373,7 +481,10 @@ def make_server(app, port=8765):
 
         def do_OPTIONS(self):
             origin = self.headers.get("Origin", "")
-            if self.path == "/api/bridge/results" and app.bridge.allowed_origin(origin):
+            if self.path in {
+                "/api/bridge/results",
+                "/api/bridge/submit/step",
+            } and app.bridge.allowed_origin(origin):
                 try:
                     self.trusted_host()
                     if self.headers.get("Access-Control-Request-Method") != "POST":

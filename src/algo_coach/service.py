@@ -18,6 +18,7 @@ from algo_coach.archive import (
     plan_archive,
     publish,
 )
+from algo_coach.browser_bridge import BrowserBridge, bind_receipt
 from algo_coach.calendar import today
 from algo_coach.daily import DailySelections
 from algo_coach.errors import teaching_failure
@@ -202,31 +203,46 @@ class Coach:
             "request_id": uuid4().hex,
         }
         if code is not None:
-            if not code.strip() or len(code.encode("utf-8")) > MAX_CODE_BYTES:
-                raise ValueError("代码必须非空且不超过 128 KiB")
-            verification = inspect_code(code)
-            attempt = Attempt(
-                attempt_id=uuid4().hex,
-                code=code,
-                code_hash=verification.code_hash,
-                created_at=now(),
-                verification=verification,
-            )
-            update.update(
-                {
-                    "action": "code",
-                    "current_code": code,
-                    "code_hash": attempt.code_hash,
-                    "attempts": state["attempts"] + [attempt.model_dump()],
-                    "verification": verification.model_dump(),
-                    "completion_mode": "unfinished",
-                    "solution_summary": None,
-                    "explanation": state.get("explanation", "")
-                    if state.get("code_hash") == attempt.code_hash
-                    else "",
-                }
-            )
+            update.update(self._code_update(state, code))
         return self.graph.invoke(update, self.config(session_id))
+
+    @staticmethod
+    def _code_update(state, code):
+        if (
+            not isinstance(code, str)
+            or not code.strip()
+            or len(code.encode("utf-8")) > MAX_CODE_BYTES
+        ):
+            raise ValueError("代码必须非空且不超过 128 KiB")
+        verification = inspect_code(code)
+        attempt = Attempt(
+            attempt_id=uuid4().hex,
+            code=code,
+            code_hash=verification.code_hash,
+            created_at=now(),
+            verification=verification,
+        )
+        return {
+            "action": "code",
+            "current_code": code,
+            "code_hash": attempt.code_hash,
+            "attempts": state["attempts"] + [attempt.model_dump()],
+            "verification": verification.model_dump(),
+            "completion_mode": "unfinished",
+            "solution_summary": None,
+            "explanation": state.get("explanation", "")
+            if state.get("code_hash") == attempt.code_hash
+            else "",
+        }
+
+    def save_code(self, session_id: str, code: str) -> dict:
+        """Save a version without model calls or code execution; shares turn's validation."""
+        state = self.get(session_id)
+        if state["mode"] != self.teacher.mode:
+            raise ValueError("会话模式不匹配")
+        update = {**self._code_update(state, code), "last_error": None}
+        self.graph.update_state(self.config(session_id), update)
+        return self.get(session_id)
 
     def note(self, session_id: str, text: str) -> dict:
         state = self.get(session_id)
@@ -234,6 +250,23 @@ class Coach:
             raise ValueError("反思应为 1～16000 字符")
         self.graph.update_state(self.config(session_id), {"reflection": text})
         return {**state, "reflection": text}
+
+    def bind_browser_result(self, session_id: str, receipt_id: str, code_hash: str) -> dict:
+        state = self.get(session_id)
+        if state["mode"] != self.teacher.mode:
+            raise ValueError("会话模式不匹配")
+        if not code_hash or code_hash != state.get("code_hash"):
+            raise ValueError("代码已变化，请恢复当前版本后重新匹配。")
+        record = BrowserBridge(self.connection).load(receipt_id)
+        bound = bind_receipt(record, state)
+        reports = list(state.get("browser_reports", []))
+        if not reports or (reports[-1]["receipt_id"], reports[-1]["attempt_id"]) != (
+            receipt_id,
+            bound["attempt_id"],
+        ):
+            reports.append(bound)
+            self.graph.update_state(self.config(session_id), {"browser_reports": reports[-20:]})
+        return self.get(session_id)
 
     def test(self, session_id: str) -> dict:
         """Explicit execution request: no model call and no extra attempt or hint escalation."""

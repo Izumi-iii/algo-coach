@@ -5,6 +5,7 @@ import json
 import re
 
 from algo_coach.adapters import canonical_adapter, problem_hash
+from algo_coach.browser_bridge import current_browser_feedback
 from algo_coach.errors import TeachingPolicyError
 from algo_coach.judging import two_sum_pairs
 from algo_coach.models import Problem, TeachingReply
@@ -78,9 +79,74 @@ def _check_case(adapter, inputs, expected):
     return "input_expected_checked", "输入约束与预期输出核验通过；未执行用户代码。"
 
 
+def browser_failure_facts(state: dict) -> dict | None:
+    """Check bounded report arithmetic; never run code or attest the browser source."""
+    report = current_browser_feedback(state)
+    if not report or report.get("status_code") not in {11, 15}:
+        return None
+    if canonical_adapter(Problem.model_validate(state["problem"])) != "two_sum":
+        return None
+    details = report.get("failure_details") or {}
+    try:
+        lines = details.get("last_testcase", "").strip().splitlines()
+        if len(lines) != 2:
+            return None
+        nums, target = (json.loads(line) for line in lines)
+        if (
+            not _integers(nums, -(10**9), 10**9)
+            or not 2 <= len(nums) <= 200
+            or type(target) is not int
+            or not -(10**9) <= target <= 10**9
+        ):
+            return None
+        expected_text = details.get("expected_output")
+        if expected_text:
+            expected = json.loads(expected_text)
+        elif report["status_code"] == 15:
+            pairs = two_sum_pairs(nums, target)
+            if len(pairs) != 1:
+                return None
+            expected = pairs[0]
+        else:
+            return None
+        output_text = details.get("code_output")
+        output = json.loads(output_text) if output_text else None
+        if report["status_code"] == 11 and output is None:
+            return None
+        if not _integers(expected, 0, 199) or len(expected) != 2:
+            return None
+        inputs = {"nums": nums, "target": target}
+        if _check_case("two_sum", inputs, expected)[0] != "input_expected_checked":
+            return None
+    except (ValueError, TypeError, AttributeError, RecursionError):
+        return None
+    in_bounds = _integers(output, 0, len(nums) - 1) and len(output) == 2
+    values = [nums[index] for index in output] if in_bounds else None
+    return {
+        "inputs": inputs,
+        "expected": expected,
+        "expected_source": "browser_report" if expected_text else "application_oracle",
+        "reported_output": output,
+        "indices_in_bounds": in_bounds if output is not None else None,
+        "distinct_indices": output[0] != output[1] if in_bounds else None,
+        "selected_values": values,
+        "selected_sum": sum(values) if values is not None else None,
+        "sum_matches_target": sum(values) == target if values is not None else None,
+        "scope": (
+            "输入及reported_output仅取自当前浏览器报告；缺少的实际输出保持null。"
+            "expected_source区分报告预期与应用独立计算的预期，后者不是执行记录。"
+            "应用仅核对约束、预期和已报告下标的算术，未执行代码或独立认证平台。"
+        ),
+    }
+
+
 def check_evidence(reply: TeachingReply, state: dict) -> dict:
     """Return application-owned records, with no inferred runtime or semantic verdict."""
-    result = {"counterexamples": [], "history_citations": []}
+    result = {
+        "counterexamples": [],
+        "history_citations": [],
+        "browser_failure": browser_failure_facts(state),
+    }
     sources = {s["message_id"]: s for s in history_sources(state)}
     for citation in reply.history_citations:
         source = sources.get(citation.message_id)
@@ -150,7 +216,12 @@ def check_evidence(reply: TeachingReply, state: dict) -> dict:
                 "scope": (
                     "匹配已有当前版本本地失败报告；没有新增执行。"
                     if matched
-                    else "未证实当前代码在此输入上失败；链表预期仅核对值序列，不证明节点身份。"
+                    else "未证实当前代码在此输入上失败。"
+                    + (
+                        "链表预期仅核对值序列，不证明节点身份。"
+                        if adapter == "reverse_k_group"
+                        else ""
+                    )
                 ),
             }
         )
@@ -181,10 +252,13 @@ def enforce_evidence(reply: TeachingReply, checks: dict):
                 "样例字面量需要结构化核验", rule="counterexample_evidence"
             ) from None
         tail = re.match(r"\s*[，,;；]?\s*(target|k)\s*[:=：]\s*(-?\d+)", prose[match.end() :])
+        registered = list(checks["counterexamples"])
+        if checks.get("browser_failure"):
+            registered.append(checks["browser_failure"])
         if not any(
             c["inputs"].get(match[1]) == values
             and (not tail or c["inputs"].get(tail[1]) == int(tail[2]))
-            for c in checks["counterexamples"]
+            for c in registered
         ):
             raise TeachingPolicyError("具体样例缺少对应结构化数据", rule="counterexample_evidence")
 

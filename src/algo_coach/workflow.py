@@ -44,6 +44,7 @@ class LearningState(TypedDict, total=False):
     problem_source: dict | None
     answer_checks: list[dict]
     teaching_evidence: list[dict]
+    browser_reports: list[dict]
 
 
 def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
