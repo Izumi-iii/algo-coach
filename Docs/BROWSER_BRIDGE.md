@@ -1,5 +1,7 @@
 # 无需复制 Cookie：读取已有提交并回传
 
+这是历史提交的兼容入口。日常刷题请使用新增的 [在 AlgoCoach 提交并自动返回判题结果](WEB_PLATFORM_SUBMIT.md)，不再需要手动搬运代码和匹配；下文只说明“读取已有记录”的操作及历次验收。
+
 这是 Manifest V3 浏览器扩展原型。用户在中国站自行登录，扩展只在点击时读取当前已有提交；不导出登录 Cookie、不调用新建提交接口、不安装第三方依赖。支持普通 Chrome / Edge 扩展运行环境，需手动加载一次。
 
 ## 当前实现与验收范围
@@ -55,15 +57,27 @@ https://leetcode.cn/problems/题目slug/submissions/数字ID/
 
 在该详情页点击扩展图标，再点击“读取当前提交并回传”。扩展先在原站同源上下文查询 `userStatus.isSignedIn`，再读取该提交的 `check` 结果；请求由浏览器使用已有登录会话发送，Python 后端不接收登录凭据。
 
-扩展只提取提交 ID、终态、状态码、可选题目内部 ID、运行时间和内存，不回传整份响应、源码、错误原文、账号名或 Cookie。登录未确认、访问拒绝、结果未完成或提交 ID 不匹配时停止，不尝试绕过或新建提交。
+扩展先读取状态，再通过只读 `submissionDetail` 查询原提交的代码、语言、题目内部 ID、展示题号和 slug。源码只传给已配对的本机接收端计算 SHA-256；数据库和后续教学上下文不保存回传源码原文，只保存哈希与匹配字段。不会读取编辑器当前草稿来冒充原提交，不回传整份响应、错误原文、账号名或 Cookie。
+
+登录未确认、结果未完成、提交 ID 或题目 ID 不一致时停止；若详情接口失败或缺字段，仍可显示历史状态，但不能用于代码匹配。更新扩展后请在扩展管理页点击重新加载，再重新连接本地页并读取。旧回执缺少源码哈希，不能补猜匹配关系。
 
 扩展提示“已回传”后，回到本地网页下方“浏览器回传 · 历史提交”，点击“刷新回传”，核对提交 ID、结果及原站链接。
 
 ## 结果的信任边界
 
-回执来源标记为 `browser_extension_report`，数据库单独存于 `app_browser_receipts`，网页明确标注**未绑定当前代码**。它不是 Python 服务用自身认证直接核验的结果，也没有读取原提交代码后与当前用户代码比较；因此不会改写本地 `Verification`、当前完成程度或模型上下文，不会把旧 AC 自动套到新代码。
+回执来源标记为 `browser_extension_report`，数据库单独存于 `app_browser_receipts`，默认**未绑定当前代码**。它不是 Python 服务用自身认证直接核验的结果，不会自动把旧 AC 套到新代码。
 
-配对令牌只限制谁能回传，不是平台对结果的数字签名。未来若接入教学和归档，仍需明确来源及提交代码绑定，不能把扩展报告称作服务器独立认证。
+### 6. 匹配后用于教学反馈
+
+1. 在当前会话保存自己的 Python3 代码，确保与原站提交逐字节相同，包括注释、空格与换行；网页编辑器中的未保存草稿不能参与匹配。
+2. 回传区域点击该记录的“匹配当前保存代码”。匹配本身不调用模型、不新建平台提交、不执行代码。
+3. 后端核对站点、展示题号与 slug、Python3 语言、源码 SHA-256，并绑定会话 ID、当前尝试 ID 和题面哈希。内部题目 ID 不与展示题号混用；C++ 等其他语言不能绑定当前 Python3 会话。
+4. 成功后可在聊天中询问该结果。模型上下文只接收仍然匹配的 `browser_feedback`，明确标注浏览器来源。它仅含状态，不能据此编造编译错误行、失败输入或执行过程；现有提示权限保持有效。
+5. 修改并保存代码，或再次保存产生新尝试后，旧绑定失效；恢复相同字节也需显式重绑。历史绑定保留最近 20 条，重启后可恢复，未变化的同一次绑定重复点击不会重复追加。
+
+此报告不改写本地 `Verification`，不自动标记独立完成，也不作为归档验收条件。未绑定、缺字段、未知状态和其他会话的结果不会进入当前教学上下文。现有保守规则继续拦截无来源的“平台已通过”断言；对常见“浏览器回传报告：状态”的直接断言额外核对当前绑定与状态，但这不是自由文本教学语义正确性的保证。
+
+配对令牌只限制谁能回传，不是平台对结果的数字签名。字段与哈希匹配只能证明本地收到的数据一致，不能把扩展报告称作服务器独立认证。
 
 本地接收端只对已配对的精确 `chrome-extension://扩展ID` 开放专用接口的 CORS，普通聊天/文件接口保持原有同源与令牌校验。回传输入有字段白名单和长度限制，不接受原始 Cookie、任意 URL 或任意文件内容。配对过期或 Web 重启后需重新连接。
 
@@ -83,6 +97,7 @@ https://leetcode.cn/problems/题目slug/submissions/数字ID/
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest tests/test_browser_bridge.py tests/test_web.py -q
+.\.venv\Scripts\python.exe -m pytest tests/test_browser_binding.py -q
 node scripts/test_browser_extension.cjs
 ```
 
@@ -91,3 +106,7 @@ Node 脚本在隔离上下文执行实际注入脚本，模拟原站响应，验
 本轮结果：22 项 HTTP/后端测试通过（含原有 7 项 Web 回归），10 个注入脚本模拟场景通过，静态/格式/JavaScript 语法和差异检查通过。无头 Edge 自动验收实例的启动被执行审批策略拒绝，仅返回 `blocked by policy`，未提供更详细原因；没有通过其他方式绕过此拒绝。用户随后手动加载扩展并完成一条已有提交的读取回传，原站与本地的提交 ID 和编译错误状态一致；没有自动化安装或新建平台提交。没有重跑完整工程、Docker 或真实模型评估。来源哈希及验证边界见 [证据](evidence/browser-bridge-2026-10-21.json)。
 
 浏览器机制参考：[脚本注入与 activeTab](https://developer.chrome.com/docs/extensions/reference/api/scripting)、[扩展网络权限](https://developer.chrome.com/docs/extensions/develop/concepts/network-requests)、[会话存储](https://developer.chrome.com/docs/extensions/reference/api/storage)。这些文档说明扩展机制，不保证中国站内部接口的可用性或第三方接入授权。
+
+详情查询参考：[LeetCode-Anki 原作者客户端的 `mySubmissionDetail` 查询](https://github.com/Peng-YM/LeetCode-Anki/blob/master/crawler_cn.py)。这是查询形式的源码依据，不是新版扩展的真实接口验收；新增详情读取与 Python3 代码绑定仍需本人浏览器手动复验。
+
+题目、语言与代码绑定轮最终验证：完整离线回归 **450 passed、8 skipped**，扩展 **20 个模拟场景通过**，Ruff 静态/格式、JavaScript 语法、差异和文档链接检查通过。跳过的真实 Docker/题源集成不计为通过；没有新增真实模型调用或平台提交。原始失败和最终源码哈希见 [绑定验收记录](evidence/browser-binding-2026-10-21.json)。

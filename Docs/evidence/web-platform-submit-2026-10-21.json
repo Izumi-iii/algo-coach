@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-21",
+  "scope": "AlgoCoach Web explicit submit -> browser extension -> LeetCode CN -> readback -> automatic version binding",
+  "source_hashes": {
+    "src/algo_coach/browser_submit.py": "cadfcd7fba99a4573bd9ed9c6b40a002fdda020cffb258aa35e7fcaf9fc3e559",
+    "src/algo_coach/browser_bridge.py": "989a7b138e9502f96790833bf6df0ca46be4d10c4f2b8ed85bd3bb930cc708bf",
+    "src/algo_coach/web.py": "c9ec0da165d96dcfed1f8eacf463d9e467e75fd165eb000b861edd343d0650ab",
+    "src/algo_coach/teaching.py": "40eee5f574e7fb1ac2f8dbd85271258cb28b4c96ed8d1c1db9eb3ed5016ff820",
+    "src/algo_coach/web_assets/app.js": "e7f52a4e164abd078b7156f7d6b0a439318ab4935984534b171fa5203bcb5e0c",
+    "src/algo_coach/web_assets/platform.js": "756895cac11243bcdd0db2eea6b410df6daf7090272e14677be1e16a2cd8f0cf",
+    "src/algo_coach/web_assets/index.html": "e7c66be91416595d5e5bf1ea0338161038e737087c2f7829621fd9c8ede6b225",
+    "extensions/leetcode-bridge/manifest.json": "ecd04e11471043f622cff3682cc713f1cf6afb4e9adb8471ceb0a470808f4636",
+    "extensions/leetcode-bridge/background.js": "a3b7088c5531ce003ad1302fd5ea137467d3739d54f79057989fb40b72ded801",
+    "extensions/leetcode-bridge/local-page.js": "b7049eeb5b27024cf300a20a06ec6a1396cc2c81cbbc45895bce14cd08fdde93",
+    "extensions/leetcode-bridge/platform-page.js": "9c0d5196dc52a81305d8659b9d8547a5bdcd80363a0c33dceb84c22f82f7bace",
+    "tests/test_browser_submit.py": "c7dc9261a3b58885b28699ac6b5a6741dd7445292acee06a62446f9776514f6d",
+    "tests/test_browser_submit_http.py": "26e9161f8dcdaa7a56e087071c6514511d714461d61d903e8974f57f2c9b4340",
+    "scripts/test_platform_extension.cjs": "80fbd777308e4c096f90856af84744bf4f2da137c47df31f8d75b0b31f285bfe",
+    "scripts/test_browser_extension.cjs": "302d9367ce4d727778868d2bef0fb738c21a9824f45e122c5a73e61c259f6a54"
+  },
+  "full_offline_regression": {
+    "passed": 488,
+    "skipped": 8,
+    "elapsed_seconds": 254.31,
+    "command": "python -m pytest -q"
+  },
+  "legacy_extension_fixture_flows": 20,
+  "worker_http_e2e": {
+    "implementation": "Actual background.js and serialized platform-page.js with controlled Chrome/LeetCode fixtures; real loopback HTTP and SQLite",
+    "scenarios": [
+      "wrong answer",
+      "accepted",
+      "compile error",
+      "account switch",
+      "not signed in",
+      "missing CSRF",
+      "platform submit timeout",
+      "lost local authorization response",
+      "lost local accepted-ID response with worker recreation"
+    ],
+    "platform_posts_per_operation": "asserted <= 1",
+    "live_browser": false
+  },
+  "recovery": "Durable sending intent and callback buffer. Ambiguous sends never automatically resubmit; existing submission IDs can be reconciled read-only.",
+  "binding": "Exact saved code, site/frontend ID/slug, Python3, original attempt and problem snapshot. Changed versions keep historical results only.",
+  "teaching": "Bound browser report and bounded platform failure details; no automatic completion or local Verification promotion.",
+  "credentials": "Browser uses original-site session. CSRF token remains in the original-site task and is not exported. Local connection capability is isolated from the page.",
+  "new_dependencies": false,
+  "paid_model_calls": 0,
+  "docker_live_tests_enabled": false,
+  "native_browser_real_submission": {
+    "status": "one real Accepted flow confirmed by user and local receiver",
+    "submission_id": "756246817",
+    "operation_id": "29ab31b07a28487c865b1d864e4da7c6",
+    "state": "finished",
+    "verdict": "accepted",
+    "platform_status_code": 10,
+    "binding_status": "current",
+    "current_feedback_matches": true,
+    "evidence_sources": [
+      "user manual confirmation",
+      "read-only loopback API inspection"
+    ],
+    "scope": "One current-version Accepted submission. Other live error/recovery scenarios and multi-day stability are not established; browser report is not independent server attestation.",
+    "teacher_mode": "demo",
+    "real_model_feedback_evaluated": false
+  },
+  "receiver": "http://127.0.0.1:8767 (demo teacher; explicit platform submit is live)",
+  "ruff_check": "passed",
+  "ruff_format": "94 files checked",
+  "javascript_syntax": "passed",
+  "dependency_check": "passed",
+  "local_document_links": "passed",
+  "initial_targeted_failure": "Missing CSRF initially discovered after sending authorization; moved the availability check into preflight before authorization. Final suite passed."
+}

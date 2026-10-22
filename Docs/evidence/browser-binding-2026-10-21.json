@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-21",
+  "scope": "Explicit browser receipt matching for teaching feedback; no new platform submissions.",
+  "source_hashes": {
+    "src/algo_coach/browser_bridge.py": "b4482f0a1498f5e9ceec339e32dd0afba0617b7ddc19e23e34f9b274b70d68e2",
+    "src/algo_coach/service.py": "d3db63c3a07b19f401db8c81996673cb96f538eedf77895ae7e0c6c25fef9819",
+    "src/algo_coach/teaching.py": "00582a9292a7601f8ee3a0ed48138a26e9f93553a32d2ceb3bd4de1da8ea7c7d",
+    "src/algo_coach/errors.py": "e5780f22961629e46854aa8e18160e32fc259cacae8d1a76e61f7a9558361f15",
+    "src/algo_coach/workflow.py": "a352d93fb924a6b8fe8f1c4090a1b95cae696c838af6566da7165439dd9c5787",
+    "src/algo_coach/web.py": "56fc9c62a4494e65553a08687dd44d223d0c0b6c620e6550e79878198df68a8b",
+    "src/algo_coach/web_assets/app.js": "a50424dded9d8f0bdb7e9a78243cd9b3d7f83205b30aa8865152ead9729a9982",
+    "src/algo_coach/web_assets/index.html": "c663ce74f23f8bf89249ddaada9311744298caeb5ed21771846df8ccbe4b39df",
+    "extensions/leetcode-bridge/manifest.json": "1eb1fef1aa1310e8215c7dd83173830a3ec4c588f254c64d6165dcd17655538c",
+    "extensions/leetcode-bridge/read-submission.js": "39faca5ad4bc7fb8873fbdd3131833b484014c8526599e7519f4b1d1a4c2b183",
+    "extensions/leetcode-bridge/popup.js": "2fcd70857e30362968a01dc4bd5fdda860c1f5a30480b92c6dc4483e126e7ec2",
+    "tests/test_browser_binding.py": "e4f255ba1ec9b052a4d971e83915f21285924b09e364022b6547f86b1c9cff12",
+    "tests/test_browser_bridge.py": "97e60d810d8c87ddf7aaf898527edd754cde19bd2602b5ce5961a5fc6e9243a2",
+    "scripts/test_browser_extension.cjs": "fbf5d68935c0c878d4e06e662a07a05fa35e57696b73f0daa5991ae4b8c4308d"
+  },
+  "matching": [
+    "leetcode_cn site, frontend ID and slug",
+    "Python3 language only",
+    "exact UTF-8 source SHA-256; no whitespace normalization",
+    "session ID, current attempt ID and problem snapshot hash"
+  ],
+  "privacy": "Submission source is sent to loopback for hashing but not persisted in receipt records or model context. Current saved user code follows the existing teaching data path.",
+  "trust": "Browser-reported evidence; not server-attested. No local Verification or completion-state promotion.",
+  "extension_fixture_flows": {
+    "passed": 20,
+    "network": "controlled fixtures only"
+  },
+  "focused_regression_before_final_selection_change": {
+    "passed": 48,
+    "command": "pytest tests/test_browser_binding.py tests/test_browser_bridge.py tests/test_response_focus.py -q"
+  },
+  "full_regression": {
+    "command": "python -m pytest -q",
+    "passed": 450,
+    "skipped": 8,
+    "elapsed_seconds": 250.79,
+    "real_model": false,
+    "docker_or_live_source_enabled": false
+  },
+  "initial_full_regression": {
+    "passed": 447,
+    "failed": 2,
+    "skipped": 8,
+    "reason": "No-report minimal model state was unnecessarily parsed as a complete Problem; fixed by early return when browser_reports is empty."
+  },
+  "native_browser_binding_validation": "pending user reload of extension v0.2.0 and manual Python3 readback",
+  "prior_user_browser_evidence": "One status-only Compile Error receipt confirmed by user screenshots; this does not verify the new detail query or code binding.",
+  "new_dependencies": false,
+  "paid_model_calls": 0,
+  "docker_enabled": false,
+  "new_platform_submission": false,
+  "detail_query_reference": "https://github.com/Peng-YM/LeetCode-Anki/blob/master/crawler_cn.py",
+  "receiver": "http://127.0.0.1:8767; demo mode",
+  "ruff_check": "passed",
+  "ruff_format": "90 files checked",
+  "javascript_syntax": "passed",
+  "git_diff_check": "passed",
+  "local_document_links": "passed"
+}
