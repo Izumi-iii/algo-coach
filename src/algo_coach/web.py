@@ -23,6 +23,7 @@ from algo_coach.browser_submit import BrowserSubmissions
 from algo_coach.runner import DockerRunner
 from algo_coach.service import Coach
 from algo_coach.teaching import DemoTeacher, ModelTeacher
+from algo_coach.teaching_stream import stream_to
 
 MAX_BODY = 1024 * 1024
 IDENTIFIER = re.compile(r"[a-f0-9]{32}\Z")
@@ -74,6 +75,7 @@ class WebApplication:
         self.token = secrets.token_urlsafe(32)
         self.operation_lock = threading.Lock()
         self.jobs_lock = threading.Lock()
+        self.jobs_changed = threading.Condition(self.jobs_lock)
         self.executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="algo-coach-web")
         self.jobs = {}
         self.bridge = BrowserBridge(coach.connection)
@@ -82,6 +84,9 @@ class WebApplication:
             {"key": p.key, "id": p.frontend_id, "title": p.title} for p in coach.problems.all()
         ]
         self._refresh_sessions()
+        self.session_cache = {}
+        for item in self.session_list[:32]:
+            self.session_cache[item["id"]] = session_view(self._get(item["id"]))
 
     def close(self):
         self.executor.shutdown(wait=True)
@@ -113,9 +118,13 @@ class WebApplication:
 
     def get_session(self, sid):
         if not self.operation_lock.acquire(blocking=False):
+            if sid in self.session_cache:
+                return {**self.session_cache[sid], "read_only_snapshot": True}
             raise APIError("正在处理上一项操作，请等待完成后恢复会话。", 409)
         try:
-            return session_view(self._get(sid))
+            view = session_view(self._get(sid))
+            self.session_cache[sid] = view
+            return view
         finally:
             self.operation_lock.release()
 
@@ -219,7 +228,14 @@ class WebApplication:
             # Only one pending job; retain a bounded set of finished request IDs.
             while len(self.jobs) >= 64:
                 del self.jobs[next(iter(self.jobs))]
-            self.jobs[job_id] = {"status": "running", "signature": signature}
+            self.jobs[job_id] = {
+                "status": "running",
+                "signature": signature,
+                "sequence": 0,
+                "phase": "starting",
+                "preview": "",
+                "session_id": payload.get("session_id"),
+            }
         self.executor.submit(self._execute, job_id, payload)
         return {"job_id": job_id}
 
@@ -230,11 +246,48 @@ class WebApplication:
                 raise APIError(
                     "任务不存在或服务已重启。请恢复会话核对已保存结果，勿自动重发。", 404
                 )
-            return {key: value[key] for key in ("status", "result", "error") if key in value}
+            return {
+                key: value[key]
+                for key in (
+                    "status",
+                    "result",
+                    "error",
+                    "sequence",
+                    "phase",
+                    "preview",
+                    "session_id",
+                )
+                if key in value
+            }
+
+    def stream_update(self, job_id, kind, value):
+        with self.jobs_changed:
+            job = self.jobs[job_id]
+            if kind == "preview":
+                job["preview"] = value
+            elif kind == "reset":
+                job["preview"] = ""
+            elif kind == "phase":
+                job["phase"] = value
+            job["sequence"] += 1
+            self.jobs_changed.notify_all()
+
+    def wait_job_change(self, job_id, sequence):
+        with self.jobs_changed:
+            self.jobs_changed.wait_for(
+                lambda: job_id not in self.jobs or self.jobs[job_id]["sequence"] != sequence,
+                timeout=10,
+            )
 
     def _execute(self, job_id, payload):
+        with stream_to(lambda kind, value: self.stream_update(job_id, kind, value)):
+            self._execute_job(job_id, payload)
+
+    def _execute_job(self, job_id, payload):
         try:
             operation = payload["operation"]
+            if operation in {"test", "doctor"}:
+                self.stream_update(job_id, "phase", "testing" if operation == "test" else "doctor")
             if operation == "doctor":
                 result = {"doctor": DockerRunner.from_env().doctor()}
             elif operation == "create":
@@ -265,6 +318,11 @@ class WebApplication:
                     state = self.coach.turn(sid, payload["text"])
                 result = {"state": session_view(state)}
             outcome = {"status": "completed", "result": result}
+            if result.get("state"):
+                view = result["state"]
+                self.session_cache[view["session_id"]] = view
+                while len(self.session_cache) > 64:
+                    del self.session_cache[next(iter(self.session_cache))]
         except ValidationError:
             outcome = {"status": "failed", "error": "输入或题面数据未通过校验，请检查内容后重试。"}
         except ValueError as exc:
@@ -285,8 +343,11 @@ class WebApplication:
                 }
             finally:
                 self.operation_lock.release()
-        with self.jobs_lock:
+        with self.jobs_changed:
             self.jobs[job_id].update(outcome)
+            self.jobs[job_id]["preview"] = ""
+            self.jobs[job_id]["sequence"] += 1
+            self.jobs_changed.notify_all()
 
 
 def make_server(app, port=8765):
@@ -381,6 +442,8 @@ def make_server(app, port=8765):
                         app.operation_lock.release()
                 elif re.fullmatch(r"/api/sessions/[a-f0-9]{32}", path):
                     self.send_data(200, app.get_session(path.rsplit("/", 1)[1]))
+                elif re.fullmatch(r"/api/jobs/[a-f0-9]{32}/events", path):
+                    self.send_job_events(path.split("/")[-2])
                 elif re.fullmatch(r"/api/jobs/[a-f0-9]{32}", path):
                     self.send_data(200, app.job(path.rsplit("/", 1)[1]))
                 else:
@@ -389,6 +452,32 @@ def make_server(app, port=8765):
                 self.send_data(getattr(exc, "status", 400), {"error": str(exc)})
             except Exception:
                 self.send_data(500, {"error": "无法读取本地数据，请稍后重试。"})
+
+        def send_job_events(self, job_id):
+            app.job(job_id)  # Fail before headers for missing/expired jobs.
+            self.send_response(200)
+            self.send_header("Content-Type", "text/event-stream; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("X-Content-Type-Options", "nosniff")
+            self.send_header("Connection", "close")
+            self.end_headers()
+            self.close_connection = True
+            sequence = -1
+            try:
+                while True:
+                    job = app.job(job_id)
+                    if job["sequence"] != sequence:
+                        sequence = job["sequence"]
+                        data = json.dumps(job, ensure_ascii=False)
+                        self.wfile.write(f"id: {sequence}\ndata: {data}\n\n".encode())
+                    else:
+                        self.wfile.write(b": heartbeat\n\n")
+                    self.wfile.flush()
+                    if job["status"] != "running":
+                        break
+                    app.wait_job_change(job_id, sequence)
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError, APIError):
+                pass
 
         def do_POST(self):
             cors_origin = None

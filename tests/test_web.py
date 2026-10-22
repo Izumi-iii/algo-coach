@@ -10,6 +10,7 @@ import pytest
 from algo_coach.models import Verification
 from algo_coach.service import Coach
 from algo_coach.teaching import DemoTeacher
+from algo_coach.teaching_stream import emit
 from algo_coach.verification import inspect_code
 from algo_coach.web import WebApplication, make_server
 
@@ -63,6 +64,50 @@ def result(client, job_id):
             return data["result"]
         time.sleep(0.01)
     pytest.fail("HTTP fixture job did not finish")
+
+
+def test_sse_preview_is_live_readonly_history_available_and_disconnect_does_not_resubmit(site):
+    client, app, coach, _ = site
+    first = result(client, submit(client, app, "create", source="local", reference="1"))["state"]
+    second = result(client, submit(client, app, "create", source="local", reference="25"))["state"]
+    started, release = threading.Event(), threading.Event()
+    original, calls = coach.teacher.reply, []
+
+    def reply(state):
+        calls.append(1)
+        emit("preview", "已检查的第一段。")
+        started.set()
+        assert release.wait(5)
+        return original(state)
+
+    coach.teacher.reply = reply
+    job_id = submit(client, app, "turn", session_id=first["session_id"], text="/hint")
+    try:
+        assert started.wait(2)
+        with client.stream("GET", f"/api/jobs/{job_id}/events") as response:
+            assert response.headers["content-type"].startswith("text/event-stream")
+            line = next(line for line in response.iter_lines() if line.startswith("data: "))
+            import json
+
+            snapshot = json.loads(line[6:])
+            assert snapshot["status"] == "running"
+            assert snapshot["preview"] == "已检查的第一段。"
+            cached = client.get(f"/api/sessions/{second['session_id']}").json()
+            assert cached["read_only_snapshot"] is True
+            assert cached["problem"]["frontend_id"] == "25"
+        assert client.get("/api/bootstrap").json()["busy"]
+    finally:
+        release.set()
+    result(client, job_id)
+    assert len(calls) == 1
+    final = client.get(f"/api/jobs/{job_id}").json()
+    assert final["preview"] == "" and final["status"] == "completed"
+    assert (
+        client.get(
+            f"/api/jobs/{job_id}/events", headers={"Origin": "https://untrusted.invalid"}
+        ).status_code
+        == 403
+    )
 
 
 def test_web_workflow_preserves_versions_reports_and_resumes(site):

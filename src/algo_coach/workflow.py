@@ -10,6 +10,7 @@ from algo_coach.errors import POLICY_FEEDBACK, TeachingPolicyError, teaching_fai
 from algo_coach.models import Problem, TeachingReply
 from algo_coach.teaching import Teacher, answer_code, validate_reply
 from algo_coach.teaching_evidence import check_evidence, enforce_evidence, render_evidence
+from algo_coach.teaching_stream import emit
 from algo_coach.verification import VerificationService, render_report
 
 
@@ -80,9 +81,12 @@ def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
         for _ in range(2):
             evidence_record = None
             try:
+                emit("reset")
+                emit("phase", "generating")
                 draft = TeachingReply.model_validate(
                     teacher.reply({**state, "retry_feedback": feedback})
                 )
+                emit("phase", "checking")
                 validate_reply(draft, state)
                 checks = check_evidence(draft, state)
                 evidence_record = {
@@ -102,6 +106,7 @@ def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
                     )
                 response = draft.reply
                 if state["action"] == "answer" and teacher.mode == "model":
+                    emit("phase", "answer_check")
                     verifier = answer_verifier or VerificationService()
                     report = verifier.verify(
                         Problem.model_validate(state["problem"]), answer_code(response)
@@ -161,6 +166,8 @@ def build_workflow(teacher: Teacher, checkpointer, *, answer_verifier=None):
                     "teaching_evidence": evidence_records,
                 }
             except Exception as exc:
+                emit("reset")
+                emit("phase", "retrying")
                 # Never persist raw provider exceptions: they may contain URLs or credentials.
                 failure_code, failure_message, retryable = teaching_failure(exc)
                 feedback = (

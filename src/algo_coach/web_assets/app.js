@@ -13,11 +13,15 @@ let platformConnected = false;
 let platformRunning = false;
 let platformTimer = null;
 let platformGeneration = 0;
+let activeTask = null;
+let taskSnapshot = null;
+const drafts = new Map();
 const statusNames = {not_run:"未执行", syntax_error:"语法错误", passed:"本地通过", wrong_answer:"答案错误", runtime_error:"运行错误", timeout:"执行超时", resource_limit:"资源超限", unsupported:"题型未支持", runner_error:"执行器错误", cancelled:"已取消"};
 
 function notice(text, kind = "") {
   $("notice").textContent = text;
   $("notice").className = `notice ${kind}`;
+  $("notice").hidden = kind !== "error" || !text;
 }
 
 async function api(path, body) {
@@ -40,14 +44,21 @@ async function api(path, body) {
 
 function controls() {
   const blocked = !boot || busy || uncertain || remoteBusy;
-  $("new-session").querySelectorAll("button,input,select").forEach((node) => { node.disabled = blocked; });
-  $("source").disabled = blocked;
+  $("new-session").querySelectorAll("button").forEach((node) => { node.disabled = blocked; });
+  $("source").disabled = !boot;
+  $("reference").disabled = !boot;
   $("reference").hidden = $("source").value === "daily";
-  for (const id of ["message","send","hint","answer","code","submit-code"]) $(id).disabled = blocked || !current;
+  for (const id of ["message","code"]) $(id).disabled = !boot || !current;
+  for (const id of ["send","hint","answer","submit-code"]) {
+    $(id).disabled = blocked || !current;
+    $(id).title = blocked && current ? "当前任务完成后可发送；你可以先继续编辑。" : "";
+  }
   $("doctor").disabled = blocked;
   $("retry").disabled = blocked || !current?.last_error;
   $("retry").hidden = !current?.last_error;
-  $("sessions").querySelectorAll("button").forEach((node) => { node.disabled = blocked; });
+  $("sessions").querySelectorAll("button").forEach((node) => { node.disabled = !boot; });
+  $("activity").hidden = !blocked;
+  $("activity").textContent = blocked ? "任务进行中 · 可以继续编辑和查看记录" : "";
   const draft = current && $("code").value !== current.current_code;
   $("draft-report-note").hidden = !draft || !current?.current_code;
   $("test-code").disabled = blocked || !current?.current_code || draft;
@@ -122,6 +133,7 @@ function renderProblem(problem) {
 }
 
 function appendMessage(role, content) {
+  if (role === "user") content = ({"/answer":"查看完整解答","/hint":"给一点提示","/retry":"重试上一请求"})[content.trim()] || content;
   const article = document.createElement("article"); article.className = `message ${role}`;
   const label = element("div","","message-label"); label.append(element("span",role === "user" ? "你" : "ac"), document.createTextNode(role === "user" ? "你的思路" : "AlgoCoach"));
   const body = document.createElement("div"); body.className = "message-content";
@@ -133,6 +145,30 @@ function appendMessage(role, content) {
     else body.append(element("p",text));
   });
   article.append(label,body); $("messages").append(article);
+  return article;
+}
+
+function renderPending(job = taskSnapshot) {
+  if (!job || !current || job.session_id !== current.session_id || job.status !== "running") return;
+  const messages = $("messages");
+  const atBottom = messages.scrollHeight - messages.scrollTop - messages.clientHeight < 80;
+  let article = messages.querySelector("[data-stream-placeholder]");
+  if (!article) {
+    if (activeTask?.text && activeTask.text !== "/retry" && !current.history.some(m => m.role === "user" && m.content === activeTask.text && m === current.history.at(-1))) appendMessage("user",activeTask.text);
+    article = appendMessage("assistant","");
+    article.dataset.streamPlaceholder = "true";
+    article.classList.add("streaming-message");
+    article.append(element("div","","stream-status"));
+    article.querySelector(".stream-status").setAttribute("role","status");
+  }
+  if (article.dataset.preview !== (job.preview || "")) {
+    article.dataset.preview = job.preview || "";
+    const body = article.querySelector(".message-content");
+    body.replaceChildren(element("p",job.preview || ""));
+  }
+  const labels = {starting:"正在准备",generating:job.preview ? "正在继续回答" : "正在思考",checking:"正在整理回复",retrying:"正在调整回复",testing:"正在运行已保存代码",doctor:"正在检查执行环境",answer_check:"正在核对完整解答"};
+  article.querySelector(".stream-status").textContent = labels[job.phase] || "正在处理";
+  if (atBottom) messages.scrollTop = messages.scrollHeight;
 }
 
 function starter(problem) {
@@ -167,17 +203,18 @@ function renderReport() {
 function renderState(next, discardDraft = false) {
   const previous = current;
   const oldDraft = $("code").value;
+  if (previous && previous.session_id !== next.session_id) drafts.set(previous.session_id,{code:oldDraft,message:$("message").value});
   const keepDraft = !discardDraft && previous?.session_id === next.session_id && oldDraft !== (previous.current_code || starter(previous.problem)) && oldDraft !== next.current_code;
   current = next;
   if (previous?.session_id !== current.session_id) {
     platformGeneration++; clearTimeout(platformTimer);
     $("platform-status").textContent = "正式提交会增加原站账号记录；模型不会自动提交。";
   }
-  if (previous?.session_id !== current.session_id) $("message").value = "";
+  if (previous?.session_id !== current.session_id) $("message").value = drafts.get(current.session_id)?.message || "";
   remember("session",current.session_id);
   renderProblem(current.problem);
   if (previous?.session_id !== current.session_id) setProblemExpanded(recalled("problem-expanded") === "yes");
-  $("hint-level").textContent = `H${current.hint_level} · ${current.answer_revealed ? "已查看完整答案" : "渐进提示"}`;
+  $("hint-level").textContent = `H${current.hint_level} · ${current.answer_revealed ? "已查看完整答案" : current.hint_level === 4 ? "完整解答已授权" : "渐进提示"}`;
   $("messages").replaceChildren();
   if (current.history_total > current.history.length) $("messages").append(element("p",`展示最近 ${current.history.length} 条消息；更早内容仍保存在本地。`,"quiet"));
   const openingQuestion = "你目前对这道题有什么思路，或需要先澄清哪一点？";
@@ -189,9 +226,10 @@ function renderState(next, discardDraft = false) {
   });
   if (current.last_error && current.response) appendMessage("assistant",current.response);
   $("messages").scrollTop = $("messages").scrollHeight;
-  if (!keepDraft) $("code").value = current.current_code || starter(current.problem);
+  if (!keepDraft) $("code").value = (previous?.session_id !== current.session_id ? drafts.get(current.session_id)?.code : null) ?? (current.current_code || starter(current.problem));
   $("attempts").textContent = `已保存 ${current.attempt_count} 次代码提交`;
   renderReport(); renderSessions(); lineNumbers(); controls();
+  renderPending();
   refreshPlatform().catch(() => {});
 }
 
@@ -200,9 +238,8 @@ function hasUnsaved() {
 }
 
 async function restore(sid, force = false) {
-  if (!force && hasUnsaved() && !confirm("有未提交的代码或消息。切换会话会丢弃这些修改，是否继续？")) return;
   try {
-    const state = await api(`/api/sessions/${sid}`); renderState(state,!force);
+    const state = await api(`/api/sessions/${sid}`); renderState(state);
     const submissions = await refreshPlatform().catch(() => []);
     const pending = submissions?.find(item => ["prepared","checking","queued","judging"].includes(item.state) && !item.last_error);
     if (pending && platformConnected && !platformRunning) drivePlatform(pending.operation_id);
@@ -211,7 +248,46 @@ async function restore(sid, force = false) {
 }
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve,ms));
+async function finishJob(job) {
+  remember("pending",null); uncertain = false;
+  if (job.status === "failed") {
+    if (current?.session_id === job.session_id) await restore(current.session_id,true);
+    throw new Error(job.error);
+  }
+  if (job.result.state) {
+    const next = job.result.state;
+    if (!current || !job.session_id || current.session_id === next.session_id) renderState(next);
+    notice(next.last_error ? "教学回复未完成，输入已保存。可用“重试上一请求”继续。" : "",next.last_error ? "error" : "");
+  }
+  if (job.result.doctor) {
+    const result = job.result.doctor;
+    $("execution-environment").textContent = `${result.enabled ? "执行器已启用" : "执行器未启用"} · ${result.reason}`;
+    notice(result.ready ? "" : result.reason, result.ready ? "" : "error");
+  }
+}
+
 async function waitForJob(id) {
+  if (!window.EventSource) return waitForJobPolling(id);
+  let connectionFailure = false;
+  try {
+    await new Promise((resolve,reject) => {
+      const source = new EventSource(`/api/jobs/${id}/events`);
+      source.onmessage = event => {
+        let job;
+        try { job = JSON.parse(event.data); } catch { connectionFailure = true; source.close(); reject(new Error("事件格式无效")); return; }
+        taskSnapshot = job;
+        if (job.status === "running") { renderPending(job); return; }
+        source.close(); finishJob(job).then(resolve,reject);
+      };
+      source.onerror = () => { connectionFailure = true; source.close(); reject(new Error("流连接中断")); };
+    });
+  } catch (error) {
+    if (!connectionFailure) throw error;
+    await waitForJobPolling(id); // Recover the same job; never POST the request again.
+  }
+}
+
+async function waitForJobPolling(id) {
   let errors = 0;
   while (true) {
     let job;
@@ -220,21 +296,9 @@ async function waitForJob(id) {
       if (error.status || ++errors >= 3) throw error;
       notice("连接暂时中断，正在恢复任务状态，不会重新发送请求。","busy"); await delay(1200); continue;
     }
-    if (job.status === "running") { await delay(700); continue; }
-    remember("pending",null); uncertain = false;
-    if (job.status === "failed") {
-      if (current) await restore(current.session_id,true);
-      throw new Error(job.error);
-    }
-    if (job.result.state) {
-      renderState(job.result.state);
-      notice(current.last_error ? "教学回复未完成，输入已保存。可用“重试上一请求”继续。" : "已保存。继续验证你的想法。",current.last_error ? "error" : "");
-    }
-    if (job.result.doctor) {
-      const result = job.result.doctor;
-      $("execution-environment").textContent = `${result.enabled ? "执行器已启用" : "执行器未启用"} · ${result.reason}`;
-      notice(result.enabled && result.ready ? "Docker 引擎和镜像可用。代码测试仍需单独执行。" : result.reason, result.ready ? "" : "error");
-    }
+    taskSnapshot = job;
+    if (job.status === "running") { renderPending(job); await delay(700); continue; }
+    await finishJob(job);
     return;
   }
 }
@@ -243,9 +307,13 @@ async function act(operation, fields = {}) {
   if (busy || uncertain || remoteBusy) return false;
   let completed = false;
   busy = true; controls();
-  notice(operation === "test" ? "正在运行已提交版本的本地测试…" : operation === "doctor" ? "正在检查 Docker 与判题镜像…" : "正在处理，请等待结果。输入提交后不会自动重发。","busy");
+  notice("");
   const id = crypto.randomUUID().replaceAll("-","");
   remember("pending",id);
+  activeTask = {id,operation,session_id:fields.session_id,text:operation === "turn" ? fields.text : null};
+  taskSnapshot = {status:"running",session_id:fields.session_id,phase:"starting",preview:""};
+  if (operation === "turn" && !fields.text.startsWith("/")) $("message").value = "";
+  renderPending();
   try {
     const job = await api("/api/actions",{operation,request_id:id,...fields});
     await waitForJob(job.job_id);
@@ -253,9 +321,12 @@ async function act(operation, fields = {}) {
   } catch (error) {
     if (error.status && error.status < 500) remember("pending",null);
     uncertain = Boolean(recalled("pending"));
+    if (operation === "turn" && !fields.text.startsWith("/") && current?.session_id === fields.session_id && !$("message").value) $("message").value = fields.text;
     notice(error.message,"error");
   } finally {
     busy = false;
+    activeTask = null; taskSnapshot = null;
+    document.querySelectorAll("[data-stream-placeholder]").forEach(node => node.remove());
     try { await refreshBoot(); } catch (error) { notice(error.message,"error"); }
     controls();
   }
@@ -275,7 +346,7 @@ async function recoverPending() {
 
 $("new-session").addEventListener("submit",async (event) => {
   event.preventDefault();
-  if (hasUnsaved() && !confirm("新练习会丢弃未提交的代码或消息，是否继续？")) return;
+  if (hasUnsaved() && !confirm("开始新练习？当前草稿会在本页保留，刷新后可能丢失。")) return;
   await act("create",{source:$("source").value,reference:$("reference").value});
 });
 $("source").addEventListener("change",() => {
@@ -283,8 +354,7 @@ $("source").addEventListener("change",() => {
 });
 $("chat-form").addEventListener("submit",async (event) => {
   event.preventDefault(); const text = $("message").value.trim(); if (!text || !current) return;
-  const completed = await act("turn",{session_id:current.session_id,text});
-  if (completed) $("message").value = "";
+  await act("turn",{session_id:current.session_id,text});
 });
 $("message").addEventListener("keydown",(event) => { if (event.key === "Enter" && !event.shiftKey && !event.isComposing) { event.preventDefault(); $("chat-form").requestSubmit(); } });
 for (const [id,text] of [["hint","/hint"],["answer","/answer"],["retry","/retry"]]) $(id).addEventListener("click",() => act("turn",{session_id:current.session_id,text}));
@@ -337,7 +407,7 @@ async function init() {
     }
     $("execution-environment").textContent = boot.runner_enabled ? "执行器配置已启用。可检查环境后运行已提交版本。" : "执行器尚未启用，测试会如实返回未执行。配置见 Docs/RUNNER.md。";
     const sid = recalled("session");
-    if (sid && boot.sessions.some((s) => s.id === sid) && !boot.busy) await restore(sid,true);
+    if (sid && boot.sessions.some((s) => s.id === sid)) await restore(sid,true);
     else notice(boot.busy ? "另一页面的操作正在进行，请等待完成。" : "本地工作区已就绪。选择题目开始，或恢复左侧会话。",boot.busy ? "busy" : "");
     if (recalled("pending")) await recoverPending();
   } catch (error) { notice(error.message,"error"); }

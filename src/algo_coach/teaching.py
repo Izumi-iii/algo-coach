@@ -17,6 +17,7 @@ from algo_coach.code_facts import code_facts
 from algo_coach.errors import TeachingOutputError, TeachingPolicyError
 from algo_coach.models import Problem, SolutionSummary, TeachingReply
 from algo_coach.teaching_evidence import browser_failure_facts, history_sources
+from algo_coach.teaching_stream import StreamTeachingReply, consume_stream, streaming_enabled
 
 SYSTEM_PROMPT = """你是 AlgoCoach 算法教练，用简洁中文回应用户当前的卡点。
 应用给出的 hint_level 是披露上限：
@@ -481,6 +482,11 @@ class ModelTeacher:
         self.summary_model = model.with_structured_output(
             SolutionSummary, include_raw=True, **options
         )
+        self.stream_model = model.bind_tools(
+            [StreamTeachingReply], tool_choice="StreamTeachingReply"
+        )
+        if provider == "openai":
+            self.stream_model = self.stream_model.bind(stream_usage=True)
         self.last_usage: dict | None = None
 
     def reply(self, state: dict) -> TeachingReply:
@@ -578,6 +584,20 @@ class ModelTeacher:
             if focus["question_limit"] == 0:
                 instruction += "用户要求直接核对，本轮不提问。"
         messages.append(SystemMessage(instruction))
+        if streaming_enabled() and getattr(self, "stream_model", None) is not None:
+            messages.append(
+                SystemMessage(
+                    "本轮使用StreamTeachingReply工具：先完整输出hint_level_used、stage、full_solution、"
+                    "counterexamples、history_citations五个字段（空数组也须输出），最后输出reply。"
+                    "reply用空行分隔完整段落，每段先给足上下文，不将否定词或关键限定留到下一段。"
+                    "字段顺序只影响流式显示，不改变任何教学权限或证据要求。"
+                )
+            )
+
+            def save_usage(value):
+                self.last_usage = value
+
+            return consume_stream(self.stream_model, messages, state, save_usage)
         result = self.model.invoke(messages)
         raw = result.get("raw")
         self.last_usage = getattr(raw, "usage_metadata", None)

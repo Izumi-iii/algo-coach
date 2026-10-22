@@ -22,3 +22,11 @@
 @media(max-width:650px){.problem-summary{padding:14px;gap:10px;flex-wrap:wrap}.problem-summary h2{font-size:16px;flex-basis:100%}.problem-scroll{max-height:280px}.chat-card{height:560px}}
 .browser-card{margin-top:18px}.browser-card>.report-detail{padding-top:12px}.browser-card a{color:var(--accent)}
 .platform-card{margin-bottom:18px}.platform-card>.report-detail{padding-top:12px}.platform-result{padding:12px 0;border-top:1px solid var(--line)}.platform-result a{color:var(--accent)}.platform-result input{max-width:200px;margin:8px;padding:8px}
+/* Status belongs to the conversation; editing stays available during generation. */
+.task-activity{display:block;font-size:10px;line-height:1.7;color:#b8ccb5;margin-top:10px}
+.streaming-message .message-label{color:var(--accent)}
+.stream-status{display:flex;align-items:center;gap:8px;color:#789079;font-size:11px;min-height:24px;margin-top:5px}
+.stream-status::before{content:"";width:6px;height:6px;border-radius:50%;background:#80a877;box-shadow:9px 0 #a5bf9b,18px 0 #d0dec8;margin-right:20px;animation:reply-breathe 1.3s ease-in-out infinite}
+@keyframes reply-breathe{50%{opacity:.35}}
+@media(prefers-reduced-motion:reduce){.stream-status::before{animation:none}}
+.notice:not(.error){display:none}.task-activity{grid-column:1/-1}
